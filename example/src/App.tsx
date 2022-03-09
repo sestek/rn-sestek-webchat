@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'rn-sestek-webchat';
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { multiply, ChatModal } from 'rn-sestek-webchat';
 
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
@@ -13,6 +13,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Result: {result}</Text>
+      <ChatModal />
     </View>
   );
 }
