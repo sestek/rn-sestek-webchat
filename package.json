@@ -29,7 +29,8 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "start": "cd example && npm run ios && npm run android"
   },
   "keywords": [
     "react-native",
@@ -143,5 +144,9 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "@aspnet/signalr": "^1.0.27",
+    "timeago.js": "^4.0.2"
   }
 }

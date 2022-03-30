@@ -1,9 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, FC, useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import ModalComponent from '../components/modal';
+import { useChat } from './useChat';
 
-export const ChatModal = () => {
-  //const [messages, setMessages] = useState(props.messages || []);
-  const [visible, setVisible] = useState(false);
+interface PropsChatModal {
+  triggerModal?: () => void;
+}
+
+export const ChatModal: FC<PropsChatModal> = (props) => {
+
+  const [visible, setVisible] = useState<boolean>(false);
+  const triggerVisible = useCallback(() => {
+    setVisible(old => !old);
+  }, [visible]);
+
+  useEffect(() => {
+    if (props.triggerModal) {
+      triggerVisible();
+    }
+  }, []);
 
   return (
     <>
@@ -18,9 +33,13 @@ export const ChatModal = () => {
           />
         </TouchableOpacity>
       </View>
-      {/*visible && (
-                <ModalComponent visible={visible} closeModal={setVisible} {...props} />
-            )*/}
+      {visible && (
+        <ModalComponent
+          visible={visible}
+          closeModal={triggerVisible}
+        //...props} 
+        />
+      )}
     </>
   );
 };
