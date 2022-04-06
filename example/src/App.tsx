@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { multiply, ChatModal } from 'rn-sestek-webchat';
 
 export default function App() {

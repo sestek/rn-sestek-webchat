@@ -147,6 +147,8 @@
   },
   "dependencies": {
     "@aspnet/signalr": "^1.0.27",
+    "@types/react-native-snap-carousel": "^3.8.5",
+    "react-native-snap-carousel": "^3.9.1",
     "timeago.js": "^4.0.2"
   }
 }

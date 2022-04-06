@@ -1,7 +1,9 @@
 export default interface PropsMessageBoxComponent {
     position: 'left' | 'right';
     type: 'text' | 'system' | 'file' | 'location',
-    text: string;
+    activity: any;
+    changeInputData: (text: string) => void;
+    sendMessage: any;
     title?: string;
     titleColor?: string;
     onTitleClick?: () => void;

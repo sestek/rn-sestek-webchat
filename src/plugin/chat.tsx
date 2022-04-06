@@ -1,7 +1,7 @@
 import React, { useState, useCallback, FC, useEffect } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import ModalComponent from '../components/modal';
-import { useChat } from './useChat';
+import { ChatIcon } from '../image';
 
 interface PropsChatModal {
   triggerModal?: () => void;
@@ -29,7 +29,7 @@ export const ChatModal: FC<PropsChatModal> = (props) => {
         >
           <Image
             style={styles.imageStyle}
-            source={require('../image/chat_icon.png')}
+            source={ChatIcon}
           />
         </TouchableOpacity>
       </View>

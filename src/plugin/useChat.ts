@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
+import { GeneralManager, SignalRClient } from '../services';
 import type { PropsUseChat } from 'src/types';
-import SignalRClient from '../services/signalr';
 
-const client = new SignalRClient("http://localhost:55020/chathub");
-const sessionId = "";
+const client = new SignalRClient(GeneralManager.getWebchatHost());
+const sessionId = GeneralManager.createUUID();
 
 const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
 
@@ -35,22 +35,14 @@ const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
     const attachClientOnMessage = () => {
         client.onmessage((d: any, m: any) => {
             console.log(d, m);
+            if (typeof m !== "object") {
+                m = JSON.parse(m);
+            }
             addMessageList(m);
         });
     }
 
     const sendMessage = async (message: any) => {
-        await client.sendAsync(
-            sessionId,
-            message,
-            defaultConfiguration.customAction,
-            defaultConfiguration.customActionData,
-            defaultConfiguration.projectName,
-            defaultConfiguration.clientId,
-            defaultConfiguration.channel,
-            defaultConfiguration.tenant,
-            defaultConfiguration.fullName
-        );
         addMessageList({
             message,
             customAction: '',
@@ -62,6 +54,17 @@ const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
             conversationId: sessionId,
             fullName: defaultConfiguration.fullName
         });
+        await client.sendAsync(
+            sessionId,
+            message,
+            defaultConfiguration.customAction,
+            defaultConfiguration.customActionData,
+            defaultConfiguration.projectName,
+            defaultConfiguration.clientId,
+            defaultConfiguration.channel,
+            defaultConfiguration.tenant,
+            defaultConfiguration.fullName
+        );
     }
 
     const sendConversationStart = async () => {
@@ -79,9 +82,9 @@ const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
             userAgent: "USERAGENT EKLENECEK",
             browserLanguage: "tr" // BURASI DİNAMİK İSTENECEK
         };
+        addMessageList(startObj);
         await client.startConversation(JSON.stringify(startObj));
         defaultConfiguration.customAction = '';
-        addMessageList(startObj);
     }
 
 

@@ -1,6 +1,7 @@
 import React, { type FC } from "react";
 import { Image, View, Text, TouchableOpacity } from "react-native";
 import type { PropsHeaderComponent } from "src/types";
+import { MinusIcon, MultiplyIcon } from '../image';
 
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
@@ -13,10 +14,10 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
                 </Text>
             </View>
             <TouchableOpacity onPress={() => props.closeModal(old => !old)}>
-                <Image style={{ width: 20, height: 20, margin: 5 }} source={require('../image/minus.png')} />
+                <Image style={{ width: 20, height: 20, margin: 5 }} source={MinusIcon} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { }}>
-                <Image style={{ width: 20, height: 20, margin: 5 }} source={require('../image/multiply.png')} />
+                <Image style={{ width: 20, height: 20, margin: 5 }} source={MultiplyIcon} />
             </TouchableOpacity>
         </View>
     )

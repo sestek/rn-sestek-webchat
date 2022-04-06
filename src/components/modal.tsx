@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Alert, Modal, View } from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from 'src/types';
@@ -9,12 +9,15 @@ import { styles } from './modal-style';
 
 const ModalComponent: FC<PropsModalComponent> = (props) => {
 
+    const [inputData, setInputData] = useState<string>("");
+    const changeInputData = (text: string) => setInputData(text);
+
     const [messageList, sendMessage] = useChat({
         defaultConfiguration: {
             sendConversationStart: true,
-            tenant: 'AXA',
-            projectName: 'AXAChatbot',
-            channel: 'NdUi'
+            tenant: 'Hakan',
+            projectName: 'ChatBotMessages',
+            channel: 'NdaInfoBip'
         },
         messages: []
     });
@@ -40,10 +43,19 @@ const ModalComponent: FC<PropsModalComponent> = (props) => {
                     <HeaderComponent {...props} />
                 </View>
                 <View style={{ flex: 1, backgroundColor: 'gray' }}>
-                    <BodyComponent messageList={messageList} />
+                    <BodyComponent
+                        messageList={messageList}
+                        changeInputData={changeInputData}
+                        sendMessage={sendMessage}
+                    />
                 </View>
                 <View style={styles.footer}>
-                    <FooterComponent {...props} />
+                    <FooterComponent
+                        {...props}
+                        inputData={inputData}
+                        changeInputData={changeInputData}
+                        sendMessage={sendMessage}
+                    />
                 </View>
             </View>
         </Modal>

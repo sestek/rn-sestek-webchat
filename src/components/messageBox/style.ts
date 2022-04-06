@@ -10,6 +10,22 @@ export default StyleSheet.create({
         overflow: 'hidden',
     },
 
+    rceMButton: {
+        elevation: 8,
+        backgroundColor: "#ff6600",
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+        marginBottom: 6,
+    },
+    rceMButtonText: {
+        fontSize: 12,
+        color: "#fff",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
+
     rceMbox: {
         backgroundColor: 'white',
         borderRadius: 10,
@@ -21,10 +37,10 @@ export default StyleSheet.create({
         marginBottom: 3,
         paddingTop: 7,
         paddingLeft: 9,
-        paddingBottom: 8,
+        paddingBottom: 16,
         paddingRight: 9,
         maxWidth: width - 50,
-        alignSelf:'flex-end',
+        alignSelf: 'flex-end',
     },
 
     rceMboxBody: {
@@ -34,7 +50,7 @@ export default StyleSheet.create({
     },
 
     rceMboxRight: {
-        alignSelf:'flex-start',
+        alignSelf: 'flex-start',
         marginLeft: 5,
         marginRight: 20,
         borderTopRightRadius: 10,
@@ -43,12 +59,13 @@ export default StyleSheet.create({
 
     rceMboxText: {
         fontSize: 13.6,
+        marginBottom: 6,
     },
 
     rceMboxTime: {
         position: 'absolute',
         right: -4,
-        bottom: -6,
+        bottom: -14,
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
