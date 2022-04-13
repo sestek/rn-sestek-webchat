@@ -5,6 +5,8 @@ import type PropsBodyComponent from "./propsBodyComponent";
 import type PropsUseChat from "./propsUseChat";
 import type PropsAvatar from "./propsAvatarComponent";
 import type PropsMessageBoxComponent from "./propsMessageBoxComponent";
+import type PropsDefaultConfiguration from "./propsDefaultConfiguration";
+import type PropsChatModal from "./propsChatModal";
 
 export {
     PropsModalComponent,
@@ -13,5 +15,7 @@ export {
     PropsBodyComponent,
     PropsUseChat,
     PropsAvatar,
-    PropsMessageBoxComponent
+    PropsMessageBoxComponent,
+    PropsDefaultConfiguration,
+    PropsChatModal
 };

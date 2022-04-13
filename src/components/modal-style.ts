@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
   header: {
     height: 30,
     marginTop: GeneralManager.getMobileTopBottom("top"),
-    backgroundColor: '#ff6600',
+    backgroundColor: GeneralManager.getColorAndText().backgroundColor,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   footer: {
     height: Platform.OS === "android" ? 60 : 80,
-    backgroundColor: '#ff6600',
+    backgroundColor: GeneralManager.getColorAndText().backgroundColor,
     padding: 10,
     paddingBottom: Platform.OS === "android" ? 10 : 25,
   }

@@ -1,4 +1,4 @@
-import React, { FC, createRef, useState } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './style';
 import Avatar from './avatar';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
@@ -7,6 +7,8 @@ import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
+
+    console.log(props.activity)
 
     const [activeSlide, setActiveSlide] = useState<number>(0);
     const changeActiveSlide = (number: number) => setActiveSlide(number);
@@ -159,10 +161,10 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                             <Text
                                 style={styles.rceMboxTimeText}>
                                 {
-                                    props.date &&
+                                    props.activity?.timestamp &&
                                     (
                                         props.dateString ||
-                                        format(props.date)
+                                        format(props.activity?.timestamp)
                                     )
                                 }
                             </Text>
@@ -177,7 +179,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 MessageBox.defaultProps = {
     position: 'left',
     type: 'text',
-    text: '',
+    activity: null,
     title: 'SYSTEM',
     titleColor: 'black',
     date: new Date(),

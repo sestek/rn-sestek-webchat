@@ -1,4 +1,7 @@
+import type PropsCustomizeConfiguration from "./propsCustomizeConfiguration";
+
 export default interface PropsMessageBoxComponent {
+    customizeConfiguration: PropsCustomizeConfiguration;
     position: 'left' | 'right';
     type: 'text' | 'system' | 'file' | 'location',
     activity: any;

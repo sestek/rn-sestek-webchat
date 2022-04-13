@@ -4,10 +4,16 @@ import type { PropsBodyComponent } from 'src/types';
 import { styles } from './body-style';
 import MessageBox from './messageBox';
 import { RobotIcon } from '../image';
+import { GeneralManager } from '../services';
 
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
 
-    const scrollView = useRef(null);
+    const scrollView = useRef<ScrollView>(null);
+    const { incomingIcon, outgoingIcon, incomingText, outgoingText } = props.customizeConfiguration;
+
+    const getUserName = (channel: any) => {
+        return channel ? incomingText || "User" : outgoingText || "Chatbot";
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -15,7 +21,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                 ref={scrollView}
                 onContentSizeChange={() => scrollView?.current?.scrollToEnd({ animated: true })}
             >
-                {props.messageList.map((x: any, key: number) =>
+                {props.messageList.slice(1).map((x: any, key: number) =>
                     <MessageBox
                         {...props}
                         key={key}
@@ -23,7 +29,11 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                         type={'text'}
                         activity={x}
                         status={null}
-                        avatar={RobotIcon}
+                        title={getUserName(x?.channel)}
+                        avatar={x.channel ?
+                            GeneralManager.returnIconData(incomingIcon?.type, incomingIcon?.value, RobotIcon) :
+                            GeneralManager.returnIconData(outgoingIcon?.type, outgoingIcon?.value, RobotIcon)
+                        }
                         renderAddCmp={undefined}
                     />)}
             </ScrollView>

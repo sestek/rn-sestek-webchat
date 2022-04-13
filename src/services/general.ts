@@ -14,7 +14,7 @@ export default class GeneralManager {
     }
 
     static createUUID() {
-        var s = ["M","o","b","i","l"];
+        var s = ["M", "o", "b", "i", "l"];
         var hexDigits = "0123456789abcdef";
         for (var i = 5; i < 36; i++) {
             s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
@@ -25,5 +25,23 @@ export default class GeneralManager {
 
         var uuid = s.join("");
         return uuid;
+    }
+
+    static getColorAndText() {
+        return {
+            backgroundColor: '#ff6600',
+            textColor: '#fff',
+        }
+    }
+
+    static returnIconData(type: 'component' | 'uri' | undefined, value?: string, defaultIcon?: any) {
+        switch (type) {
+            case "component":
+                return value;
+            case "uri":
+                return { uri: value };
+            default:
+                return defaultIcon;
+        }
     }
 }

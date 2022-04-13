@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { GeneralManager, SignalRClient } from '../services';
-import type { PropsUseChat } from 'src/types';
+import type { PropsUseChat } from '../types';
 
-const client = new SignalRClient(GeneralManager.getWebchatHost());
-const sessionId = GeneralManager.createUUID();
 
-const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
+const useChat = ({ defaultConfiguration, messages, sessionId, client }: PropsUseChat) => {
+
 
     const [messageList, setMessageList] = useState<any>(messages || []);
     const addMessageList = (message: any) => {
@@ -34,7 +32,7 @@ const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
 
     const attachClientOnMessage = () => {
         client.onmessage((d: any, m: any) => {
-            console.log(d, m);
+            //console.log(d, m);
             if (typeof m !== "object") {
                 m = JSON.parse(m);
             }
@@ -44,6 +42,7 @@ const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
 
     const sendMessage = async (message: any) => {
         addMessageList({
+            timestamp: new Date().getTime(),
             message,
             customAction: '',
             customActionData: '',
@@ -70,6 +69,7 @@ const useChat = ({ defaultConfiguration, messages }: PropsUseChat) => {
     const sendConversationStart = async () => {
         defaultConfiguration.customAction = 'startOfConversation';
         const startObj = {
+            timestamp: new Date().getTime(),
             message: 'start_message_1234',
             customAction: 'startOfConversation',
             customActionData: defaultConfiguration.customActionData,

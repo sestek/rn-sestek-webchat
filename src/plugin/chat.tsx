@@ -1,48 +1,91 @@
-import React, { useState, useCallback, FC, useEffect } from 'react';
+import React, { useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { GeneralManager, SignalRClient } from '../services';
 import ModalComponent from '../components/modal';
 import { ChatIcon } from '../image';
+import type { PropsChatModal } from '../types';
 
-interface PropsChatModal {
-  triggerModal?: () => void;
+export interface ChatModalRef {
+  triggerVisible: () => void;
+  startConversation: () => void;
+  endConversation: () => void;
+  conversationStatus: boolean;
 }
 
-export const ChatModal: FC<PropsChatModal> = (props) => {
+let sessionId = GeneralManager.createUUID();
+let client = new SignalRClient(GeneralManager.getWebchatHost());
+
+export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) => {
+
+  const [start, setStart] = useState<boolean>(false);
+  const startConversation = () => {
+    if (!start) {
+      sessionId = GeneralManager.createUUID();
+      client = new SignalRClient(GeneralManager.getWebchatHost());
+    }
+    setStart(true);
+    setVisible(true);
+  }
+  const endConversation = () => {
+    setStart(false);
+    setVisible(false);
+  }
 
   const [visible, setVisible] = useState<boolean>(false);
   const triggerVisible = useCallback(() => {
     setVisible(old => !old);
   }, [visible]);
 
-  useEffect(() => {
-    if (props.triggerModal) {
+  useImperativeHandle(ref, () => ({
+    triggerVisible: () => {
       triggerVisible();
-    }
-  }, []);
+    },
+    startConversation: () => {
+      startConversation();
+    },
+    endConversation: () => {
+      endConversation();
+    },
+    conversationStatus: start
+  }));
+
+  const { firstColor, firstSize, firsIcon } = props.customizeConfiguration;
 
   return (
     <>
       <View style={styles.mainContainer}>
         <TouchableOpacity
-          style={styles.floatBottomRight}
-          onPress={() => setVisible((old) => !old)}
+          style={[
+            styles.floatBottomRight,
+            firstColor ? { backgroundColor: firstColor } : {}
+          ]}
+          onPress={() => startConversation()}
         >
           <Image
-            style={styles.imageStyle}
-            source={ChatIcon}
+            style={{
+              width: firstSize || 50,
+              height: firstSize || 50,
+            }}
+            source={GeneralManager.returnIconData(firsIcon?.type, firsIcon?.value, ChatIcon)}
           />
         </TouchableOpacity>
       </View>
-      {visible && (
+      {start && (
         <ModalComponent
+          customizeConfiguration={props.customizeConfiguration}
+          defaultConfiguration={props.defaultConfiguration}
           visible={visible}
+          closeConversation={endConversation}
           closeModal={triggerVisible}
+          sessionId={sessionId}
+          client={client}
         //...props} 
         />
       )}
     </>
   );
-};
+});
+
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -55,12 +98,8 @@ const styles = StyleSheet.create({
     right: 10,
   },
   floatBottomRight: {
-    backgroundColor: 'gray',
-    padding: 10,
+    backgroundColor: GeneralManager.getColorAndText().backgroundColor,
+    padding: 0,
     borderRadius: 50,
-  },
-  imageStyle: {
-    width: 50,
-    height: 50,
-  },
+  }
 });

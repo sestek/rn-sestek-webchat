@@ -13,10 +13,10 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
                     {props.headerText}
                 </Text>
             </View>
-            <TouchableOpacity onPress={() => props.closeModal(old => !old)}>
+            <TouchableOpacity onPress={() => props.closeModal()}>
                 <Image style={{ width: 20, height: 20, margin: 5 }} source={MinusIcon} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { }}>
+            <TouchableOpacity onPress={() => props.closeConversation()}>
                 <Image style={{ width: 20, height: 20, margin: 5 }} source={MultiplyIcon} />
             </TouchableOpacity>
         </View>

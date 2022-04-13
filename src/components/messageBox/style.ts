@@ -34,13 +34,22 @@ export default StyleSheet.create({
         marginRight: 5,
         marginTop: 3,
         flexDirection: 'column',
-        marginBottom: 3,
         paddingTop: 7,
         paddingLeft: 9,
         paddingBottom: 16,
         paddingRight: 9,
         maxWidth: width - 50,
         alignSelf: 'flex-end',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: -5,
+            height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
+        marginBottom: 20,
     },
 
     rceMboxBody: {
@@ -55,6 +64,10 @@ export default StyleSheet.create({
         marginRight: 20,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 0,
+        shadowOffset: {
+            width: 5,
+            height: 5,
+        },
     },
 
     rceMboxText: {
