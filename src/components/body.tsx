@@ -9,10 +9,14 @@ import { GeneralManager } from '../services';
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
 
     const scrollView = useRef<ScrollView>(null);
-    const { incomingIcon, outgoingIcon, incomingText, outgoingText } = props.customizeConfiguration;
+    const { incomingIcon, outgoingIcon, incomingText, outgoingText, outgoingTextColor, incomingTextColor } = props.customizeConfiguration;
 
     const getUserName = (channel: any) => {
         return channel ? incomingText || "User" : outgoingText || "Chatbot";
+    }
+
+    const getTextColor = (channel: any) => {
+        return channel ? incomingTextColor || "black" : outgoingTextColor || "black";
     }
 
     return (
@@ -30,6 +34,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                         activity={x}
                         status={null}
                         title={getUserName(x?.channel)}
+                        titleColor={getTextColor(x?.channel)}
                         avatar={x.channel ?
                             GeneralManager.returnIconData(incomingIcon?.type, incomingIcon?.value, RobotIcon) :
                             GeneralManager.returnIconData(outgoingIcon?.type, outgoingIcon?.value, RobotIcon)

@@ -68,8 +68,8 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'SAIB',
-          projectName: 'SAIB',
+          tenant: 'ArabBank',
+          projectName: 'ArabBank',
           channel: 'NdaInfoBip'
         }}
         customizeConfiguration={{
@@ -81,12 +81,12 @@ export default function App() {
           //bottomSendIcon: "<Cmp />",
           incomingIcon: { type: 'uri', value: 'https://upload.wikimedia.org/wikipedia/commons/7/70/User_icon_BLACK-01.png' },
           incomingText: '',
-          incomingTextColor: '',
+          incomingTextColor: 'black',
           outgoingIcon: { type: 'component', value: require('./images/knovvu_logo.png') },
           outgoingText: 'Knovvu',
-          outgoingTextColor: '',
-          messageColor: '',
-          messageBoxColor: '',
+          outgoingTextColor: '#7f81ae',
+          messageColor: '#FCFBF7',
+          messageBoxColor: '#7f81ae',
           //bodyColorOrImage: { type: 'image', value: 'https://i.pinimg.com/550x/4a/6f/59/4a6f59296f90c11d77744720ca10d1af.jpg' },
           bodyColorOrImage: { type: 'color', value: '#7f81ae' },
           firsIcon: { type: 'component', value: require('./images/knovvu_logo.png') },

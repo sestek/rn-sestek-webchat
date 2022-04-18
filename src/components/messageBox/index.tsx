@@ -10,12 +10,15 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
     console.log(props.activity)
 
+    const { messageBoxColor, messageColor } = props.customizeConfiguration;
+
     const [activeSlide, setActiveSlide] = useState<number>(0);
     const changeActiveSlide = (number: number) => setActiveSlide(number);
 
     var positionCls = [
         styles.rceMbox,
         props.position === 'right' && styles.rceMboxRight,
+        messageColor ? { backgroundColor: messageColor } : {}
     ];
     var thatAbsoluteTime = props.type !== 'text' && props.type !== 'file' && !(props.type === 'location' && props.activity.text || props.activity.message);
 
@@ -29,7 +32,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         return (
             <>
                 {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.images?.map((image: any, index: number) =>
-                    <Image key={index} source={{ url: image.url }} style={{ width: '100%', height: 300, marginBottom: 10 }} />
+                    <Image key={index} source={{ url: image.url }} style={{ width: '100%', height: 300, marginBottom: 10,backgroundColor:'red' }} />
                 )}
 
                 {props.type === 'text' &&
@@ -40,7 +43,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     </Text>}
 
                 {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.buttons?.map((button: any, index: number) =>
-                    <TouchableOpacity key={index} onPress={() => onPressButton(button?.value || button?.title)} style={styles.rceMButton}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() => onPressButton(button?.value || button?.title)}
+                        style={[styles.rceMButton, messageBoxColor ? { backgroundColor: messageBoxColor } : {}]}
+                    >
                         <Text style={styles.rceMButtonText}>{button?.title}</Text>
                     </TouchableOpacity>
                 )}
