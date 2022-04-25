@@ -1,7 +1,7 @@
-import type PropsCustomizeConfiguration from "./propsCustomizeConfiguration";
-import type PropsDefaultConfiguration from "./propsDefaultConfiguration";
+import type PropsCustomizeConfiguration from './propsCustomizeConfiguration';
+import type PropsDefaultConfiguration from './propsDefaultConfiguration';
 
 export default interface PropsChatModal {
-    defaultConfiguration: PropsDefaultConfiguration;
-    customizeConfiguration: PropsCustomizeConfiguration;
+  defaultConfiguration: PropsDefaultConfiguration;
+  customizeConfiguration: PropsCustomizeConfiguration;
 }
