@@ -4,4 +4,4 @@ export default interface PropsAvatar {
   src: any;
   alt?: string;
   sideElement?: any;
-}
+};

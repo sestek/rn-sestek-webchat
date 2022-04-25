@@ -12,7 +12,7 @@ export default interface PropsMessageBoxComponent {
   onTitleClick?: () => void;
   onForwardClick?: () => void;
   date?: Date;
-  data?: {};
+  data?: null;
   onClick?: () => void;
   onOpen?: () => void;
   onDownload?: () => void;
