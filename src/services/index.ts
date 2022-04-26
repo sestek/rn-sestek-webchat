@@ -1,4 +1,4 @@
-import GeneralManager from "./general";
-import SignalRClient from "./signalr";
+import GeneralManager from './general';
+import SignalRClient from './signalr';
 
 export { GeneralManager, SignalRClient };
