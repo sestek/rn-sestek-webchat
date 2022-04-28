@@ -28,9 +28,10 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                 {props.messageList.slice(1).map((x: any, key: number) =>
                     <MessageBox
                         {...props}
+                        modules={props.modules}
                         key={key}
                         position={x.channel ? 'left' : 'right'}
-                        type={'text'}
+                        type={x?.type || 'text'}
                         activity={x}
                         status={null}
                         title={getUserName(x?.channel)}

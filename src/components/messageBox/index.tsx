@@ -5,10 +5,9 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { format } from 'timeago.js';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import AudioComponent from './audio';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
-
-    console.log(props.activity)
 
     const { messageBoxColor, messageColor } = props.customizeConfiguration;
 
@@ -20,7 +19,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         props.position === 'right' && styles.rceMboxRight,
         messageColor ? { backgroundColor: messageColor } : {}
     ];
-    var thatAbsoluteTime = props.type !== 'text' && props.type !== 'file' && !(props.type === 'location' && props.activity.text || props.activity.message);
+    var thatAbsoluteTime = props.type !== 'text' && props.type !== 'file' && !(props.type === 'location' && (props.activity.text || props.activity.message));
 
 
     const onPressButton = (text?: string) => {
@@ -32,10 +31,10 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         return (
             <>
                 {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.images?.map((image: any, index: number) =>
-                    <Image key={index} source={{ url: image.url }} style={{ width: '100%', height: 300, marginBottom: 10,backgroundColor:'red' }} />
+                    <Image key={index} source={{ url: image.url }} style={{ width: '100%', height: 300, marginBottom: 10, backgroundColor: 'red' }} />
                 )}
 
-                {props.type === 'text' &&
+                {(props.type === 'text' || props.type === 'message') &&
                     <Text
                         style={styles.rceMboxText}>
                         {props.activity.text || props.activity.message}
@@ -80,6 +79,14 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         );
     }
 
+    const renderItemAudio = () => {
+        return (
+            <>
+                <AudioComponent url={props.activity?.message} modules={props.modules} />
+            </>
+        );
+    }
+
     const renderCarouselPagination = () => {
         return (
             <Pagination
@@ -113,7 +120,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                             <View
                                 style={[
                                     styles.rceMboxTitle,
-                                    props.type === 'text' && styles.rceMboxTitleClear,
+                                    (props.type === 'text' || props.type === 'message') && styles.rceMboxTitleClear,
                                 ]}
                             >
                                 {
@@ -160,9 +167,10 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
                         {props.activity?.attachmentLayout !== "carousel" && renderItemMessage(props.activity?.attachments)}
 
+                        {props.type === "audio" && renderItemAudio(props.activity)}
+
                         <View
                             style={[
-                                styles.rceMboxTime,
                                 thatAbsoluteTime && styles.rceMboxTimeBlock
                             ]}>
                             <Text
@@ -185,7 +193,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
 MessageBox.defaultProps = {
     position: 'left',
-    type: 'text',
+    type: 'message',
     activity: null,
     title: 'SYSTEM',
     titleColor: 'black',

@@ -10,7 +10,7 @@ export default class GeneralManager {
     }
 
     static getWebchatHost() {
-        return `http://${Platform.OS !== "ios" ? "10.0.2.2" : "localhost"}:55020/chathub`;
+        return `http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`;
     }
 
     static createUUID() {

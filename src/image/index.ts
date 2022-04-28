@@ -4,6 +4,9 @@ const MultiplyIcon = require('./multiply.png');
 const RobotIcon = require('./robot.png');
 const SendIcon = require('./send.png');
 const VoiceIcon = require('./voice.png');
+const RecordInIcon = require('./record_in.png');
+const RecordOutIcon = require('./record_out.png');
+const PlayIcon = require('./play.png');
 
 export {
     ChatIcon,
@@ -11,5 +14,8 @@ export {
     MultiplyIcon,
     RobotIcon,
     SendIcon,
-    VoiceIcon
+    VoiceIcon,
+    RecordInIcon,
+    RecordOutIcon,
+    PlayIcon
 };

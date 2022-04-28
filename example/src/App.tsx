@@ -1,8 +1,10 @@
-import * as React from 'react';
-import { useRef } from 'react';
-import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, View, Text, Image, Pressable, Platform } from 'react-native';
 import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import RNFetchBlob from 'react-native-fetch-blob';
+
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
@@ -34,6 +36,12 @@ export default function App() {
     modalRef.current?.triggerVisible();
   }
 
+  const pressGetMessageList = () => {
+    const data = modalRef.current?.messageList;
+    console.log(JSON.stringify(data));
+  }
+
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -54,7 +62,24 @@ export default function App() {
         <Pressable style={styles.button} onPress={pressTriggerVisible}>
           <Text style={styles.text}>Trigger Visible</Text>
         </Pressable>
+        <Pressable style={styles.button} onPress={pressGetMessageList}>
+          <Text style={styles.text}>Get Message Data</Text>
+        </Pressable>
       </View>
+      {/*<View style={{ flex: 1, flexDirection: 'row' }}>
+        <Pressable style={[styles.button, styles.buttonRow]} onPress={() => recorder.onStartRecord()}>
+          <Text style={styles.text}>Start Record</Text>
+        </Pressable>
+        <Pressable style={[styles.button, styles.buttonRow]} onPress={() => recorder.onStopRecord()}>
+          <Text style={styles.text}>Stop Record</Text>
+        </Pressable>
+        <Pressable style={[styles.button, styles.buttonRow]} onPress={() => {
+          recorder.onStartPlay();
+          //'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+        }}>
+          <Text style={styles.text}>Record Play</Text>
+        </Pressable>
+      </View>*/}
       <View style={{ flex: 0.5, justifyContent: 'center' }}>
         <Text style={{ margin: 20, fontSize: 12, fontWeight: '100' }}>
           Sestek is a global technology company helping organizations with
@@ -65,12 +90,15 @@ export default function App() {
       </View>
       <FlashMessage position="top" />
       <ChatModal
+        url={`http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`}
+        modules={{ AudioRecorderPlayer: AudioRecorderPlayer, RNFS: RNFetchBlob }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
           tenant: 'ArabBank',
           projectName: 'ArabBank',
-          channel: 'NdaInfoBip'
+          channel: 'NdaInfoBip',
+          clientId: "mobile-testing",
         }}
         customizeConfiguration={{
           headerColor: '#7f81ae',
@@ -120,6 +148,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: 'white',
     marginBottom: 10
+  },
+  buttonRow: {
+    fontSize: 5,
+    margin: 5,
+    maxHeight: 75,
+    maxWidth: 125,
   },
   text: {
     fontSize: 16,

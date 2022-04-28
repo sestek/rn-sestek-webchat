@@ -76,12 +76,6 @@ export default StyleSheet.create({
     },
 
     rceMboxTime: {
-        position: 'absolute',
-        right: -4,
-        bottom: -14,
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'row',
     },
 
     rceMboxTimeText: {
@@ -99,7 +93,7 @@ export default StyleSheet.create({
         marginLeft: -6,
         paddingTop: 5,
         paddingRight: 3,
-        paddingBottom: 2,
+        paddingBottom: 0,
         // backgroundColor: linear-gradient(to top, rgba(0,0,0,0.33), transparent),
         borderBottomLeftRadius: 5,
         borderBottomRightRadius: 5,

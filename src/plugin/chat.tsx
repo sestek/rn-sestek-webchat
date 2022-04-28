@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useCallback, useImperativeHandle, forwardRef, useRef } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
-import ModalComponent from '../components/modal';
+import ModalComponent, { ModalCompRef } from '../components/modal';
 import { ChatIcon } from '../image';
 import type { PropsChatModal } from '../types';
 
@@ -10,6 +10,7 @@ export interface ChatModalRef {
   startConversation: () => void;
   endConversation: () => void;
   conversationStatus: boolean;
+  messageList: any;
 }
 
 let sessionId = GeneralManager.createUUID();
@@ -17,11 +18,12 @@ let client = new SignalRClient(GeneralManager.getWebchatHost());
 
 export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) => {
 
+  const modalRef = useRef<ModalCompRef>(null);
   const [start, setStart] = useState<boolean>(false);
   const startConversation = () => {
     if (!start) {
       sessionId = GeneralManager.createUUID();
-      client = new SignalRClient(GeneralManager.getWebchatHost());
+      client = new SignalRClient(props.url);
     }
     setStart(true);
     setVisible(true);
@@ -46,7 +48,11 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
     endConversation: () => {
       endConversation();
     },
-    conversationStatus: start
+    getAllMessages: () => {
+      return
+    },
+    conversationStatus: start,
+    messageList: modalRef.current?.messageList
   }));
 
   const { firstColor, firstSize, firsIcon } = props.customizeConfiguration;
@@ -72,6 +78,9 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
       </View>
       {start && (
         <ModalComponent
+          ref={modalRef}
+          url={props.url}
+          modules={props.modules}
           customizeConfiguration={props.customizeConfiguration}
           defaultConfiguration={props.defaultConfiguration}
           visible={visible}

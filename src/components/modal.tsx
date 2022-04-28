@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { forwardRef, useState, useImperativeHandle } from 'react';
 import { Alert, Modal, View, ImageBackground } from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from '../types';
@@ -7,21 +7,31 @@ import FooterComponent from './footer';
 import HeaderComponent from './header';
 import { styles } from './modal-style';
 
-const ModalComponent: FC<PropsModalComponent> = (props) => {
+export interface ModalCompRef {
+    messageList: any;
+}
+
+const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>((props, ref) => {
 
     const [inputData, setInputData] = useState<string>("");
     const changeInputData = (text: string) => setInputData(text);
 
 
-    const [messageList, sendMessage] = useChat({
+    const [messageList, sendMessage, sendAudio] = useChat({
+        url: props?.url,
         defaultConfiguration: props.defaultConfiguration,
         messages: [],
         sessionId: props.sessionId,
-        client: props.client
+        client: props.client,
+        rnfs: props.modules.RNFS
     });
 
     //console.log(JSON.stringify(messageList));
     const { bodyColorOrImage, headerColor, headerText, bottomColor, bottomInputText } = props.customizeConfiguration;
+
+    useImperativeHandle(ref, () => ({
+        messageList: messageList
+    }));
 
     return (
         <Modal
@@ -39,6 +49,7 @@ const ModalComponent: FC<PropsModalComponent> = (props) => {
                     {bodyColorOrImage?.type == "image" &&
                         <ImageBackground source={{ uri: bodyColorOrImage?.value }} style={{ width: '100%', height: '100%' }} resizeMode="stretch">
                             <BodyComponent
+                                modules={props.modules}
                                 customizeConfiguration={props.customizeConfiguration}
                                 messageList={messageList}
                                 changeInputData={changeInputData}
@@ -47,6 +58,7 @@ const ModalComponent: FC<PropsModalComponent> = (props) => {
                         </ImageBackground>}
                     {bodyColorOrImage?.type != "image" &&
                         <BodyComponent
+                            modules={props.modules}
                             customizeConfiguration={props.customizeConfiguration}
                             messageList={messageList}
                             changeInputData={changeInputData}
@@ -59,12 +71,13 @@ const ModalComponent: FC<PropsModalComponent> = (props) => {
                         inputData={inputData}
                         changeInputData={changeInputData}
                         sendMessage={sendMessage}
+                        sendAudio={sendAudio}
                         placeholderText={bottomInputText}
                     />
                 </View>
             </View>
         </Modal >
     )
-};
+});
 
 export default ModalComponent;

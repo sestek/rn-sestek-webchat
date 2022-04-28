@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
 
-
-const useChat = ({ defaultConfiguration, messages, sessionId, client }: PropsUseChat) => {
+const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url }: PropsUseChat) => {
 
 
     const [messageList, setMessageList] = useState<any>(messages || []);
@@ -40,7 +39,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client }: PropsUse
         });
     }
 
-    const sendMessage = async (message: any) => {
+    const sendMessage = async (message: string, bot: boolean = false) => {
         addMessageList({
             timestamp: new Date().getTime(),
             message,
@@ -48,7 +47,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client }: PropsUse
             customActionData: '',
             clientId: defaultConfiguration.clientId,
             tenant: defaultConfiguration.tenant,
-            channel: defaultConfiguration.channel,
+            channel: bot ? null : defaultConfiguration.channel,
             project: defaultConfiguration.projectName,
             conversationId: sessionId,
             fullName: defaultConfiguration.fullName
@@ -64,6 +63,46 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client }: PropsUse
             defaultConfiguration.tenant,
             defaultConfiguration.fullName
         );
+    }
+
+    const sendAudio = async (url: string, filename: string, data: string) => {
+
+        addMessageList({
+            timestamp: new Date().getTime(),
+            type: 'audio',
+            message: url,
+            customAction: '',
+            customActionData: '',
+            clientId: defaultConfiguration.clientId,
+            tenant: defaultConfiguration.tenant,
+            channel: defaultConfiguration.channel,
+            project: defaultConfiguration.projectName,
+            conversationId: sessionId,
+            fullName: defaultConfiguration.fullName
+        });
+
+        const formData = new Array();
+        formData.push({ name: 'audio', data: data, filename: filename, type: 'audio/' + filename.split(".")[1] });
+        formData.push({ name: "user", data: sessionId });
+        formData.push({ name: "project", data: defaultConfiguration.projectName || "" });
+        formData.push({ name: "clientId", data: defaultConfiguration.clientId || "" });
+        formData.push({ name: "tenant", data: defaultConfiguration.tenant || "" });
+        formData.push({ name: "fullName", data: defaultConfiguration.fullName || "" });
+        formData.push({ name: "customAction", data: defaultConfiguration.customAction || "" });
+        formData.push({ name: "customActionData", data: defaultConfiguration.customActionData || "" });
+
+        const replaceLink = url.replace('chathub', 'Home/SendAudio');
+
+        rnfs.fetch('POST', replaceLink, {
+            'Content-Type': 'multipart/form-data',
+            'Accept': 'application/json'
+        }, formData).then(async (resp: any) => {
+            //console.log(await resp.base64())
+            const message = JSON.parse(resp?.data)?.message?.replace(/<\/?[^>]+(>|$)/g, "");
+            sendMessage(message, true);
+        }).catch((err: any) => {
+            console.log(err)
+        })
     }
 
     const sendConversationStart = async () => {
@@ -91,7 +130,8 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client }: PropsUse
 
     return [
         messageList,
-        sendMessage
+        sendMessage,
+        sendAudio
     ]
 }
 
