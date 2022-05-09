@@ -6,7 +6,7 @@ import { PlayIcon } from '../../image';
 
 const AudioComponent: FC<PropsAudio> = (props) => {
     const [stateRecord, setStateRecord] = useState<any>({ playTime: 0, duration: 0 });
-    const [recorder, setRecorder] = useState<Recorder>(new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS));
+    const [recorder] = useState<Recorder>(new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS));
     const [start, setStart] = useState<boolean>(false);
     const triggerStart = () => setStart(old => !old);
 
@@ -18,14 +18,14 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     }, [stateRecord])
 
     const onPlayPause = async () => {
-        if(start){
+        if (start) {
             await recorder.audioRecorderPlayer.pausePlayer();
             triggerStart();
             return;
         }
-        const msg = await recorder.audioRecorderPlayer.startPlayer(props.url);
+        await recorder.audioRecorderPlayer.startPlayer(props.url);
         //console.log(props.url);
-        recorder.audioRecorderPlayer.addPlayBackListener((e, x) => {
+        recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
             recorder.currentPositionSec = e.currentPosition;
             recorder.currentDurationSec = e.duration;
             console.log(e, x)

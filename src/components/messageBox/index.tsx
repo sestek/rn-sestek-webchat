@@ -27,11 +27,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         props.changeInputData("");
     }
 
-    const renderItemMessage = (attachments: any) => {
+    const renderItemMessage = () => {
         return (
             <>
                 {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.images?.map((image: any, index: number) =>
-                    <Image key={index} source={{ url: image.url }} style={{ width: '100%', height: 300, marginBottom: 10, backgroundColor: 'red' }} />
+                    <Image key={index} source={{ uri: image.url }} style={{ width: '100%', height: 300, marginBottom: 10, backgroundColor: 'red' }} />
                 )}
 
                 {(props.type === 'text' || props.type === 'message') &&
@@ -58,7 +58,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         return (
             <View style={{ backgroundColor: 'white' }}>
                 {item?.content?.images?.map((image: any, index: number) =>
-                    <Image key={index} source={{ url: image.url }} style={{ width: '100%', height: 300, marginBottom: 10 }} />
+                    <Image key={index} source={{ uri: image.url }} style={{ width: '100%', height: 300, marginBottom: 10 }} />
                 )}
 
                 {
@@ -165,9 +165,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                             </View>
                         }
 
-                        {props.activity?.attachmentLayout !== "carousel" && renderItemMessage(props.activity?.attachments)}
+                        {props.activity?.attachmentLayout !== "carousel" && renderItemMessage()}
 
-                        {props.type === "audio" && renderItemAudio(props.activity)}
+                        {props.type === "audio" && renderItemAudio()}
 
                         <View
                             style={[

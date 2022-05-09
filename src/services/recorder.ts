@@ -25,7 +25,7 @@ class Recorder {
             android: `${dirs}/${GeneralManager.createUUID()}.mp3`,
         });
         await this.audioRecorderPlayer.startRecorder(path);
-        this.audioRecorderPlayer.addRecordBackListener((e) => {
+        this.audioRecorderPlayer.addRecordBackListener((e: any) => {
             this.recordSecs = e.currentPosition;
             this.recordTime = this.audioRecorderPlayer.mmssss(Math.floor(e.currentPosition));
             return;
@@ -46,7 +46,7 @@ class Recorder {
         console.log('onStartPlay');
         const msg = await this.audioRecorderPlayer.startPlayer(url);
         console.log(msg);
-        this.audioRecorderPlayer.addPlayBackListener((e) => {
+        this.audioRecorderPlayer.addPlayBackListener((e: any) => {
             this.currentPositionSec = e.currentPosition;
             this.currentDurationSec = e.duration;
             this.playTime = this.audioRecorderPlayer.mmssss(Math.floor(e.currentPosition));

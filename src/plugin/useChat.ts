@@ -31,7 +31,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
 
     const attachClientOnMessage = () => {
         client.onmessage((d: any, m: any) => {
-            //console.log(d, m);
+            console.log(d, m);
             if (typeof m !== "object") {
                 m = JSON.parse(m);
             }
@@ -65,12 +65,12 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
         );
     }
 
-    const sendAudio = async (url: string, filename: string, data: string) => {
+    const sendAudio = async (urlSet: string, filename: string, data: string) => {
 
         addMessageList({
             timestamp: new Date().getTime(),
             type: 'audio',
-            message: url,
+            message: urlSet,
             customAction: '',
             customActionData: '',
             clientId: defaultConfiguration.clientId,

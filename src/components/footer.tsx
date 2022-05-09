@@ -9,7 +9,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
     const recordEnabled = props.modules.AudioRecorderPlayer && props.modules.RNFS ? true : false;
 
-    const [recorder, setRecorder] = useState<Recorder | undefined>(recordEnabled ? new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS) : undefined);
+    const [recorder] = useState<Recorder | undefined>(recordEnabled ? new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS) : undefined);
     const [recordStart, setRecordStart] = useState<boolean>(false);
     const triggerRecord = async () => {
         console.log(recordStart);

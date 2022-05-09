@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useImperativeHandle } from 'react';
-import { Alert, Modal, View, ImageBackground } from 'react-native';
+import { Alert, Modal, View, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from '../types';
 import BodyComponent from './body';
@@ -41,7 +41,8 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>((props, ref
             onRequestClose={() => {
                 Alert.alert('Modal has now been closed.');
             }}>
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                pointerEvents="box-none">
                 <View style={[styles.header, headerColor ? { backgroundColor: headerColor } : {}]}>
                     <HeaderComponent {...props} headerText={headerText || undefined} />
                 </View>
@@ -75,7 +76,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>((props, ref
                         placeholderText={bottomInputText}
                     />
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         </Modal >
     )
 });
