@@ -1,23 +1,31 @@
 import React, { FC, useRef } from 'react';
 import { SafeAreaView, ScrollView } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
-import { styles } from './body-style';
-import MessageBox from './messageBox';
 import { RobotIcon } from '../image';
 import { GeneralManager } from '../services';
+import { styles } from './body-style';
+import MessageBox from './messageBox';
 
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
-
     const scrollView = useRef<ScrollView>(null);
-    const { incomingIcon, outgoingIcon, incomingText, outgoingText, outgoingTextColor, incomingTextColor } = props.customizeConfiguration;
+    const {
+        incomingIcon,
+        outgoingIcon,
+        incomingText,
+        outgoingText,
+        outgoingTextColor,
+        incomingTextColor,
+    } = props.customizeConfiguration;
 
     const getUserName = (channel: any) => {
-        return channel ? incomingText || "User" : outgoingText || "Chatbot";
-    }
+        return channel ? incomingText || 'User' : outgoingText || 'Chatbot';
+    };
 
     const getTextColor = (channel: any) => {
-        return channel ? incomingTextColor || "black" : outgoingTextColor || "black";
-    }
+        return channel
+            ? incomingTextColor || 'black'
+            : outgoingTextColor || 'black';
+    };
 
     return (
         <SafeAreaView style={styles.container}>
