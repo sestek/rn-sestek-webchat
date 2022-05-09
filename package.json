@@ -36,7 +36,9 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "sestek",
+    "chatbot"
   ],
   "repository": "https://github.com/sestek/rn-sestek-webchat",
   "author": "Tayfun Akgün <tayfun_akgun@sestek.com> (https://www.sestek.com)",
@@ -55,6 +57,7 @@
     "@types/jest": "^26.0.0",
     "@types/react": "^16.9.19",
     "@types/react-native": "0.62.13",
+    "@types/react-native-snap-carousel": "^3.8.5",
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.20.0",
     "commitlint": "^11.0.0",
@@ -153,7 +156,6 @@
   },
   "dependencies": {
     "@aspnet/signalr": "^1.0.27",
-    "@types/react-native-snap-carousel": "^3.8.5",
     "react-native-snap-carousel": "^3.9.1",
     "timeago.js": "^4.0.2"
   },
