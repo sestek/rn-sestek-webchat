@@ -95,6 +95,12 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
   );
 });
 
+ChatModal.defaultProps = {
+  url: 'https://nd-test-webchat.sestek.com/chathub'
+};
+
+//`https://nd-test-webchat.sestek.com/chathub`;
+
 
 const styles = StyleSheet.create({
   mainContainer: {

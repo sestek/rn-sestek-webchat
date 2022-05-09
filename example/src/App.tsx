@@ -90,7 +90,7 @@ export default function App() {
       </View>
       <FlashMessage position="top" />
       <ChatModal
-        url={`http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`}
+        //url={`http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`}
         modules={{ AudioRecorderPlayer: AudioRecorderPlayer, RNFS: RNFetchBlob }}
         ref={modalRef}
         defaultConfiguration={{

@@ -6,5 +6,5 @@ export default interface PropsChatModal {
     modules: PropsModules;
     defaultConfiguration: PropsDefaultConfiguration;
     customizeConfiguration: PropsCustomizeConfiguration;
-    url: string;
+    url?: string;
 }
