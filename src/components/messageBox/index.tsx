@@ -6,6 +6,7 @@ import { format } from 'timeago.js';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import AudioComponent from './audio';
+import Markdown from '../../plugin/markdown/index';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
@@ -35,11 +36,10 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 )}
 
                 {(props.type === 'text' || props.type === 'message') &&
-                    <Text
-                        style={styles.rceMboxText}>
+                    <Markdown style={styles.rceMboxText}>
                         {props.activity.text || props.activity.message}
                         {'\t\t\t\t\t'}
-                    </Text>}
+                    </Markdown>}
 
                 {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.buttons?.map((button: any, index: number) =>
                     <TouchableOpacity

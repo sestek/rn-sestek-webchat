@@ -922,6 +922,11 @@
   "resolved" "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.4.tgz"
   "version" "15.7.4"
 
+"@types/react-native-fetch-blob@^0.10.7":
+  "integrity" "sha512-9UTvmUvArimShiENeR3xnRO71NcZjpTi7AcFAIbhdTIfqQOO2OK/I/DpUPXcZF/erffLxOoRkoXrZOxyBBWKRQ=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-fetch-blob/-/react-native-fetch-blob-0.10.7.tgz"
+  "version" "0.10.7"
+
 "@types/react-native@^0.67.2":
   "integrity" "sha512-DyBkq7kw1UngzfvBr8WE41+hL/TWpxOZVaeABJz6Si7DmpT0Rq6vJCYjVaR85ViKSYJvIHpzxYfp0dD+lb3ctA=="
   "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.67.2.tgz"

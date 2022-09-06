@@ -23,7 +23,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
   const startConversation = () => {
     if (!start) {
       sessionId = GeneralManager.createUUID();
-      client = new SignalRClient(props.url);
+      client = new SignalRClient(props?.url || '');
     }
     setStart(true);
     setVisible(true);
@@ -79,7 +79,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
       {start && (
         <ModalComponent
           ref={modalRef}
-          url={props.url}
+          url={props?.url || ''}
           modules={props.modules}
           customizeConfiguration={props.customizeConfiguration}
           defaultConfiguration={props.defaultConfiguration}
@@ -96,6 +96,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
 });
 
 ChatModal.defaultProps = {
+  //url: 'http://192.168.20.72:55022/chathub'
   url: 'https://nd-test-webchat.sestek.com/chathub'
 };
 
