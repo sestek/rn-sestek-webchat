@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     paddingTop: 10,
   },
   header: {
-    height: 30,
+    height: 40,
     marginTop: GeneralManager.getMobileTopBottom('top'),
     backgroundColor: GeneralManager.getColorAndText().backgroundColor,
     borderTopLeftRadius: 8,
