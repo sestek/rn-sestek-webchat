@@ -109,7 +109,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
         defaultConfiguration.customAction = 'startOfConversation';
         const startObj = {
             timestamp: new Date().getTime(),
-            message: 'hi',
+            message: '',
             customAction: 'startOfConversation',
             customActionData: defaultConfiguration.customActionData,
             clientId: defaultConfiguration.clientId,
