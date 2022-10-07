@@ -95,8 +95,8 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'BAC',
-          projectName: 'EN_PERSONAL_SHOPPER',
+          tenant: 'Hakan',
+          projectName: 'ChatBotMessages',
           channel: 'NdaInfoBip',
           clientId: "mobile-testing",
         }}

@@ -55,11 +55,11 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
     messageList: modalRef.current?.messageList
   }));
 
-  const { firstColor, firstSize, firsIcon } = props.customizeConfiguration;
+  const { firstColor, firstSize, firsIcon, firstIconHide } = props.customizeConfiguration;
 
   return (
     <>
-      <View style={styles.mainContainer}>
+      {!firstIconHide && <View style={styles.mainContainer}>
         <TouchableOpacity
           style={[
             styles.floatBottomRight,
@@ -75,7 +75,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
             source={GeneralManager.returnIconData(firsIcon?.type, firsIcon?.value, ChatIcon)}
           />
         </TouchableOpacity>
-      </View>
+      </View>}
       {start && (
         <ModalComponent
           ref={modalRef}

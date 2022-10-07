@@ -14,6 +14,7 @@ export default interface PropsCustomizeConfiguration {
   messageColor?: string;
   messageBoxColor?: string;
   bodyColorOrImage?: BodyColorOrImageType;
+  firstIconHide?:boolean;
   firsIcon?: IconType;
   firstColor?: string;
   firstSize?: number;

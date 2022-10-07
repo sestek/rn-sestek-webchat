@@ -1,8 +1,10 @@
 import React from 'react';
 
 import {
+    Alert,
     Falsy,
     Image,
+    Linking,
     RecursiveArray,
     RegisteredStyle,
     Text,
@@ -19,12 +21,18 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
     const LINK_INSIDE = '(?:\\[[^\\]]*\\]|[^\\]]|\\](?=[^\\[]*\\]))*';
     const LINK_HREF_AND_TITLE =
         "\\s*<?([^\\s]*?)>?(?:\\s+['\"]([\\s\\S]*?)['\"])?\\s*";
-    var pressHandler = function (target: any) {
-        if (opts.onLink) {
+    var pressHandler = async function (target: any) {
+        /*if (opts.onLink) {
             opts.onLink(target).catch(function (error: { message: string; }) {
                 console.log('There has been a problem with this action. ' + error.message);
                 throw error;
             });
+        }*/
+        const supported = await Linking.canOpenURL(target);
+        if (supported) {
+            await Linking.openURL(target);
+        } else {
+            Alert.alert(`Don't know how to open this URL: ${target}`);
         }
     };
     var parseInline = function (parse: (arg0: any, arg1: any) => any, content: any, state: { inline: boolean; }) {
