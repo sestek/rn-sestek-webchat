@@ -44,7 +44,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>((props, ref
             <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 pointerEvents="box-none">
                 <View style={[styles.header, headerColor ? { backgroundColor: headerColor } : {}]}>
-                    <HeaderComponent {...props} headerText={headerText || undefined} />
+                    <HeaderComponent {...props} headerText={headerText || undefined} hideIcon={props.customizeConfiguration.hideIcon} closeIcon={props.customizeConfiguration.closeIcon} />
                 </View>
                 <View style={{ flex: 1, backgroundColor: bodyColorOrImage?.type == "color" ? bodyColorOrImage.value : '#fff' }}>
                     {bodyColorOrImage?.type == "image" &&

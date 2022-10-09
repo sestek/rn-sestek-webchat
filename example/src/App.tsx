@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { StyleSheet, View, Text, Image, Pressable, Platform } from 'react-native';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
@@ -95,8 +95,8 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'ArabBank',
-          projectName: 'ArabBank',
+          tenant: 'Hakan',
+          projectName: 'ChatBotMessages',
           channel: 'NdaInfoBip',
           clientId: "mobile-testing",
         }}

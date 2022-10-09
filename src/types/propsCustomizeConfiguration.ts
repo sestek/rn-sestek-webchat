@@ -14,9 +14,12 @@ export default interface PropsCustomizeConfiguration {
   messageColor?: string;
   messageBoxColor?: string;
   bodyColorOrImage?: BodyColorOrImageType;
+  firstIconHide?:boolean;
   firsIcon?: IconType;
   firstColor?: string;
   firstSize?: number;
+  closeIcon?: any;
+  hideIcon?: any;
 }
 
 interface BodyColorOrImageType {
@@ -24,7 +27,7 @@ interface BodyColorOrImageType {
   value: any;
 }
 
-interface IconType {
+export interface IconType {
   type: 'uri' | 'component';
   value: any;
 }

@@ -4,14 +4,16 @@ import type { PropsHeaderComponent } from 'src/types';
 import { MinusIcon, MultiplyIcon } from '../image';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
+  const CloseIcon = props.closeIcon;
+  const HideIcon = props.hideIcon;
   return (
     <View style={{ flex: 1, display: 'flex', flexDirection: 'row' }}>
       <View style={{ flex: 1 }}>
         <Text
           style={{
             flex: 1,
+            paddingTop: 8,
             paddingLeft: 10,
-            textAlignVertical: 'center',
             color: 'white',
             fontWeight: 'bold',
             fontSize: 18,
@@ -21,16 +23,19 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
         </Text>
       </View>
       <TouchableOpacity onPress={() => props.closeModal()}>
-        <Image
-          style={{ width: 20, height: 20, margin: 5 }}
-          source={MinusIcon}
-        />
+        {props.closeIcon ? <CloseIcon /> :
+          <Image
+            style={{ width: 20, height: 20, margin: 5 }}
+            source={MinusIcon}
+          />}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => props.closeConversation()}>
-        <Image
-          style={{ width: 20, height: 20, margin: 5 }}
-          source={MultiplyIcon}
-        />
+        {props.hideIcon ? <HideIcon /> :
+          <Image
+            style={{ width: 20, height: 20, margin: 5 }}
+            source={MultiplyIcon}
+          />
+        }
       </TouchableOpacity>
     </View>
   );
