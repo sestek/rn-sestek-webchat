@@ -146,9 +146,11 @@ export default StyleSheet.create({
         borderRadius: 3,
     },
     tableHeader: {
-        backgroundColor: '#222222',
+        backgroundColor:'#e2e2de',
         flexDirection: 'row',
         justifyContent: 'space-around',
+        borderBottomWidth:1,
+        borderColor:'black'
     },
     tableHeaderCell: {
         color: '#ffffff',
@@ -177,4 +179,5 @@ export default StyleSheet.create({
         borderColor: '#222222',
         borderBottomWidth: 1,
     },
+
 });
