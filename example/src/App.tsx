@@ -38,7 +38,7 @@ export default function App() {
 
   const pressGetMessageList = () => {
     const data = modalRef.current?.messageList;
-    console.log(JSON.stringify(data));
+    //console.log(JSON.stringify(data));
   }
 
 
@@ -95,8 +95,8 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'Hakan',
-          projectName: 'ChatBotMessages',
+          tenant: 'Default',
+          projectName: 'GocIdaresi_TR',
           channel: 'NdaInfoBip',
           clientId: "mobile-testing",
         }}

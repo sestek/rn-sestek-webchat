@@ -7,6 +7,7 @@ const VoiceIcon = require('./voice.png');
 const RecordInIcon = require('./record_in.png');
 const RecordOutIcon = require('./record_out.png');
 const PlayIcon = require('./play.png');
+const PauseIcon = require('./pause.png');
 
 export {
     ChatIcon,
@@ -17,5 +18,6 @@ export {
     VoiceIcon,
     RecordInIcon,
     RecordOutIcon,
-    PlayIcon
+    PlayIcon,
+    PauseIcon
 };

@@ -31,7 +31,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
 
     const attachClientOnMessage = () => {
         client.onmessage((d: any, m: any) => {
-            console.log(d, m);
+            //console.log(d, m);
             if (typeof m !== "object") {
                 m = JSON.parse(m);
             }
@@ -101,7 +101,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
             const message = JSON.parse(resp?.data)?.message?.replace(/<\/?[^>]+(>|$)/g, "");
             sendMessage(message, true);
         }).catch((err: any) => {
-            console.log(err)
+            //console.log(err)
         })
     }
 

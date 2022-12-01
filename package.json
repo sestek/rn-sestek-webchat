@@ -1,6 +1,6 @@
 {
   "name": "rn-sestek-webchat",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "React Native Sestek Webchat Plugin",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -158,8 +158,7 @@
     "husky": "^8.0.1",
     "lodash": "^4.17.21",
     "react-native-snap-carousel": "^4.0.0-beta.6",
-    "simple-markdown": "^0.7.3",
-    "timeago.js": "^4.0.2"
+    "simple-markdown": "^0.7.3"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [

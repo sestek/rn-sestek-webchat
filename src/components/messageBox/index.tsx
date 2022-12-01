@@ -2,11 +2,11 @@ import React, { FC, useState } from 'react';
 import styles from './style';
 import Avatar from './avatar';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { format } from 'timeago.js';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import AudioComponent from './audio';
 import Markdown from '../../plugin/markdown/index';
+import { Recorder } from '../../services';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
@@ -80,9 +80,12 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     }
 
     const renderItemAudio = () => {
+        let url = props.activity?.message;
+
+        if (props.activity?.channelData?.AudioFromTts?.Data) url = props.activity.channelData.AudioFromTts.Data;
         return (
             <>
-                <AudioComponent url={props.activity?.message} modules={props.modules} />
+                <AudioComponent url={url && url.length > 1000 ? 'file://' + new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS).saveLocalFileAudio(url) : url} modules={props.modules} />
             </>
         );
     }
@@ -167,7 +170,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
                         {props.activity?.attachmentLayout !== "carousel" && renderItemMessage()}
 
-                        {props.type === "audio" && renderItemAudio()}
+                        {(props.type === "audio" || props.activity?.channelData?.AudioFromTts) && renderItemAudio()}
 
                         <View
                             style={[
@@ -179,7 +182,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                                     props.activity?.timestamp &&
                                     (
                                         props.dateString ||
-                                        format(props.activity?.timestamp)
+                                        new Date(props.activity?.timestamp).toLocaleString()
                                     )
                                 }
                             </Text>
@@ -206,4 +209,8 @@ MessageBox.defaultProps = {
     renderAddCmp: null,
 };
 
-export default MessageBox;
+const customComparator = (prevProps: PropsMessageBoxComponent, nextProps: PropsMessageBoxComponent) => {
+    return JSON.stringify(nextProps.activity) === JSON.stringify(prevProps.activity);
+};
+
+export default React.memo(MessageBox, customComparator);

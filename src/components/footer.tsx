@@ -12,10 +12,10 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     const [recorder] = useState<Recorder | undefined>(recordEnabled ? new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS) : undefined);
     const [recordStart, setRecordStart] = useState<boolean>(false);
     const triggerRecord = async () => {
-        console.log(recordStart);
         if (recordStart) {
             var result = await recorder?.onStopRecord();
             const dirFile = result?.url.split('/');
+            console.log('TEST', dirFile[dirFile.length - 1]);
             //const uri = props.modules.RNFS.fs.dirs.CacheDir + '/' + dirFile[dirFile.length - 1];
             props.sendAudio(result?.url, dirFile[dirFile.length - 1], result?.data);
         }
