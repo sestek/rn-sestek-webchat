@@ -15,7 +15,6 @@ target 'RnSestekWebchatExample' do
   # use_flipper!({ 'Flipper' => '0.80.0' })
   pod 'react-native-fetch-blob',
     :path => '../node_modules/react-native-fetch-blob'
-  pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   post_install do |installer|
     flipper_post_install(installer)
