@@ -11,7 +11,7 @@ npm install rn-sestek-webchat --save
 #### Step 1: If you want to send audio you have to follow the steps below 
 
 ```
-npm install react-native-audio-recorder-player
+npm install react-native-audio-recorder-player@3.4.0
 ```
 
 To record and send audio, you need to install the package above and [click this link](https://www.npmjs.com/package/react-native-audio-recorder-player) to make the necessary integrations.
@@ -19,7 +19,7 @@ To record and send audio, you need to install the package above and [click this 
 #### Step 2: Install react-native-fetch-blob
 
 ```
-npm i --save react-native-fetch-blob
+npm i --save react-native-fetch-blob@0.10.8
 ```
 
 If you want to send audio, you must also install the "react-native-fetch-blob" package. Because it is needed to keep the recorded audio in the cache and listen again.
