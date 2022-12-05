@@ -80,8 +80,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     }
 
     const renderItemAudio = () => {
-        let url = props.activity?.message;
+        if(!props.modules.AudioRecorderPlayer || !props.modules.RNFS){
+            return null;
+        }
 
+        let url = props.activity?.message;
         if (props.activity?.channelData?.AudioFromTts?.Data) url = props.activity.channelData.AudioFromTts.Data;
         return (
             <>
