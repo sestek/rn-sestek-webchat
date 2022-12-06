@@ -10,6 +10,8 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     const [start, setStart] = useState<boolean>(false);
     const triggerStart = () => setStart(old => !old);
 
+    const RNSlider = props.modules.RNSlider;
+
     //GET DURATION
     useEffect(() => {
         getDuration();
@@ -67,7 +69,17 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     }
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ paddingRight: 5 }}>{stateRecord.playTime + ' / ' + stateRecord.duration}</Text>
+            {RNSlider ? <RNSlider
+                style={{ width: 200, height: 40 }}
+                value={stateRecord.playTime && parseInt(stateRecord.playTime.substring(4,5))}
+                minimumValue={0}
+                disabled
+                maximumValue={stateRecord.duration && parseInt(stateRecord.duration.substring(4,5))}
+                minimumTrackTintColor="#FFFFFF"
+                maximumTrackTintColor="#000000"
+            /> :
+                <Text style={{ paddingRight: 5 }}>{stateRecord.playTime + ' / ' + stateRecord.duration}</Text>
+            }
             <TouchableOpacity onPress={() => !start ? onPlayPlayer() : onPausePlayer()}>
                 <Image source={!start ? PlayIcon : PauseIcon} style={{ width: 25, height: 25 }} />
             </TouchableOpacity>

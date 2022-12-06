@@ -4,6 +4,7 @@ import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
+import Slider from '@react-native-community/slider';
 
 
 export default function App() {
@@ -91,7 +92,7 @@ export default function App() {
       <FlashMessage position="top" />
       <ChatModal
         //url={`http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`}
-        modules={{ AudioRecorderPlayer: AudioRecorderPlayer, RNFS: RNFetchBlob }}
+        modules={{ AudioRecorderPlayer: AudioRecorderPlayer, RNFS: RNFetchBlob, RNSlider: Slider }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
