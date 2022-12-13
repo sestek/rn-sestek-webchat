@@ -1,47 +1,45 @@
 import React, { useRef } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
-import FlashMessage, { showMessage } from "react-native-flash-message";
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Slider from '@react-native-community/slider';
-
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
 
   const pressStartConversation = () => {
     modalRef.current?.startConversation();
-  }
+  };
 
   const pressEndConversation = () => {
     if (!modalRef.current?.conversationStatus) {
       showMessage({
         backgroundColor: '#7f81ae',
         description: 'The conversation has already ended.',
-        message: 'Warning'
+        message: 'Warning',
       });
     }
     modalRef.current?.endConversation();
-  }
+  };
 
   const pressTriggerVisible = () => {
     if (!modalRef.current?.conversationStatus) {
       showMessage({
         backgroundColor: '#7f81ae',
         description: 'First you need to start the conversation.',
-        message: 'Warning'
+        message: 'Warning',
       });
       return;
     }
     modalRef.current?.triggerVisible();
-  }
+  };
 
   const pressGetMessageList = () => {
     const data = modalRef.current?.messageList;
     //console.log(JSON.stringify(data));
-  }
-
+  };
 
   return (
     <View style={styles.container}>
@@ -84,22 +82,27 @@ export default function App() {
       <View style={{ flex: 0.5, justifyContent: 'center' }}>
         <Text style={{ margin: 20, fontSize: 12, fontWeight: '100' }}>
           Sestek is a global technology company helping organizations with
-          Conversational Solutions to be data-driven, increase efficiency and deliver better experiences for their customers.
-          Sestek’s AI-powered solutions are build on text-to-speech, speech recognition,
-          natural language processing and voice biometrics technologies.
+          Conversational Solutions to be data-driven, increase efficiency and
+          deliver better experiences for their customers. Sestek’s AI-powered
+          solutions are build on text-to-speech, speech recognition, natural
+          language processing and voice biometrics technologies.
         </Text>
       </View>
       <FlashMessage position="top" />
       <ChatModal
         //url={`http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`}
-        modules={{ AudioRecorderPlayer: AudioRecorderPlayer, RNFS: RNFetchBlob, RNSlider: Slider }}
+        modules={{
+          AudioRecorderPlayer: AudioRecorderPlayer,
+          RNFS: RNFetchBlob,
+          RNSlider: Slider,
+        }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
           tenant: 'Default',
           projectName: 'GocIdaresi_TR',
           channel: 'NdaInfoBip',
-          clientId: "mobile-testing",
+          clientId: 'mobile-testing',
         }}
         customizeConfiguration={{
           headerColor: '#7f81ae',
@@ -108,19 +111,41 @@ export default function App() {
           bottomInputText: 'Bottom input text..',
           //bottomVoiceIcon: "<Cmp />",
           //bottomSendIcon: "<Cmp />",
-          incomingIcon: { type: 'uri', value: 'https://upload.wikimedia.org/wikipedia/commons/7/70/User_icon_BLACK-01.png' },
+          incomingIcon: {
+            type: 'uri',
+            value:
+              'https://upload.wikimedia.org/wikipedia/commons/7/70/User_icon_BLACK-01.png',
+          },
           incomingText: '',
           incomingTextColor: 'black',
-          outgoingIcon: { type: 'component', value: require('./images/knovvu_logo.png') },
+          outgoingIcon: {
+            type: 'component',
+            value: require('./images/knovvu_logo.png'),
+          },
           outgoingText: 'Knovvu',
           outgoingTextColor: '#7f81ae',
           messageColor: '#FCFBF7',
           messageBoxColor: '#7f81ae',
           //bodyColorOrImage: { type: 'image', value: 'https://i.pinimg.com/550x/4a/6f/59/4a6f59296f90c11d77744720ca10d1af.jpg' },
           bodyColorOrImage: { type: 'color', value: '#7f81ae' },
-          firsIcon: { type: 'component', value: require('./images/knovvu_logo.png') },
+          firsIcon: {
+            type: 'component',
+            value: require('./images/knovvu_logo.png'),
+          },
           firstColor: 'white',
           firstSize: 70,
+          leftMessageBoxColor:'white',
+          sliderMaximumTrackTintColor: 'gray',
+          sliderThumbTintColor:"blue",
+          sliderMinimumTrackTintColor:'pink',
+          sliderPauseImage: {
+            type: 'image',
+            value: require('../../src/image/pause2.png'),
+          },
+          sliderPlayImage: {
+            type:'image',
+            value: require('../../src/image/play2.png'),
+          },
         }}
       />
     </View>
@@ -148,7 +173,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
     backgroundColor: 'white',
-    marginBottom: 10
+    marginBottom: 10,
   },
   buttonRow: {
     fontSize: 5,

@@ -15,10 +15,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     const [activeSlide, setActiveSlide] = useState<number>(0);
     const changeActiveSlide = (number: number) => setActiveSlide(number);
 
+    const leftMessageBoxColorValue = props.customizeConfiguration.leftMessageBoxColor
     var positionCls = [
         styles.rceMbox,
         props.position === 'right' && styles.rceMboxRight,
-        messageColor ? { backgroundColor: messageColor } : {}
+        messageColor ? { backgroundColor: props.position === 'right'? messageColor : leftMessageBoxColorValue } : {}
     ];
     var thatAbsoluteTime = props.type !== 'text' && props.type !== 'file' && !(props.type === 'location' && (props.activity.text || props.activity.message));
 
@@ -88,7 +89,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         if (props.activity?.channelData?.AudioFromTts?.Data) url = props.activity.channelData.AudioFromTts.Data;
         return (
             <>
-                <AudioComponent url={url && url.length > 1000 ? 'file://' + new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS).saveLocalFileAudio(url) : url} modules={props.modules} />
+                <AudioComponent url={url && url.length > 1000 ? 'file://' + new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS).saveLocalFileAudio(url) : url} modules={props.modules} customizeConfiguration={props.customizeConfiguration} />
             </>
         );
     }

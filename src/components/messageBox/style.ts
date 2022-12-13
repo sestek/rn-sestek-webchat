@@ -29,7 +29,7 @@ export default StyleSheet.create({
     rceMbox: {
         backgroundColor: 'white',
         borderRadius: 10,
-        borderTopRightRadius: 0,
+        borderTopRightRadius: 10,
         marginLeft: 20,
         marginRight: 5,
         marginTop: 3,
@@ -63,7 +63,7 @@ export default StyleSheet.create({
         marginLeft: 5,
         marginRight: 20,
         borderTopRightRadius: 10,
-        borderTopLeftRadius: 0,
+        borderTopLeftRadius: 10,
         shadowOffset: {
             width: 5,
             height: 5,

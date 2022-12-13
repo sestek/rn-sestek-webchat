@@ -20,6 +20,12 @@ export default interface PropsCustomizeConfiguration {
   firstSize?: number;
   closeIcon?: any;
   hideIcon?: any;
+  leftMessageBoxColor?: string
+  sliderMinimumTrackTintColor?: string;
+  sliderMaximumTrackTintColor?: string;
+  sliderThumbTintColor?: string;
+  sliderPlayImage?: BodyColorOrImageType;
+  sliderPauseImage?: BodyColorOrImageType;
 }
 
 interface BodyColorOrImageType {

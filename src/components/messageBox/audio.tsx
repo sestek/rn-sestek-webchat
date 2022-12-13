@@ -1,94 +1,132 @@
 import React, { FC, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Recorder } from '../../services';
 import type { PropsAudio } from '../../types/';
-import { PlayIcon, PauseIcon } from '../../image';
+import { PlayIcon, PauseIcon, PlayIcon2, PauseIcon2 } from '../../image';
 
 const AudioComponent: FC<PropsAudio> = (props) => {
-    const [stateRecord, setStateRecord] = useState<any>({ playTime: "00:00:00", duration: "00:00:00" });
-    const [recorder] = useState<Recorder>(new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS));
-    const [start, setStart] = useState<boolean>(false);
-    const triggerStart = () => setStart(old => !old);
+  const [stateRecord, setStateRecord] = useState<any>({
+    playTime: '00:00:00',
+    duration: '00:00:00',
+  });
+  const [recorder] = useState<Recorder>(
+    new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS)
+  );
+  const [start, setStart] = useState<boolean>(false);
+  const triggerStart = () => setStart((old) => !old);
 
-    const RNSlider = props.modules.RNSlider;
+  const RNSlider = props.modules.RNSlider;
+  const AuidoProp = props.customizeConfiguration
 
-    //GET DURATION
-    useEffect(() => {
-        getDuration();
-    }, []);
+  //GET DURATION
+  useEffect(() => {
+    getDuration();
+  }, []);
 
-    const getDuration = async () => {
-        await recorder.audioRecorderPlayer.startPlayer(props.url);
-        recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
-            recorder.currentDurationSec = e.duration;
-            setStateRecord({
-                playTime: "00:00:00",
-                duration: recorder.audioRecorderPlayer.mmssss(Math.floor(e.duration))
-            })
-            recorder.audioRecorderPlayer.stopPlayer();
-            recorder.audioRecorderPlayer.removePlayBackListener();
-            return;
-        });
+  const getDuration = async () => {
+    await recorder.audioRecorderPlayer.startPlayer(props.url);
+    recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
+      recorder.currentDurationSec = e.duration;
+      setStateRecord({
+        playTime: '00:00:00',
+        duration: recorder.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+      });
+      recorder.audioRecorderPlayer.stopPlayer();
+      recorder.audioRecorderPlayer.removePlayBackListener();
+      return;
+    });
+  };
+
+  useEffect(() => {
+    if (
+      stateRecord.playTime === stateRecord.duration &&
+      stateRecord.playTime !== '00:00:00'
+    ) {
+      recorder.audioRecorderPlayer.stopPlayer();
+      recorder.audioRecorderPlayer.removePlayBackListener();
+      setStateRecord({
+        playTime: '00:00:00',
+        duration: stateRecord.duration,
+      });
+      triggerStart();
     }
+  }, [stateRecord]);
 
-    useEffect(() => {
-        if (stateRecord.playTime === stateRecord.duration && stateRecord.playTime !== "00:00:00") {
-            recorder.audioRecorderPlayer.stopPlayer();
-            recorder.audioRecorderPlayer.removePlayBackListener();
-            setStateRecord({
-                playTime: "00:00:00",
-                duration: stateRecord.duration
-            });
-            triggerStart();
-        }
-    }, [stateRecord])
-
-    const onPlayPlayer = async () => {
-        if (stateRecord.playTime !== "00:00:00") {
-            await recorder.audioRecorderPlayer.resumePlayer();
-        }
-        else {
-            await recorder.audioRecorderPlayer.startPlayer(props.url);
-        }
-        recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
-            recorder.currentPositionSec = e.currentPosition;
-            recorder.currentDurationSec = e.duration;
-            setStateRecord({
-                playTime: recorder.audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-                duration: recorder.audioRecorderPlayer.mmssss(Math.floor(e.duration))
-            })
-            return;
-        });
-        triggerStart();
+  const onPlayPlayer = async () => {
+    if (stateRecord.playTime !== '00:00:00') {
+      await recorder.audioRecorderPlayer.resumePlayer();
+    } else {
+      await recorder.audioRecorderPlayer.startPlayer(props.url);
     }
+    recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
+      recorder.currentPositionSec = e.currentPosition;
+      recorder.currentDurationSec = e.duration;
+      setStateRecord({
+        playTime: recorder.audioRecorderPlayer.mmssss(
+          Math.floor(e.currentPosition)
+        ),
+        duration: recorder.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+      });
+      return;
+    });
+    triggerStart();
+  };
 
-    const onPausePlayer = async () => {
-        recorder.audioRecorderPlayer.removePlayBackListener();
-        await recorder.audioRecorderPlayer.pausePlayer();
-        triggerStart();
-    }
-    return (
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            {RNSlider ? <RNSlider
-                style={{ width: 200, height: 40 }}
-                value={stateRecord.playTime && parseInt(stateRecord.playTime.substring(4,5))}
-                minimumValue={0}
-                disabled
-                maximumValue={stateRecord.duration && parseInt(stateRecord.duration.substring(4,5))}
-                minimumTrackTintColor="#FFFFFF"
-                maximumTrackTintColor="#000000"
-            /> :
-                <Text style={{ paddingRight: 5 }}>{stateRecord.playTime + ' / ' + stateRecord.duration}</Text>
-            }
-            <TouchableOpacity onPress={() => !start ? onPlayPlayer() : onPausePlayer()}>
-                <Image source={!start ? PlayIcon : PauseIcon} style={{ width: 25, height: 25 }} />
-            </TouchableOpacity>
-        </View>
-    );
-}
+  const onPausePlayer = async () => {
+    recorder.audioRecorderPlayer.removePlayBackListener();
+    await recorder.audioRecorderPlayer.pausePlayer();
+    triggerStart();
+  };
+
+  const PauseIconOrImage = AuidoProp.sliderPauseImage?.value ? AuidoProp.sliderPauseImage?.value  : PauseIcon2
+  const PlayIconOrImage = AuidoProp.sliderPlayImage?.value ? AuidoProp.sliderPlayImage?.value  : PlayIcon2
+
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+      }}
+    >
+      <TouchableOpacity
+        onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
+      >
+        <Image
+          source={!start ? PlayIconOrImage : PauseIconOrImage}
+          style={{ width: 25, height: 25}}
+        />
+      </TouchableOpacity>
+      {RNSlider ? (
+        <RNSlider
+          style={{margin:0,width: 230, transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }]}}
+          value={
+            stateRecord.playTime &&
+            parseInt(stateRecord.playTime.substring(4, 5))
+          }
+          minimumValue={0}
+          disabled
+          maximumValue={
+            stateRecord.duration &&
+            parseInt(stateRecord.duration.substring(4, 5))
+          }
+          minimumTrackTintColor= {AuidoProp.sliderMinimumTrackTintColor}
+          maximumTrackTintColor={AuidoProp.sliderMaximumTrackTintColor}
+          thumbTintColor={AuidoProp.sliderThumbTintColor}
+        />
+      ) : (
+        <Text style={{ paddingRight: 5 }}>
+          {stateRecord.playTime + ' / ' + stateRecord.duration}
+        </Text>
+      )}
+    </View>
+  );
+};
 
 AudioComponent.defaultProps = {
-    url: '',
+  url: '',
 };
 
 export default React.memo(AudioComponent);
+
