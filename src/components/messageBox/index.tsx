@@ -1,7 +1,7 @@
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './style';
 import Avatar from './avatar';
-import { View, Text, TouchableOpacity, Image, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Linking, Dimensions } from 'react-native';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import AudioComponent from './audio';
@@ -32,25 +32,70 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         props.changeInputData("");
     }
 
+    const [imageList, setImageList] = useState<any>([]);
+    const [cardList, setCardList] = useState<any>([]);
+    useEffect(() => {
+        if (Array.isArray(props.activity?.attachments)) {
+            if (props.activity?.attachments.length === 1) {
+                props.activity?.attachments[0]?.content?.images?.map((image: any) => {
+                    Image.getSize(image.url, (width: number, height: number) => {
+                        setImageList((prev: any) => [...prev, { url: image.url, width, height }])
+                    }, error => {
+                        console.log(error);
+                    })
+                });
+            }
+            if (props.activity.attachments.length > 1) {
+                props.activity.attachments.map((attach: any, key: number) => {
+                    setTimeout(function () {
+                        console.log(key);
+                        Image.getSize(attach?.content?.images[0].url, (width: number, height: number) => {
+                            setCardList((prev: any) => [...prev, {
+                                key,
+                                title: attach?.content?.title,
+                                subtitle: attach?.content?.subtitle,
+                                text: attach?.content?.text,
+                                url: attach?.content?.images[0].url,
+                                width,
+                                height,
+                                buttons: attach?.content?.buttons
+                            }])
+                        }, error => {
+                            console.log(error)
+                        })
+                    }, key * 400);
+                });
+            }
+        }
+    }, []);
+
     const renderItemMessage = () => {
         return (
             <>
-                {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.images?.map((image: any, index: number) =>
-                    <Image key={index} source={{ uri: image.url }} style={{ width: '100%', height: 300, marginBottom: 10, backgroundColor: 'red' }} />
+                {imageList.map((image: any, index: number) =>
+                    <Image
+                        key={index}
+                        source={{ uri: image.url }}
+                        style={{
+                            resizeMode: 'contain',
+                            width: image.width,
+                            height: image.height,
+                            maxWidth: Dimensions.get('screen').width * 0.8, marginBottom: 10
+                        }} />
                 )}
 
                 {(props.type === 'message' && props.activity?.attachments[0]?.content?.title) &&
-                    <Markdown style={styles.rceMboxText}>
+                    <Markdown styles={styles.rceMboxText}>
                         {props.activity?.attachments[0]?.content?.title}
                         {'\t\t\t\t\t'}
                     </Markdown>}
                 {(props.type === 'message' && props.activity?.attachments[0]?.content?.subtitle) &&
-                    <Markdown style={styles.rceMboxText}>
+                    <Markdown styles={styles.rceMboxText}>
                         {props.activity?.attachments[0]?.content?.subtitle}
                         {'\t\t\t\t\t'}
                     </Markdown>}
                 {((props.type === 'text' || props.type === 'message') && (props.activity.text || props.activity.message)) &&
-                    <Markdown style={styles.rceMboxText}>
+                    <Markdown styles={styles.rceMboxText}>
                         {props.activity.text || props.activity.message}
                         {'\t\t\t\t\t'}
                     </Markdown>}
@@ -66,7 +111,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                             ref={webViewRef}
                             style={{ height: 350 }}
                             onNavigationStateChange={(event: any) => {
-                                console.log(webViewRef)
                                 const uri = "https://www.google.com/maps/dir";
                                 if (webViewRef?.current?.stopLoading && event.url?.includes(uri)) {
                                     webViewRef?.current?.stopLoading();
@@ -96,21 +140,31 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
     const renderItemCarousel = ({ item }: any) => {
         return (
-            <View style={{ backgroundColor: 'white' }}>
-                {item?.content?.images?.map((image: any, index: number) =>
-                    <Image key={index} source={{ uri: image.url }} style={{ width: '100%', height: 300, marginBottom: 10 }} />
-                )}
+            <View key={item.key} style={{ backgroundColor: 'white' }}>
+                <Image
+                    source={{ uri: item.url }}
+                    style={{
+                        resizeMode: 'contain',
+                        width: '100%',
+                        height: 300,
+                        maxWidth: Dimensions.get('screen').width * 0.8, marginBottom: 10
+                    }} />
 
-                {
-                    item?.content?.text &&
-                    <Text
-                        style={styles.rceMboxText}>
-                        {item?.content?.text || ""}
-                        {'\t\t\t\t\t'}
-                    </Text>
-                }
 
-                {item?.content?.buttons?.map((button: any, index: number) =>
+                {item.title &&
+                    <Markdown styles={styles.rceMboxText}>
+                        {item.title}
+                    </Markdown>}
+                {item.subtitle &&
+                    <Markdown styles={styles.rceMboxText}>
+                        {item.subtitle}
+                    </Markdown>}
+                {item.text &&
+                    <Markdown styles={styles.rceMboxText}>
+                        {item.text}
+                    </Markdown>}
+
+                {item?.buttons?.map((button: any, index: number) =>
                     <TouchableOpacity key={index} onPress={() => onPressButton(button?.value || button?.title)} style={styles.rceMButton}>
                         <Text style={styles.rceMButtonText}>{button?.title}</Text>
                     </TouchableOpacity>
@@ -192,15 +246,15 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                             </View>
                         }
 
-                        {props.activity?.attachmentLayout === "carousel" &&
+                        {(props.activity?.attachmentLayout === "carousel" && cardList.length > 1) &&
                             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <View>
                                         <Carousel
                                             layout="tinder"
-                                            data={props.activity?.attachments}
+                                            data={cardList}
                                             renderItem={renderItemCarousel}
-                                            sliderWidth={400}
+                                            sliderWidth={250}
                                             itemWidth={250}
                                             inactiveSlideOpacity={0}
                                             onSnapToItem={(index) => changeActiveSlide(index)}
