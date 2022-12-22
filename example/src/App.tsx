@@ -5,6 +5,7 @@ import FlashMessage, { showMessage } from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
 import Slider from '@react-native-community/slider';
+import { WebView } from 'react-native-webview';
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
@@ -95,12 +96,13 @@ export default function App() {
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
           RNSlider: Slider,
+          RNWebView: WebView
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'Default',
-          projectName: 'GocIdaresi_TR',
+          tenant: 'BAC',
+          projectName: 'ResponseTypeTest',
           channel: 'NdaInfoBip',
           clientId: 'mobile-testing',
         }}
@@ -134,16 +136,16 @@ export default function App() {
           },
           firstColor: 'white',
           firstSize: 70,
-          leftMessageBoxColor:'white',
+          leftMessageBoxColor: 'white',
           sliderMaximumTrackTintColor: 'gray',
-          sliderThumbTintColor:"blue",
-          sliderMinimumTrackTintColor:'pink',
+          sliderThumbTintColor: "blue",
+          sliderMinimumTrackTintColor: 'pink',
           sliderPauseImage: {
             type: 'image',
             value: require('../../src/image/pause2.png'),
           },
           sliderPlayImage: {
-            type:'image',
+            type: 'image',
             value: require('../../src/image/play2.png'),
           },
         }}

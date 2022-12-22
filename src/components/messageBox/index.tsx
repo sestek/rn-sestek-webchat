@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './style';
 import Avatar from './avatar';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Linking } from 'react-native';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import AudioComponent from './audio';
@@ -12,6 +12,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
     const { messageBoxColor, messageColor } = props.customizeConfiguration;
 
+    const WebView = props.modules.RNWebView;
+
+    const webViewRef = useRef<any>();
     const [activeSlide, setActiveSlide] = useState<number>(0);
     const changeActiveSlide = (number: number) => setActiveSlide(number);
 
@@ -19,7 +22,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     var positionCls = [
         styles.rceMbox,
         props.position === 'right' && styles.rceMboxRight,
-        messageColor ? { backgroundColor: props.position === 'right'? messageColor : leftMessageBoxColorValue } : {}
+        messageColor ? { backgroundColor: props.position === 'right' ? messageColor : leftMessageBoxColorValue } : {}
     ];
     var thatAbsoluteTime = props.type !== 'text' && props.type !== 'file' && !(props.type === 'location' && (props.activity.text || props.activity.message));
 
@@ -36,11 +39,47 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     <Image key={index} source={{ uri: image.url }} style={{ width: '100%', height: 300, marginBottom: 10, backgroundColor: 'red' }} />
                 )}
 
-                {(props.type === 'text' || props.type === 'message') &&
+                {(props.type === 'message' && props.activity?.attachments[0]?.content?.title) &&
+                    <Markdown style={styles.rceMboxText}>
+                        {props.activity?.attachments[0]?.content?.title}
+                        {'\t\t\t\t\t'}
+                    </Markdown>}
+                {(props.type === 'message' && props.activity?.attachments[0]?.content?.subtitle) &&
+                    <Markdown style={styles.rceMboxText}>
+                        {props.activity?.attachments[0]?.content?.subtitle}
+                        {'\t\t\t\t\t'}
+                    </Markdown>}
+                {((props.type === 'text' || props.type === 'message') && (props.activity.text || props.activity.message)) &&
                     <Markdown style={styles.rceMboxText}>
                         {props.activity.text || props.activity.message}
                         {'\t\t\t\t\t'}
                     </Markdown>}
+
+                {(props.activity?.type === 'message' && props.activity?.attachments[0]?.content?.text) &&
+                    <Markdown style={styles.rceMboxText}>
+                        {props.activity?.attachments[0]?.content?.text}
+                        {'\t\t\t\t\t'}
+                    </Markdown>}
+                {(Array.isArray(props.activity.entities) && props.activity.entities[0]?.geo) &&
+                    <View style={{ height: 200, width: 350 }}>
+                        <WebView
+                            ref={webViewRef}
+                            style={{ height: 350 }}
+                            onNavigationStateChange={(event: any) => {
+                                console.log(webViewRef)
+                                const uri = "https://www.google.com/maps/dir";
+                                if (webViewRef?.current?.stopLoading && event.url?.includes(uri)) {
+                                    webViewRef?.current?.stopLoading();
+                                }
+                                Linking.openURL(event.url);
+                            }}
+                            source={{ html: `<iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=${props.activity.entities[0]?.geo.latitude},${props.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>` }} />
+                        <Markdown style={styles.rceMboxText}>
+                            {props.activity.entities[0]?.geo?.name}
+                            {props.activity.entities[0]?.address}
+                            {props.activity.entities[0]?.hasMap}
+                        </Markdown>
+                    </View>}
 
                 {Array.isArray(props.activity?.attachments) && props.activity?.attachments[0]?.content?.buttons?.map((button: any, index: number) =>
                     <TouchableOpacity
@@ -81,7 +120,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     }
 
     const renderItemAudio = () => {
-        if(!props.modules.AudioRecorderPlayer || !props.modules.RNFS){
+        if (!props.modules.AudioRecorderPlayer || !props.modules.RNFS) {
             return null;
         }
 

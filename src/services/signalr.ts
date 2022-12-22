@@ -53,7 +53,7 @@ class SignalRClient {
     };
 
     receiveMessage = async () => {
-        await this.connection.on('ReceiveMessage', (message: any) =>{ /*console.log(message)*/});
+        await this.connection.on('ReceiveMessage', (message: any) => { /*console.log(message)*/ });
     };
 
     reconnectAsync = async () => {

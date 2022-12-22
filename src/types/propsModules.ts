@@ -1,5 +1,6 @@
 export default interface PropsModules {
   AudioRecorderPlayer: any;
   RNFS: any;
-  RNSlider:any;
+  RNSlider: any;
+  RNWebView: any;
 }
