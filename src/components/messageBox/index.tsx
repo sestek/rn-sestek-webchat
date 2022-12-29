@@ -105,11 +105,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                         {props.activity?.attachments[0]?.content?.text}
                         {'\t\t\t\t\t'}
                     </Markdown>}
-                {(Array.isArray(props.activity.entities) && props.activity.entities[0]?.geo) &&
-                    <View style={{ height: 200, width: 350 }}>
+                {(WebView && Array.isArray(props.activity.entities) && props.activity.entities[0]?.geo) &&
+                    <View style={{ flex: 1, maxHeight: Dimensions.get('screen').height * 0.5 }}>
                         <WebView
                             ref={webViewRef}
-                            style={{ height: 350 }}
+                            style={{ height: 300, width: 300 }}
                             onNavigationStateChange={(event: any) => {
                                 const uri = "https://www.google.com/maps/dir";
                                 if (webViewRef?.current?.stopLoading && event.url?.includes(uri)) {
@@ -120,7 +120,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                             source={{ html: `<iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=${props.activity.entities[0]?.geo.latitude},${props.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>` }} />
                         <Markdown style={styles.rceMboxText}>
                             {props.activity.entities[0]?.geo?.name}
+                        </Markdown>
+                        <Markdown style={styles.rceMboxText}>
                             {props.activity.entities[0]?.address}
+                        </Markdown>
+                        <Markdown style={styles.rceMboxText}>
                             {props.activity.entities[0]?.hasMap}
                         </Markdown>
                     </View>}
@@ -165,7 +169,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     </Markdown>}
 
                 {item?.buttons?.map((button: any, index: number) =>
-                    <TouchableOpacity key={index} onPress={() => onPressButton(button?.value || button?.title)} style={styles.rceMButton}>
+                    <TouchableOpacity
+                        key={index}
+                        onPress={() => onPressButton(button?.value || button?.title)}
+                        style={[styles.rceMButton, messageBoxColor ? { backgroundColor: messageBoxColor } : {}]}
+                    >
                         <Text style={styles.rceMButtonText}>{button?.title}</Text>
                     </TouchableOpacity>
                 )}
