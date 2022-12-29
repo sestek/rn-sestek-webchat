@@ -16,7 +16,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   const triggerStart = () => setStart((old) => !old);
 
   const RNSlider = props.modules.RNSlider;
-  const AuidoProp = props.customizeConfiguration
+  const AuidoProp = props.customizeConfiguration;
 
   //GET DURATION
   useEffect(() => {
@@ -78,29 +78,48 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     triggerStart();
   };
 
-  const PauseIconOrImage = AuidoProp.sliderPauseImage?.value ? AuidoProp.sliderPauseImage?.value  : PauseIcon2
-  const PlayIconOrImage = AuidoProp.sliderPlayImage?.value ? AuidoProp.sliderPlayImage?.value  : PlayIcon2
+  const PauseIconOrImage = AuidoProp.sliderPauseImage?.value
+    ? AuidoProp.sliderPauseImage?.value
+    : PauseIcon2;
+  const PlayIconOrImage = AuidoProp.sliderPlayImage?.value
+    ? AuidoProp.sliderPlayImage?.value
+    : PlayIcon2;
 
   return (
     <View
       style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        
+        display: 'flex',
+        flexDirection:'row'
       }}
     >
-      <TouchableOpacity
-        onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
-      >
-        <Image
-          source={!start ? PlayIconOrImage : PauseIconOrImage}
-          style={{ width: 25, height: 25}}
-        />
-      </TouchableOpacity>
+      <View 
+      style={{
+        flex:2,
+        justifyContent:'center',
+        alignItems:'center'
+
+      }}>
+        <TouchableOpacity
+          onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
+        >
+          <Image
+            source={!start ? PlayIconOrImage : PauseIconOrImage}
+            style={{ width: 25, height: 25 }}
+          />
+        </TouchableOpacity>
+      </View>
+
       {RNSlider ? (
+        <View style={{
+          flex:10,
+          paddingLeft:10
+        }}>
         <RNSlider
-          style={{margin:0,width: 230, transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }]}}
+          style={{
+            margin: 0,
+            width: 230,
+            transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
+          }}
           value={
             stateRecord.playTime &&
             parseInt(stateRecord.playTime.substring(4, 5))
@@ -111,10 +130,11 @@ const AudioComponent: FC<PropsAudio> = (props) => {
             stateRecord.duration &&
             parseInt(stateRecord.duration.substring(4, 5))
           }
-          minimumTrackTintColor= {AuidoProp.sliderMinimumTrackTintColor}
+          minimumTrackTintColor={AuidoProp.sliderMinimumTrackTintColor}
           maximumTrackTintColor={AuidoProp.sliderMaximumTrackTintColor}
           thumbTintColor={AuidoProp.sliderThumbTintColor}
         />
+        </View>
       ) : (
         <Text style={{ paddingRight: 5 }}>
           {stateRecord.playTime + ' / ' + stateRecord.duration}
@@ -129,4 +149,3 @@ AudioComponent.defaultProps = {
 };
 
 export default React.memo(AudioComponent);
-

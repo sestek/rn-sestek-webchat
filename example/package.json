@@ -9,7 +9,7 @@
     "start": "react-native start"
   },
   "dependencies": {
-    "@react-native-community/slider": "^3.0.3",
+    "@miblanchard/react-native-slider": "^2.2.0",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-audio-recorder-player": "^3.4.0",

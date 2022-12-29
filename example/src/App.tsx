@@ -4,7 +4,7 @@ import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
-import Slider from '@react-native-community/slider';
+import {Slider} from '@miblanchard/react-native-slider';
 import { WebView } from 'react-native-webview';
 
 export default function App() {
@@ -101,8 +101,8 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'BAC',
-          projectName: 'ResponseTypeTest',
+          tenant: 'Tayfun',
+          projectName: 'GocIdaresi_TR',
           channel: 'NdaInfoBip',
           clientId: 'mobile-testing',
         }}
