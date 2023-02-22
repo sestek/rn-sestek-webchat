@@ -31,38 +31,43 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
 
     const attachClientOnMessage = () => {
         client.onmessage((d: any, m: any) => {
-            console.log(d, m);
+            //console.log(d, m);
             if (typeof m !== "object") {
                 m = JSON.parse(m);
+                if (m && !m.timestamp) {
+                    m.timestamp = Date.now();
+                }
             }
             addMessageList(m);
         });
     }
 
     const sendMessage = async (message: string, bot: boolean = false) => {
-        addMessageList({
-            timestamp: new Date().getTime(),
-            message,
-            customAction: '',
-            customActionData: '',
-            clientId: defaultConfiguration.clientId,
-            tenant: defaultConfiguration.tenant,
-            channel: bot ? null : defaultConfiguration.channel,
-            project: defaultConfiguration.projectName,
-            conversationId: sessionId,
-            fullName: defaultConfiguration.fullName
-        });
-        await client.sendAsync(
-            sessionId,
-            message,
-            defaultConfiguration.customAction,
-            defaultConfiguration.customActionData,
-            defaultConfiguration.projectName,
-            defaultConfiguration.clientId,
-            defaultConfiguration.channel,
-            defaultConfiguration.tenant,
-            defaultConfiguration.fullName
-        );
+        if (message) {
+            addMessageList({
+                timestamp: new Date().getTime(),
+                message,
+                customAction: '',
+                customActionData: '',
+                clientId: defaultConfiguration.clientId,
+                tenant: defaultConfiguration.tenant,
+                channel: bot ? null : defaultConfiguration.channel,
+                project: defaultConfiguration.projectName,
+                conversationId: sessionId,
+                fullName: defaultConfiguration.fullName
+            });
+            await client.sendAsync(
+                sessionId,
+                message,
+                defaultConfiguration.customAction,
+                defaultConfiguration.customActionData,
+                defaultConfiguration.projectName,
+                defaultConfiguration.clientId,
+                defaultConfiguration.channel,
+                defaultConfiguration.tenant,
+                defaultConfiguration.fullName
+            );
+        }
     }
 
     const sendAudio = async (urlSet: string, filename: string, data: string) => {
@@ -80,7 +85,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
             conversationId: sessionId,
             fullName: defaultConfiguration.fullName
         });
-
+        console.log(filename)
         const formData = new Array();
         formData.push({ name: 'audio', data: data, filename: filename, type: 'audio/' + filename.split(".")[1] });
         formData.push({ name: "user", data: sessionId });

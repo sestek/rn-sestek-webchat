@@ -1,3 +1,4 @@
+import type PropsCustomizeConfiguration from "./propsCustomizeConfiguration";
 import type PropsModules from "./propsModules";
 
 export default interface PropsFooterComponent {
@@ -7,4 +8,5 @@ export default interface PropsFooterComponent {
     sendMessage: any;
     sendAudio: any;
     modules: PropsModules;
+    customizeConfiguration: PropsCustomizeConfiguration;
 }

@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   textInput: {
+    color: 'black',
     backgroundColor: 'white',
     height: '100%',
     padding: 5,

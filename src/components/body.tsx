@@ -31,9 +31,10 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
         <SafeAreaView style={styles.container}>
             <ScrollView
                 ref={scrollView}
+                keyboardShouldPersistTaps='handled'
                 onContentSizeChange={() => scrollView?.current?.scrollToEnd({ animated: true })}
             >
-                {props.messageList.slice(1).map((x: any, key: number) =>
+                {props.messageList.slice(1).filter(x=>x.message!=="").map((x: any, key: number) =>
                     <MessageBox
                         {...props}
                         modules={props.modules}

@@ -14,7 +14,7 @@ export default interface PropsCustomizeConfiguration {
   messageColor?: string;
   messageBoxColor?: string;
   bodyColorOrImage?: BodyColorOrImageType;
-  firstIconHide?:boolean;
+  firstIconHide?: boolean;
   firsIcon?: IconType;
   firstColor?: string;
   firstSize?: number;
@@ -26,6 +26,7 @@ export default interface PropsCustomizeConfiguration {
   sliderThumbTintColor?: string;
   sliderPlayImage?: BodyColorOrImageType;
   sliderPauseImage?: BodyColorOrImageType;
+  beforeAudioClick?: () => Promise<void>;
 }
 
 interface BodyColorOrImageType {

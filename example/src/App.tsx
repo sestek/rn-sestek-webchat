@@ -4,7 +4,7 @@ import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
-import {Slider} from '@miblanchard/react-native-slider';
+import { Slider } from '@miblanchard/react-native-slider';
 import { WebView } from 'react-native-webview';
 
 export default function App() {
@@ -41,6 +41,12 @@ export default function App() {
     const data = modalRef.current?.messageList;
     //console.log(JSON.stringify(data));
   };
+
+  const beforeAudioFunc = () => {
+    return new Promise<void>((resolve, reject) => {
+      resolve();
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -148,6 +154,7 @@ export default function App() {
             type: 'image',
             value: require('../../src/image/play2.png'),
           },
+          beforeAudioClick: beforeAudioFunc
         }}
       />
     </View>

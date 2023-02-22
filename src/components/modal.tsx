@@ -39,7 +39,8 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>((props, ref
             transparent={true}
             visible={props.visible}
             onRequestClose={() => {
-                Alert.alert('Modal has now been closed.');
+                //Alert.alert('Modal has now been closed.');
+                props.closeModal();
             }}>
             <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 pointerEvents="box-none">

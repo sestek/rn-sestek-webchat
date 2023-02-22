@@ -106,6 +106,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 return React.createElement(Text, {
                     key: state.key,
                     style: styles.del,
+                    selectable: true,
                 }, output(node.content, state));
             },
         },
@@ -119,6 +120,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 return React.createElement(Text, {
                     key: state.key,
                     style: styles.em,
+                    selectable: true,
                 }, output(node.content, state));
             },
         },
@@ -137,6 +139,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 const ret = React.createElement(Text, {
                     key: state.key,
                     style: state.style,
+                    selectable: true,
                 }, output(node.content, state));
                 return ret;
             },
@@ -313,6 +316,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 return React.createElement(Text, {
                     key: state.key,
                     style: paragraphStyle,
+                    selectable: true,
                 }, output(node.content, state));
             },
         },
@@ -326,6 +330,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 return React.createElement(Text, {
                     key: state.key,
                     style: state.style,
+                    selectable: true,
                 }, output(node.content, state));
             },
         },
@@ -335,6 +340,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                     return React.createElement(Text, {
                         key: i,
                         style: styles.tableHeaderCell,
+                        selectable: true,
                     }, output(content, state));
                 });
 
@@ -375,6 +381,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 return React.createElement(Text, {
                     key: state.key,
                     style: textStyle,
+                    selectable: true,
                 }, node.content);
             },
         },
@@ -388,6 +395,7 @@ module.exports = function (styles: { [x: string]: any; autolink: any; blockQuote
                 return React.createElement(Text, {
                     key: state.key,
                     style: styles.strong,
+                    selectable: true,
                 }, output(node.content, state));
             },
         },

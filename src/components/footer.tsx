@@ -31,6 +31,15 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
         props.changeInputData("");
     }
 
+    const touchRecord = () => {
+        if (props.customizeConfiguration.beforeAudioClick) {
+            props.customizeConfiguration.beforeAudioClick().then(() => triggerRecord());
+        }
+        else {
+            triggerRecord();
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View style={{ flex: 1 }}>
@@ -39,11 +48,12 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
                     value={props.inputData}
                     onChangeText={(text: string) => props.changeInputData(text)}
                     placeholder={props.placeholderText || "Please write a message"}
+                    placeholderTextColor="grey"
                     keyboardType="default"
                 />
             </View>
             {props.modules.AudioRecorderPlayer && props.modules.RNFS &&
-                <TouchableOpacity onPress={() => { triggerRecord() }}>
+                <TouchableOpacity onPress={touchRecord}>
                     <Image style={styles.icon} source={recordStart ? RecordInIcon : RecordOutIcon} />
                 </TouchableOpacity>
             }

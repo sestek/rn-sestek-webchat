@@ -87,23 +87,19 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 {(props.type === 'message' && props.activity?.attachments[0]?.content?.title) &&
                     <Markdown styles={styles.rceMboxText}>
                         {props.activity?.attachments[0]?.content?.title}
-                        {'\t\t\t\t\t'}
                     </Markdown>}
                 {(props.type === 'message' && props.activity?.attachments[0]?.content?.subtitle) &&
                     <Markdown styles={styles.rceMboxText}>
                         {props.activity?.attachments[0]?.content?.subtitle}
-                        {'\t\t\t\t\t'}
                     </Markdown>}
                 {((props.type === 'text' || props.type === 'message') && (props.activity.text || props.activity.message)) &&
                     <Markdown styles={styles.rceMboxText}>
                         {props.activity.text || props.activity.message}
-                        {'\t\t\t\t\t'}
                     </Markdown>}
 
                 {(props.activity?.type === 'message' && props.activity?.attachments[0]?.content?.text) &&
                     <Markdown style={styles.rceMboxText}>
                         {props.activity?.attachments[0]?.content?.text}
-                        {'\t\t\t\t\t'}
                     </Markdown>}
                 {(WebView && Array.isArray(props.activity.entities) && props.activity.entities[0]?.geo) &&
                     <View style={{ flex: 1, maxHeight: Dimensions.get('screen').height * 0.5 }}>
@@ -287,7 +283,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                                     props.activity?.timestamp &&
                                     (
                                         props.dateString ||
-                                        new Date(props.activity?.timestamp).toLocaleString()
+                                        `${new Date(props.activity?.timestamp).toLocaleDateString()} ${new Date(props.activity?.timestamp).toLocaleTimeString()}`
                                     )
                                 }
                             </Text>
