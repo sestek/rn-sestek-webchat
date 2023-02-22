@@ -109,7 +109,7 @@ export default function App() {
           sendConversationStart: true,
           tenant: 'Tayfun',
           projectName: 'GocIdaresi_TR',
-          channel: 'NdaInfoBip',
+          channel: 'Mobil',
           clientId: 'mobile-testing',
         }}
         customizeConfiguration={{
