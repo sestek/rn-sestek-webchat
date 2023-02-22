@@ -43,7 +43,7 @@ const  modalRef = useRef<ChatModalRef>(null);
 		sendConversationStart:  true,
 		tenant:  'TenantName',
 		projectName:  'ProjectName',
-		channel:  'NdaInfoBip',
+		channel:  'Mobil',
 		clientId:  "mobile-testing",
 	}}
 	customizeConfiguration={{
