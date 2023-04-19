@@ -108,7 +108,9 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
 ChatModal.defaultProps = {
   //url: 'http://192.168.20.72:55022/chathub'
 //  url: 'https://stable.web.cai.demo.sestek.com/webchat/chathub',
-  url: 'https://nd-test-webchat.sestek.com/chathub'
+ //url: 'https://nd-test-webchat.sestek.com/chathub'
+  // url:'https://eu.va.knovvu.com/webchat/chathub'
+  url:"https://igavassistwebchat.igairport.aero:6443/chathub"
 };
 
 //`https://nd-test-webchat.sestek.com/chathub`;

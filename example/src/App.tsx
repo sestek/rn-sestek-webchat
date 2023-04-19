@@ -97,18 +97,17 @@ export default function App() {
       </View>
       <FlashMessage position="top" />
       <ChatModal
-        //url={`http://${Platform.OS !== "ios" ? "10.0.2.2" : "192.168.52.51"}:55020/chathub`}
+        url={`https://eu.va.knovvu.com/webchat/chathub`}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
           RNSlider: Slider,
-          RNWebView: WebView
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'Tayfun',
-          projectName: 'GocIdaresi_TR',
+          tenant: 'Demo',
+          projectName: 'EN_BANKING_DEMO_v1.4',
           channel: 'Mobil',
           clientId: 'mobile-testing',
         }}

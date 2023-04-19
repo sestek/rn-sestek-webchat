@@ -3748,6 +3748,11 @@
   dependencies:
     "mimic-response" "^3.1.0"
 
+"dedent@^0.6.0":
+  "integrity" "sha512-cSfRWjXJtZQeRuZGVvDrJroCR5V2UvBNUMHsPCdNYzuAG8b9V8aAy3KUcdQrGQPXs17Y+ojbPh1aOCplg9YR9g=="
+  "resolved" "https://registry.npmjs.org/dedent/-/dedent-0.6.0.tgz"
+  "version" "0.6.0"
+
 "dedent@^0.7.0":
   "integrity" "sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw="
   "resolved" "https://registry.npmjs.org/dedent/-/dedent-0.7.0.tgz"
@@ -5378,7 +5383,7 @@
   "resolved" "https://registry.npmjs.org/interpret/-/interpret-1.4.0.tgz"
   "version" "1.4.0"
 
-"invariant@^2.2.4":
+"invariant@^2.2.2", "invariant@^2.2.4":
   "integrity" "sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA=="
   "resolved" "https://registry.npmjs.org/invariant/-/invariant-2.2.4.tgz"
   "version" "2.2.4"
@@ -6721,6 +6726,19 @@
   "version" "1.4.0"
   dependencies:
     "js-tokens" "^3.0.0 || ^4.0.0"
+
+"lottie-ios@^3.4.0", "lottie-ios@^4.1.3":
+  "integrity" "sha512-2oSMEAaww11yb4mA7lBs4HKhVbWwNe62EiFwlg/27mx/RFMA8czKCPymcteFviytgIwc1pOKGw65my3oFqoTnQ=="
+  "resolved" "https://registry.npmjs.org/lottie-ios/-/lottie-ios-4.1.3.tgz"
+  "version" "4.1.3"
+
+"lottie-react-native@^5.1.5":
+  "integrity" "sha512-xl6uEo50joQeIqso5SvPKt1uGBqMhgNgs+36S4725Nfigf4zAY23/I9QEEkJF+1BHq7wKCeYha2KafLTm20gqA=="
+  "resolved" "https://registry.npmjs.org/lottie-react-native/-/lottie-react-native-5.1.5.tgz"
+  "version" "5.1.5"
+  dependencies:
+    "invariant" "^2.2.2"
+    "react-native-safe-modules" "^1.0.3"
 
 "lowercase-keys@^1.0.0":
   "integrity" "sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA=="
@@ -8143,6 +8161,13 @@
   optionalDependencies:
     "jetifier" "^1.6.6"
 
+"react-native-safe-modules@^1.0.3":
+  "integrity" "sha512-DUxti4Z+AgJ/ZsO5U7p3uSCUBko8JT8GvFlCeOXk9bMd+4qjpoDvMYpfbixXKgL88M+HwmU/KI1YFN6gsQZyBA=="
+  "resolved" "https://registry.npmjs.org/react-native-safe-modules/-/react-native-safe-modules-1.0.3.tgz"
+  "version" "1.0.3"
+  dependencies:
+    "dedent" "^0.6.0"
+
 "react-native-snap-carousel@^4.0.0-beta.6":
   "integrity" "sha512-jr6Kesrn+/047FwL32JRwAL6/l4Soz2uw73rFM5LfoGTgZhPatUsw60eTE3bznqFewPhoFIKezYe2m3LypTnIA=="
   "resolved" "https://registry.npmjs.org/react-native-snap-carousel/-/react-native-snap-carousel-4.0.0-beta.6.tgz"
@@ -8151,7 +8176,7 @@
     "@types/react-addons-shallow-compare" "^0.14.22"
     "react-addons-shallow-compare" "15.6.2"
 
-"react-native@>=0.58.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@0.63.4":
+"react-native@*", "react-native@>=0.46", "react-native@>=0.58.0", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@0.63.4":
   "integrity" "sha512-I4kM8kYO2mWEYUFITMcpRulcy4/jd+j9T6PbIzR0FuMcz/xwd+JwHoLPa1HmCesvR1RDOw9o4D+OFLwuXXfmGw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.63.4.tgz"
   "version" "0.63.4"
@@ -8189,7 +8214,7 @@
   "resolved" "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.3.tgz"
   "version" "0.4.3"
 
-"react@^16.8.0 || ^17.0.0", "react@>=16.0.0", "react@16.13.1":
+"react@*", "react@^16.8.0 || ^17.0.0", "react@>=16.0.0", "react@16.13.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"
