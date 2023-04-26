@@ -37,6 +37,11 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
                 if (m && !m.timestamp) {
                     m.timestamp = Date.now();
                 }
+                if(m.type === "SpeechRecognized"){
+                    m.type= "message"
+                    m.text = m.channelData?.CustomProperties?.textFromSr
+                    m.channel = "SpeechRecognized"
+                }
             }
             addMessageList(m);
         });
@@ -95,6 +100,7 @@ const useChat = ({ defaultConfiguration, messages, sessionId, client, rnfs, url 
         formData.push({ name: "fullName", data: defaultConfiguration.fullName || "" });
         formData.push({ name: "customAction", data: defaultConfiguration.customAction || "" });
         formData.push({ name: "customActionData", data: defaultConfiguration.customActionData || "" });
+        formData.push({ name: "channel", data: defaultConfiguration.channel || "" });
 
         const replaceLink = url.replace('chathub', 'Home/SendAudio');
 
