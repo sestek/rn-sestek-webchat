@@ -48,6 +48,10 @@ export default function App() {
     });
   }
 
+  const customActionDataEx = {
+    tel:"905301138326"
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -110,6 +114,7 @@ export default function App() {
           projectName: 'EN_BANKING_DEMO_v1.4',
           channel: 'Mobil',
           clientId: 'mobile-testing',
+          customActionData:JSON.stringify(customActionDataEx)
         }}
         customizeConfiguration={{
           headerColor: '#7f81ae',

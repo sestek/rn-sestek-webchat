@@ -4,7 +4,7 @@ import type PropsModules from "./propsModules";
 export default interface PropsMessageBoxComponent {
     customizeConfiguration: PropsCustomizeConfiguration;
     position: 'left' | 'right';
-    type: 'text' | 'system' | 'file' | 'location' | 'message' | 'audio';
+    type: 'text' | 'system' | 'file' | 'location' | 'message' | 'audio'  | 'typing';
     modules:PropsModules;
     activity: any;
     changeInputData: (text: string) => void;
