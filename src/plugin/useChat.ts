@@ -69,7 +69,7 @@ const useChat = ({
           var textMessage = m.channelData?.CustomProperties?.textFromSr;
           m.type = 'message';
           if (textMessage === null || textMessage === '') {
-            m.text = 'Your voice is not understood';
+            m.text = '🤷‍♀️';
           } else {
             m.text = textMessage;
             m.channel = 'SpeechRecognized';
