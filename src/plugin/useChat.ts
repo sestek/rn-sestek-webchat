@@ -67,16 +67,27 @@ const useChat = ({
         }
         if (m.type === 'SpeechRecognized') {
           var textMessage = m.channelData?.CustomProperties?.textFromSr;
-          m.type = 'message';
+           m.type = 'message';
           if (textMessage === null || textMessage === '') {
             m.text = '🤷‍♀️';
+            addMessageList(m);
           } else {
-            m.text = textMessage;
-            m.channel = 'SpeechRecognized';
+            setMessageList((prevMessageList: any) => {
+              const lastMessage = prevMessageList[prevMessageList.length - 1];
+              const update = {
+                text: textMessage,
+                channel: 'SpeechRecognized',
+              }
+               const updatedLastMessage = { ...lastMessage, ...update };
+              const updatedList = prevMessageList.slice(0, -1).concat(updatedLastMessage);
+              return updatedList;
+            });
           }
+        }else{
+          addMessageList(m);
         }
       }
-      addMessageList(m);
+      
     });
   };
 

@@ -89,7 +89,8 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     <View
       style={{
         display: 'flex',
-        flexDirection:'row'
+        flexDirection:'row',
+        width:250
       }}
     >
       <View 
@@ -104,7 +105,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
         >
           <Image
             source={!start ? PlayIconOrImage : PauseIconOrImage}
-            style={{ width: 25, height: 25 }}
+            style={{ width: 24, height: 24 }}
           />
         </TouchableOpacity>
       </View>

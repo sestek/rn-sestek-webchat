@@ -2,7 +2,7 @@ var recLength = 0,
     recBuffersL: any[] = [],
     recBuffersR: never[] = [],
     sampleRate: number;
-
+/////kulanılmıyor
 self.onmessage = function (e: { data: { command: any; config: any; buffer: any; type: any; }; }) {
     switch (e.data.command) {
         case 'init':

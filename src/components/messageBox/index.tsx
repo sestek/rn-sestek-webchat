@@ -264,6 +264,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     modules={props.modules}
                     customizeConfiguration={props.customizeConfiguration}
                 />
+                <Text style={{marginVertical:props.activity.text && 10}}>{props.activity.text}</Text> 
             </>
         );
     };

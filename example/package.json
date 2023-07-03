@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^2.2.0",
-    "lottie-ios": "^3.4.0",
-    "lottie-react-native": "^5.1.4",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-audio-recorder-player": "^3.4.0",

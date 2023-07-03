@@ -10,6 +10,8 @@ const PlayIcon = require('./play.png');
 const PauseIcon = require('./pause.png');
 const PlayIcon2 = require('./play2.png');
 const PauseIcon2 = require('./pause2.png');
+const RecordDisable = require('./record_disable.png');
+
 export {
     ChatIcon,
     MinusIcon,
@@ -22,6 +24,7 @@ export {
     PlayIcon,
     PauseIcon,
     PlayIcon2,
-    PauseIcon2
+    PauseIcon2,
+    RecordDisable
     
 };
