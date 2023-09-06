@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import { ChatModal, ChatModalRef } from '../src/index';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
@@ -9,6 +9,17 @@ import { WebView } from 'react-native-webview';
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
+
+  const [value, setValue] = useState({ "isim": "", "soyisim": "" })
+  const alertShow = () => {
+    alert(value.isim + " " + value.soyisim)
+  }
+
+  useEffect(() => {
+    if (value.isim != "") {
+      alertShow()
+    }
+  }, [value])
 
   const pressStartConversation = () => {
     modalRef.current?.startConversation();
@@ -49,7 +60,7 @@ export default function App() {
   }
 
   const customActionDataEx = {
-    tel:"905301138326"
+    tel: "905301138326"
   }
 
   return (
@@ -116,7 +127,7 @@ export default function App() {
           projectName: 'EN_BANKING_DEMO_v1.4',
           channel: 'Mobil',
           clientId: 'mobile-testing',
-          customActionData:JSON.stringify(customActionDataEx)
+          customActionData: JSON.stringify(customActionDataEx)
         }}
         customizeConfiguration={{
           headerColor: '#7f81ae',
@@ -160,7 +171,27 @@ export default function App() {
             type: 'image',
             value: require('../src/image/play2.png'),
           },
-          beforeAudioClick: beforeAudioFunc
+          beforeAudioClick: beforeAudioFunc,
+          closeModalSettings: {
+            use: true,
+            text: "Chat'ten çıkmak istediğinize emin misiniz ?",
+            textColor: "black",
+            background: "white",
+            buttons: {
+              yesButton: {
+                text: "Evet",
+                textColor: "white",
+                background: "#7f81ae",
+                borderColor: "transparent",
+              },
+              noButton: {
+                text: "Hayır",
+                textColor: "black",
+                background: "transparent",
+                borderColor: "black",
+              }
+            }
+          }
         }}
       />
     </View>

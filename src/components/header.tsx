@@ -29,7 +29,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
             source={MinusIcon}
           />}
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => props.closeConversation()}>
+      <TouchableOpacity onPress={() => props.clickClosedConversationModalFunc()}>
         {props.hideIcon ? <HideIcon /> :
           <Image
             style={{ width: 20, height: 20, margin: 5 }}

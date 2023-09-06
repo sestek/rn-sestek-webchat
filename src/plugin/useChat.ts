@@ -84,6 +84,7 @@ const useChat = ({
             });
           }
         }else{
+          console.log(m)
           addMessageList(m);
         }
       }

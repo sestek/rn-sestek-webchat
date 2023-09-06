@@ -15,4 +15,6 @@ export default interface PropsModalComponent {
     sessionId: string;
     client: SignalRClient;
     modules: PropsModules;
+    closedModalManagment: object;
+    clickClosedConversationModalFunc: Function;
 }

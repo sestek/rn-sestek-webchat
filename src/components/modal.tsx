@@ -6,6 +6,8 @@ import BodyComponent from './body';
 import FooterComponent from './footer';
 import HeaderComponent from './header';
 import { styles } from './modal-style';
+import CloseModal from './closeModal';
+
 
 export interface ModalCompRef {
     messageList: any;
@@ -42,6 +44,13 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>((props, ref
                 //Alert.alert('Modal has now been closed.');
                 props.closeModal();
             }}>
+            <CloseModal
+                closeModal={props.closedModalManagment.closeModal}
+                setCloseModal={props.closedModalManagment.setCloseModal}
+                closeConversation={props.closeConversation}
+                closeModalSettings={props.customizeConfiguration.closeModalSettings}
+            />
+
             <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 pointerEvents="box-none">
                 <View style={[styles.header, headerColor ? { backgroundColor: headerColor } : {}]}>

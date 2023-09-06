@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useImperativeHandle, forwardRef, useRef } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useState, useCallback, useImperativeHandle, forwardRef, useRef, useEffect } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View, Modal, Platform, Text } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
 import ModalComponent, { ModalCompRef } from '../components/modal';
 import { ChatIcon } from '../image';
@@ -18,6 +18,8 @@ let client = new SignalRClient(GeneralManager.getWebchatHost());
 
 export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) => {
 
+  const [closeModal, setCloseModal] = useState<boolean>(false);
+
   const modalRef = useRef<ModalCompRef>(null);
   const [start, setStart] = useState<boolean>(false);
   const startConversation = () => {
@@ -33,6 +35,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
       props.modules?.RNFS.fs.mkdir(folderPath).then(res => console.log(res)).catch(err => console.log(err));
     }
   }
+
   const endConversation = async () => {
     setStart(false);
     setVisible(false);
@@ -41,6 +44,10 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
       let folderPath = dirs.CacheDir + '/sestek_bot_audio' // cached folder.
       props.modules.RNFS.fs.unlink(folderPath).then(res => console.log(res)).catch(err => console.log(err));
     }
+  }
+
+  const clickClosedConversationModalFunc = () => {
+    setCloseModal(true)
   }
 
   const [visible, setVisible] = useState<boolean>(false);
@@ -98,6 +105,8 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
           closeModal={triggerVisible}
           sessionId={sessionId}
           client={client}
+          closedModalManagment={{ closeModal, setCloseModal }}
+          clickClosedConversationModalFunc={clickClosedConversationModalFunc}
         //...props} 
         />
       )}
@@ -107,10 +116,10 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>((props, ref) =
 
 ChatModal.defaultProps = {
   //url: 'http://192.168.20.72:55022/chathub'
-//  url: 'https://stable.web.cai.demo.sestek.com/webchat/chathub',
- //url: 'https://nd-test-webchat.sestek.com/chathub'
+  //  url: 'https://stable.web.cai.demo.sestek.com/webchat/chathub',
+  //url: 'https://nd-test-webchat.sestek.com/chathub'
   // url:'https://eu.va.knovvu.com/webchat/chathub'
-  url:"https://igavassistwebchat.igairport.aero:6443/chathub"
+  url: "https://igavassistwebchat.igairport.aero:6443/chathub"
 };
 
 //`https://nd-test-webchat.sestek.com/chathub`;

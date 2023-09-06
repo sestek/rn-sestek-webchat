@@ -8,6 +8,7 @@ import type PropsMessageBoxComponent from "./propsMessageBoxComponent";
 import type PropsDefaultConfiguration from "./propsDefaultConfiguration";
 import type PropsChatModal from "./propsChatModal";
 import type PropsAudio from "./propsAudio";
+import type PropsCloseModalSettings from "./propsCloseModalSettings";
 
 export {
     PropsModalComponent,
@@ -19,5 +20,6 @@ export {
     PropsMessageBoxComponent,
     PropsDefaultConfiguration,
     PropsChatModal,
-    PropsAudio
+    PropsAudio,
+    PropsCloseModalSettings
 };
