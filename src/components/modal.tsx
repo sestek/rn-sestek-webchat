@@ -52,15 +52,14 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
         transparent={true}
         visible={props.visible}
         onRequestClose={() => {
-          //Alert.alert('Modal has now been closed.');
           props.closeModal();
         }}
       >
         <CloseModal
-          closeModal={props.closedModalManagment.closeModal}
-          setCloseModal={props.closedModalManagment.setCloseModal}
-          closeConversation={props.closeConversation}
-          closeModalSettings={props.customizeConfiguration.closeModalSettings}
+          closeModal={props?.closedModalManagment?.closeModal}
+          setCloseModal={props?.closedModalManagment?.setCloseModal}
+          closeConversation={props?.closeConversation}
+          closeModalSettings={props?.customizeConfiguration?.closeModalSettings}
         />
 
         <KeyboardAvoidingView
