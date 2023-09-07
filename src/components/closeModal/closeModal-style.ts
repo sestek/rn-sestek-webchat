@@ -11,7 +11,7 @@ export const styles = (props?: any) =>
     },
     modalView: {
       margin: 20,
-      backgroundColor: 'white',
+      backgroundColor: props?.background || 'white',
       borderRadius: 20,
       padding: 35,
       alignItems: 'center',
@@ -39,7 +39,7 @@ export const styles = (props?: any) =>
       alignItems: 'center',
       borderRadius: 5,
       borderWidth: 1,
-      borderColor: props?.buttons?.yesButton?.borderColor || "transparent",
+      borderColor: props?.buttons?.yesButton?.borderColor || 'transparent',
     },
     yesButtonText: { color: props?.buttons?.yesButton?.textColor || 'white' },
     noButton: {
