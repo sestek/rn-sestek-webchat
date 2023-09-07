@@ -7,4 +7,5 @@ export default interface DefaultConfiguration {
   channel: string;
   tenant: string;
   fullName?: string;
+  enableNdUi?: boolean;
 }

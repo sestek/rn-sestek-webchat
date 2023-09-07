@@ -4,6 +4,7 @@ import type { PropsUseChat } from '../types';
 const useChat = ({
   defaultConfiguration,
   messages,
+  responseData,
   sessionId,
   client,
   rnfs,
@@ -12,6 +13,12 @@ const useChat = ({
   const [messageList, setMessageList] = useState<any>(messages || []);
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => [...messages, message]);
+  };
+
+  const { enableNdUi } = defaultConfiguration;
+  const [response, setResponse] = useState<any>(responseData || {});
+  const setResponseFunc = (customAction: any, customActionData: any) => {
+    setResponse({ customAction, customActionData });
   };
 
   useEffect(() => {
@@ -59,15 +66,33 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((d: any, m: any) => {
-      console.log(d, m);
+      console.log(d, '-', m);
       if (typeof m !== 'object') {
         m = JSON.parse(m);
+        if (m?.channelData) {
+          if (enableNdUi) {
+            if (m?.channelData?.CustomActionData) {
+              setResponseFunc(
+                m?.channelData?.CustomAction,
+                m?.channelData?.CustomActionData
+              );
+            }
+          } else {
+            if (m?.channelData?.CustomProperties) {
+              setResponseFunc(
+                m?.channelData?.CustomAction,
+                m?.channelData?.CustomProperties
+              );
+            }
+          }
+        }
+
         if (m && !m.timestamp) {
           m.timestamp = Date.now();
         }
         if (m.type === 'SpeechRecognized') {
           var textMessage = m.channelData?.CustomProperties?.textFromSr;
-           m.type = 'message';
+          m.type = 'message';
           if (textMessage === null || textMessage === '') {
             m.text = '🤷‍♀️';
             addMessageList(m);
@@ -77,18 +102,19 @@ const useChat = ({
               const update = {
                 text: textMessage,
                 channel: 'SpeechRecognized',
-              }
-               const updatedLastMessage = { ...lastMessage, ...update };
-              const updatedList = prevMessageList.slice(0, -1).concat(updatedLastMessage);
+              };
+              const updatedLastMessage = { ...lastMessage, ...update };
+              const updatedList = prevMessageList
+                .slice(0, -1)
+                .concat(updatedLastMessage);
               return updatedList;
             });
           }
-        }else{
-          console.log(m)
+        } else {
+          console.log(m);
           addMessageList(m);
         }
       }
-      
     });
   };
 
@@ -215,7 +241,7 @@ const useChat = ({
       tenant: defaultConfiguration.tenant,
       channel: defaultConfiguration.channel,
       project: defaultConfiguration.projectName,
-      conversationId: sessionId,
+      conversationId: 'Mobil' + sessionId,
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
@@ -225,7 +251,7 @@ const useChat = ({
     defaultConfiguration.customAction = '';
   };
 
-  return [messageList, sendMessage, sendAudio];
+  return [messageList, sendMessage, sendAudio, response];
 };
 
 export { useChat };
