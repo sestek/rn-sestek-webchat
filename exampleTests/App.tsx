@@ -89,9 +89,6 @@ export default function App() {
         <Pressable style={styles.button} onPress={pressGetMessageList}>
           <Text style={styles.text}>Get Message Data</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => {}}>
-          <Text style={styles.text}>Get Response Data</Text>
-        </Pressable>
       </View>
       {/*<View style={{ flex: 1, flexDirection: 'row' }}>
         <Pressable style={[styles.button, styles.buttonRow]} onPress={() => recorder.onStartRecord()}>
