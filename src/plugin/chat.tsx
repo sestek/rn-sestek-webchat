@@ -26,7 +26,6 @@ export interface ChatModalRef {
   endConversation: () => void;
   conversationStatus: boolean;
   messageList: any;
-  responseData: any;
 }
 
 let sessionId = GeneralManager.createUUID();

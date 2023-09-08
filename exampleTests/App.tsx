@@ -25,13 +25,13 @@ export default function App() {
     modalRef.current?.endConversation();
   };
 
-  const [childData, setChildData] = useState<any>(null);
-  //console.log('response : ', childData);
-  console.log(modalRef?.current?.responseData)
-
+  const [responseData, setResponseData] = useState<any>({});
+  const setResponse = (value: any) => {
+    setResponseData(value);
+  };
   useEffect(() => {
-    //setChildData(modalRef?.current);
-  });
+    console.log(responseData);
+  }, [responseData]);
 
   const pressTriggerVisible = () => {
     if (!modalRef.current?.conversationStatus) {
@@ -89,6 +89,9 @@ export default function App() {
         <Pressable style={styles.button} onPress={pressGetMessageList}>
           <Text style={styles.text}>Get Message Data</Text>
         </Pressable>
+        <Pressable style={styles.button} onPress={() => {}}>
+          <Text style={styles.text}>Get Response Data</Text>
+        </Pressable>
       </View>
       {/*<View style={{ flex: 1, flexDirection: 'row' }}>
         <Pressable style={[styles.button, styles.buttonRow]} onPress={() => recorder.onStartRecord()}>
@@ -132,6 +135,7 @@ export default function App() {
           channel: 'Mobil',
           clientId: 'mobile-testing',
           enableNdUi: false,
+          getResponseData: setResponse,
           // customActionData: JSON.stringify(customActionDataExNdUi)
         }}
         customizeConfiguration={{

@@ -8,4 +8,5 @@ export default interface DefaultConfiguration {
   tenant: string;
   fullName?: string;
   enableNdUi?: boolean;
+  getResponseData: Function;
 }

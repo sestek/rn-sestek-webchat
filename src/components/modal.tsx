@@ -17,7 +17,6 @@ import CloseModal from './closeModal';
 
 export interface ModalCompRef {
   messageList: any;
-  responseData: any;
 }
 
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
@@ -25,11 +24,10 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
     const [inputData, setInputData] = useState<string>('');
     const changeInputData = (text: string) => setInputData(text);
 
-    const [messageList, sendMessage, sendAudio, responseData] = useChat({
+    const [messageList, sendMessage, sendAudio] = useChat({
       url: props?.url,
       defaultConfiguration: props.defaultConfiguration,
       messages: [],
-      responseData: {},
       sessionId: props.sessionId,
       client: props.client,
       rnfs: props.modules.RNFS,
@@ -46,7 +44,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     useImperativeHandle(ref, () => ({
       messageList: messageList,
-      responseData: responseData,
     }));
 
     return (

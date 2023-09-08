@@ -5,7 +5,6 @@ export default interface PropsUseChat {
   url: string;
   defaultConfiguration: DefaultConfiguration;
   messages: any[];
-  responseData: any;
   sessionId: string;
   client: SignalRClient;
   rnfs: any;

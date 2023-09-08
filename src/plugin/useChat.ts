@@ -4,7 +4,6 @@ import type { PropsUseChat } from '../types';
 const useChat = ({
   defaultConfiguration,
   messages,
-  responseData,
   sessionId,
   client,
   rnfs,
@@ -15,10 +14,9 @@ const useChat = ({
     setMessageList((messages: any) => [...messages, message]);
   };
 
-  const { enableNdUi } = defaultConfiguration;
-  const [response, setResponse] = useState<any>(responseData || {});
+  const { enableNdUi, getResponseData } = defaultConfiguration;
   const setResponseFunc = (customAction: any, customActionData: any) => {
-    setResponse({ customAction, customActionData });
+    getResponseData({ customAction, customActionData });
   };
 
   useEffect(() => {
@@ -251,7 +249,7 @@ const useChat = ({
     defaultConfiguration.customAction = '';
   };
 
-  return [messageList, sendMessage, sendAudio, response];
+  return [messageList, sendMessage, sendAudio];
 };
 
 export { useChat };
