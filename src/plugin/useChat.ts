@@ -199,7 +199,6 @@ const useChat = ({
     });
 
     const replaceLink = url.replace('chathub', 'Home/SendAudio');
-
     rnfs
       .fetch(
         'POST',
@@ -216,10 +215,11 @@ const useChat = ({
           /<\/?[^>]+(>|$)/g,
           ''
         );
+        console.log("mmm : ",resp.json())
         sendMessage(message, true);
       })
       .catch((err: any) => {
-        //console.log(err)
+        console.log(err);
       })
       .finally(() => {
         setMessageList((messages: any) =>

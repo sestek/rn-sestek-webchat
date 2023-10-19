@@ -2,14 +2,21 @@ import React, { FC, useState, useEffect } from 'react';
 import { Image, TextInput, TouchableOpacity, View } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './footer-style';
-import { RecordInIcon, RecordOutIcon, SendIcon,RecordDisable } from '../image';
+import { RecordInIcon, RecordOutIcon, SendIcon, RecordDisable } from '../image';
 import { Recorder } from '../services';
 
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
-  const recordEnabled = props.modules.AudioRecorderPlayer && props.modules.RNFS ? true : false;
+  const recordEnabled =
+    props.modules.AudioRecorderPlayer && props.modules.RNFS ? true : false;
 
   const [recorder] = useState<Recorder | undefined>(
-    recordEnabled ? new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS) : undefined
+    recordEnabled
+      ? new Recorder(
+          props.modules.AudioRecorderPlayer,
+          props.modules.RNFS,
+          props.modules.Record
+        )
+      : undefined
   );
   const [recordStart, setRecordStart] = useState<boolean>(false);
   const [disableRecord, setDisableRecord] = useState<boolean>(false);
@@ -22,12 +29,14 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     if (recordStart) {
       setDisableRecord(true); // Disable recording when it starts
       var result = await recorder?.onStopRecord();
-      const dirFile = result?.url.split('/');
-      console.log('TEST', dirFile[dirFile.length - 1]);
-      props.sendAudio(result?.url, dirFile[dirFile.length - 1], result?.data);
-      setTimeout(() => {
-        setDisableRecord(false); // Enable recording after 2 seconds
-      }, 3500);
+      const dirFile = result?.url?.split('/');
+      if (dirFile) {
+        console.log('TEST', dirFile[dirFile.length - 1]);
+        props.sendAudio(result?.url, dirFile[dirFile.length - 1], result?.data);
+        setTimeout(() => {
+          setDisableRecord(false); // Enable recording after 2 seconds
+        }, 3500);
+      }
     } else {
       recorder?.onStartRecord();
     }
@@ -51,7 +60,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
   const touchRecord = () => {
     if (props.customizeConfiguration.beforeAudioClick) {
-      props.customizeConfiguration.beforeAudioClick().then(() => triggerRecord());
+      props.customizeConfiguration
+        .beforeAudioClick()
+        .then(() => triggerRecord());
     } else {
       triggerRecord();
     }
@@ -71,7 +82,16 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
       </View>
       {props.modules.AudioRecorderPlayer && props.modules.RNFS && (
         <TouchableOpacity onPress={touchRecord}>
-          <Image style={styles.icon} source={recordStart ? RecordInIcon : disableRecord? RecordDisable: RecordOutIcon} />
+          <Image
+            style={styles.icon}
+            source={
+              recordStart
+                ? RecordInIcon
+                : disableRecord
+                ? RecordDisable
+                : RecordOutIcon
+            }
+          />
         </TouchableOpacity>
       )}
       <TouchableOpacity onPress={clickSendButton}>

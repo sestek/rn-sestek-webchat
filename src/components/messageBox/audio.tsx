@@ -10,7 +10,11 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     duration: '00:00:00',
   });
   const [recorder] = useState<Recorder>(
-    new Recorder(props.modules.AudioRecorderPlayer, props.modules.RNFS)
+    new Recorder(
+      props.modules.AudioRecorderPlayer,
+      props.modules.RNFS,
+      props.modules.Record
+    )
   );
   const [start, setStart] = useState<boolean>(false);
   const triggerStart = () => setStart((old) => !old);
@@ -89,17 +93,17 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     <View
       style={{
         display: 'flex',
-        flexDirection:'row',
-        width:250
+        flexDirection: 'row',
+        width: 250,
       }}
     >
-      <View 
-      style={{
-        flex:2,
-        justifyContent:'center',
-        alignItems:'center'
-
-      }}>
+      <View
+        style={{
+          flex: 2,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <TouchableOpacity
           onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
         >
@@ -111,30 +115,32 @@ const AudioComponent: FC<PropsAudio> = (props) => {
       </View>
 
       {RNSlider ? (
-        <View style={{
-          flex:10,
-          paddingLeft:10
-        }}>
-        <RNSlider
+        <View
           style={{
-            margin: 0,
-            width: 230,
-            transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
+            flex: 10,
+            paddingLeft: 10,
           }}
-          value={
-            stateRecord.playTime &&
-            parseInt(stateRecord.playTime.substring(4, 5))
-          }
-          minimumValue={0}
-          disabled
-          maximumValue={
-            stateRecord.duration &&
-            parseInt(stateRecord.duration.substring(4, 5))
-          }
-          minimumTrackTintColor={AuidoProp.sliderMinimumTrackTintColor}
-          maximumTrackTintColor={AuidoProp.sliderMaximumTrackTintColor}
-          thumbTintColor={AuidoProp.sliderThumbTintColor}
-        />
+        >
+          <RNSlider
+            style={{
+              margin: 0,
+              width: 230,
+              transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
+            }}
+            value={
+              stateRecord.playTime &&
+              parseInt(stateRecord.playTime.substring(4, 5))
+            }
+            minimumValue={0}
+            disabled
+            maximumValue={
+              stateRecord.duration &&
+              parseInt(stateRecord.duration.substring(4, 5))
+            }
+            minimumTrackTintColor={AuidoProp.sliderMinimumTrackTintColor}
+            maximumTrackTintColor={AuidoProp.sliderMaximumTrackTintColor}
+            thumbTintColor={AuidoProp.sliderThumbTintColor}
+          />
         </View>
       ) : (
         <Text style={{ paddingRight: 5 }}>

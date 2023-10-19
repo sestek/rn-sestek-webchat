@@ -30,7 +30,7 @@ export interface ChatModalRef {
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
-
+console.log("sesiom : ",sessionId)
 export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>(
   (props, ref) => {
     if (props?.defaultConfiguration?.enableNdUi) {
@@ -51,7 +51,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>(
       setVisible(true);
       if (props.modules?.RNFS) {
         let dirs = props.modules.RNFS.fs.dirs;
-        let folderPath = dirs.CacheDir + '/sestek_bot_audio'; // cached folder.
+        let folderPath = dirs.DocumentDir + '/sestek_bot_audio'; // cached folder.
         props.modules?.RNFS.fs
           .mkdir(folderPath)
           .then((res) => console.log(res))
@@ -64,7 +64,7 @@ export const ChatModal = forwardRef<ChatModalRef, PropsChatModal>(
       setVisible(false);
       if (props.modules?.RNFS) {
         let dirs = props.modules.RNFS.fs.dirs;
-        let folderPath = dirs.CacheDir + '/sestek_bot_audio'; // cached folder.
+        let folderPath = dirs.DocumentDir + '/sestek_bot_audio'; // cached folder.
         props.modules.RNFS.fs
           .unlink(folderPath)
           .then((res) => console.log(res))

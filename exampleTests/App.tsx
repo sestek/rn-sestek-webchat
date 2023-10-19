@@ -6,6 +6,7 @@ import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
 import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
+import AudioRecord from 'react-native-audio-record';
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
@@ -62,8 +63,7 @@ export default function App() {
 
   const customActionDataExNdUi = {
     tel: '905301138326',
-    channel: 'mobileapp',
-    operate: 'ios',
+    
   };
 
   return (
@@ -123,17 +123,18 @@ export default function App() {
           RNFS: RNFetchBlob,
           RNSlider: Slider,
           RNWebView: null,
+          Record: AudioRecord,
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'BAC',
-          projectName: 'Test',
+          tenant: 'internal',
+          projectName: 'MasterBankingDemo_1_0',
           channel: 'Mobil',
           clientId: 'mobile-testing',
           enableNdUi: false,
           getResponseData: setResponse,
-          // customActionData: JSON.stringify(customActionDataExNdUi)
+          customActionData: JSON.stringify(customActionDataExNdUi)
         }}
         customizeConfiguration={{
           headerColor: '#7f81ae',

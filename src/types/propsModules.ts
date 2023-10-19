@@ -3,4 +3,5 @@ export default interface PropsModules {
   RNFS: any;
   RNSlider: any;
   RNWebView: any;
+  Record: any;
 }
