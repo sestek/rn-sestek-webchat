@@ -128,7 +128,7 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'internal',
+          tenant: 'Demo',
           projectName: 'MasterBankingDemo_1_0',
           channel: 'Mobil',
           clientId: 'mobile-testing',

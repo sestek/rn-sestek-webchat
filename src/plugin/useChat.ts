@@ -10,6 +10,7 @@ const useChat = ({
   url,
 }: PropsUseChat) => {
   const [messageList, setMessageList] = useState<any>(messages || []);
+  const sessionIdNew = defaultConfiguration.enableNdUi ? 'Mobil' + sessionId : sessionId
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => [...messages, message]);
   };
@@ -127,11 +128,11 @@ const useChat = ({
         tenant: defaultConfiguration.tenant,
         channel: bot ? null : defaultConfiguration.channel,
         project: defaultConfiguration.projectName,
-        conversationId: sessionId,
+        conversationId: sessionIdNew,
         fullName: defaultConfiguration.fullName,
       });
       await client.sendAsync(
-        sessionId,
+        sessionIdNew,
         message,
         defaultConfiguration.customAction,
         defaultConfiguration.customActionData,
@@ -155,7 +156,7 @@ const useChat = ({
       tenant: defaultConfiguration.tenant,
       channel: defaultConfiguration.channel,
       project: defaultConfiguration.projectName,
-      conversationId: sessionId,
+      conversationId: sessionIdNew,
       fullName: defaultConfiguration.fullName,
     });
     console.log(filename);
@@ -171,7 +172,7 @@ const useChat = ({
       filename: filename,
       type: 'audio/' + filename.split('.')[1],
     });
-    formData.push({ name: 'user', data: sessionId });
+    formData.push({ name: 'user', data: sessionIdNew });
     formData.push({
       name: 'project',
       data: defaultConfiguration.projectName || '',
@@ -191,7 +192,7 @@ const useChat = ({
     });
     formData.push({
       name: 'customActionData',
-      data: defaultConfiguration.customActionData || '',
+      data: defaultConfiguration.customActionData || '{}',
     });
     formData.push({
       name: 'channel',
@@ -239,7 +240,7 @@ const useChat = ({
       tenant: defaultConfiguration.tenant,
       channel: defaultConfiguration.channel,
       project: defaultConfiguration.projectName,
-      conversationId: 'Mobil' + sessionId,
+      conversationId: sessionIdNew,
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
