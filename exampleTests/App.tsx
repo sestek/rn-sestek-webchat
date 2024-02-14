@@ -15,7 +15,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
-import DocumentPicker from 'react-native-document-picker'
+import DocumentPicker from 'react-native-document-picker';
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
@@ -138,7 +138,7 @@ export default function App() {
           RNSlider: Slider,
           RNWebView: null,
           Record: AudioRecord,
-          RNFileSelector: DocumentPicker
+          RNFileSelector: DocumentPicker,
         }}
         ref={modalRef}
         defaultConfiguration={{
@@ -146,7 +146,7 @@ export default function App() {
           tenant: 'exampleTenant',
           projectName: 'exampleProjectName',
           integrationId: integrationId,
-          channel: 'Mobil',
+          channel: 'mobil',
           clientId: 'mobile-testing',
           enableNdUi: true,
           getResponseData: setResponse,
@@ -235,7 +235,7 @@ export default function App() {
           },
           // Before Func
           permissionAudioCheck: permissionAudioCheck,
-          indicatorColor : "#863CEB",
+          indicatorColor: '#863CEB',
           // Close Modal
           closeModalSettings: {
             use: true,
