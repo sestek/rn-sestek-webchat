@@ -37,7 +37,7 @@ export default function App() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
-    console.log("value", value )
+    console.log(value)
   };
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function App() {
 
   const pressGetMessageList = () => {
     const data = modalRef.current?.messageList;
-    //console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data));
   };
 
   const permissionAudioCheck = async () => {
