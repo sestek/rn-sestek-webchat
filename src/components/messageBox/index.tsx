@@ -26,6 +26,7 @@ import Markdown from '../../plugin/markdown/index';
 import { Recorder } from '../../services';
 import TypingAnimation from '../../plugin/typing';
 import { StyleContext } from '../../context/StyleContext';
+import CarouselPage from '../carousel';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const WebView = props.modules.RNWebView;
@@ -37,17 +38,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   var positionCls = [
     styles.rceMbox,
     props.position === 'right' && styles.rceMboxRight,
-    appStyle?.chatBotMessageBoxBackground && {
-      backgroundColor:
-        props.position != 'right'
-          ? appStyle?.userMessageBoxBackground
-          : appStyle?.chatBotMessageBoxBackground,
-      minWidth: 100,
-      width:
-        props?.activity?.attachmentLayout === 'carousel'
-          ? Dimensions.get('screen').width * 0.9
-          : 'auto',
-    },
+    
   ];
   var thatAbsoluteTime =
     props.type !== 'text' &&
@@ -58,7 +49,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     );
 
   const onPressButton = (value?: string, title?: string) => {
-    props.sendMessage({message:value, displayMessage:title});
+    props.sendMessage({ message: value, displayMessage: title });
     props.changeInputData('');
   };
 
@@ -133,7 +124,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 attach?.content?.images[0]?.url,
                 (width: number, height: number) => {
                   setCardList((prev: any) => [
-                    ...prev,
+                    ...prev,  
                     {
                       key,
                       title: attach?.content?.title,
@@ -309,39 +300,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
               </Markdown>
             </View>
           )}
-
-        {Array.isArray(props.activity?.attachments) &&
-          props.activity?.attachments &&
-          props.activity?.attachments[0]?.content?.buttons?.map(
-            (button: any, index: number) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => onPressButton(button?.value, button?.title)}
-                style={[
-                  styles.rceMButton,
-                  appStyle?.chatBotMessageBoxButtonBackground
-                    ? {
-                        backgroundColor:
-                          appStyle?.chatBotMessageBoxButtonBackground,
-                      }
-                    : {},
-                  {
-                    borderWidth: 1,
-                    borderColor: appStyle?.chatBotMessageBoxButtonBorderColor,
-                  },
-                ]}
-              >
-                <Text
-                  style={{
-                    ...styles.rceMButtonText,
-                    color: appStyle?.chatBotMessageBoxButtonTextColor,
-                  }}
-                >
-                  {button?.title}
-                </Text>
-              </TouchableOpacity>
-            )
-          )}
       </>
     );
   };
@@ -396,19 +354,19 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             {item.title}
           </Markdown>
         )}
-        {item?.subtitle &&   (
-            <Markdown
-              styles={styles.rceMboxText}
-              color={
-                props.position != 'right'
-                  ? appStyle?.userMessageBoxTextColor
-                  : appStyle?.chatBotMessageBoxTextColor
-              }
-            >
-              {item.subtitle}
-            </Markdown>
+        {item?.subtitle && (
+          <Markdown
+            styles={styles.rceMboxText}
+            color={
+              props.position != 'right'
+                ? appStyle?.userMessageBoxTextColor
+                : appStyle?.chatBotMessageBoxTextColor
+            }
+          >
+            {item.subtitle}
+          </Markdown>
         )}
-        {item?.text &&   (
+        {item?.text && (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -422,29 +380,19 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         )}
 
         {item?.buttons?.map((button: any, index: number) => (
+        
           <TouchableOpacity
             key={index}
             onPress={() => onPressButton(button?.value, button?.title)}
-            style={[
-              styles.rceMButton,
-              appStyle?.chatBotMessageBoxButtonBackground
-                ? {
-                    backgroundColor:
-                      appStyle?.chatBotMessageBoxButtonBackground,
-                  }
-                : {},
-              {
-                borderWidth: 1,
-                borderColor: appStyle?.chatBotMessageBoxButtonBorderColor,
-              },
-            ]}
+            style={{
+              padding: 5,
+              margin: 3,
+              borderRadius: 10,
+              borderColor: appStyle.chatBotMessageBoxBackground,
+              borderWidth: 1.5,
+            }}
           >
-            <Text
-              style={{
-                ...styles.rceMButtonText,
-                color: appStyle?.chatBotMessageBoxButtonTextColor,
-              }}
-            >
+            <Text style={{ color: appStyle.userMessageBoxBackground }}>
               {button?.title}
             </Text>
           </TouchableOpacity>
@@ -524,108 +472,162 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     );
   };
   return (
-    <View style={{ ...styles.rceContainerMbox, paddingTop: 15 }}>
+    <View style={{ ...styles.rceContainerMbox }}>
       {props.type === 'system' ? null : (
-        <View style={[positionCls]}>
-          <View style={[styles.rceMboxBody]}>
-            {(props.title || props.avatar) && props.position !== 'left' && (
-              <View
-                style={[
-                  styles.rceMboxTitle,
-                  (props.type === 'text' || props.type === 'message') &&
-                    styles.rceMboxTitleClear,
-                ]}
-              >
-                {props.avatar && (
-                  <View style={styles.rceMboxTitleAvatar}>
-                    <Avatar width={30} height={30} src={props.avatar} />
-                  </View>
-                )}
-                <View>
-                  {props.title && (
-                    <Text
-                      style={[
-                        styles.rceMboxTitleText,
-                        { color: props.titleColor || 'black' },
-                      ]}
-                    >
-                      {props.title}
-                    </Text>
-                  )}
-                </View>
+        <View
+          style={{
+            // flexDirection: props.position === 'right' ? 'row' : undefined,
+            flexDirection: 'column',
+          }}
+        >
+          <View
+            style={{
+              flexDirection: props.position === 'right' ? 'row' : undefined,
+            }}
+          >
+            {props.position === 'right' && props.avatar && (
+              <View style={styles.rceMboxTitleAvatar}>
+                <Avatar width={28} height={28} src={props.avatar} />
               </View>
             )}
-
+            <View style={[positionCls]}>
             {props.activity?.attachmentLayout === 'carousel' &&
-              cardList.length > 1 && (
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <View style={{ flexDirection: 'row', width: '100%' }}>
-                    <View style={{ width: '100%' }}>
-                      <Carousel
-                        layout="stack"
-                        data={cardList}
-                        renderItem={renderItemCarousel}
-                        sliderWidth={Dimensions.get('screen').width * 0.8}
-                        itemWidth={Dimensions.get('screen').width * 0.7}
-                        inactiveSlideOpacity={0}
-                        onSnapToItem={(index) => changeActiveSlide(index)}
-                      />
-                      {/* {renderCarouselPagination()} */}
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          marginTop: 10,
-                        }}
-                      >
-                        <View
-                          style={{
-                            width: 45,
-                            height: 25,
-                            backgroundColor: '#0000001c',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: 12,
-                          }}
-                        >
-                          <Text style={{ fontSize: 10, color: 'black' }}>
-                            {activeSlide + 1} / {cardList?.length}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
+                  cardList.length > 1 && (
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <View style={{ flexDirection: 'row', width: '100%' }}>
+                        <View style={{ width: '100%' }}>
+                          <Carousel
+                            layout="stack"
+                            data={cardList}
+                            renderItem={renderItemCarousel}
+                            sliderWidth={Dimensions.get('screen').width * 0.8}
+                            itemWidth={Dimensions.get('screen').width * 0.7}
+                            inactiveSlideOpacity={0}
+                             onSnapToItem={(index) => changeActiveSlide(index)}
+                           />
+                           {/* {renderCarouselPagination()} */}
+                           <View
+                             style={{
+                               justifyContent: 'center',
+                               alignItems: 'center',
+                               marginTop: 10,
+                             }}
+                           >
+                             <View
+                               style={{
+                                 width: 45,
+                                 height: 25,
+                                 backgroundColor: '#0000001c',
+                                 justifyContent: 'center',
+                                 alignItems: 'center',
+                                 borderRadius: 12,
+                               }}
+                             >
+                               <Text style={{ fontSize: 10, color: 'black' }}>
+                                 {activeSlide + 1} / {cardList?.length}
+                               </Text>
+                             </View>
+                           </View>
+                         </View>
+                       </View>
+                     </View>
+                        // <CarouselPage data={cardList}/>
+
+                  )}
+              <View
+                style={[
+                  styles.rceMboxBody,
+                  {
+                    backgroundColor:
+                      props.position != 'right'
+                        ? appStyle?.userMessageBoxBackground
+                        : appStyle?.chatBotMessageBoxBackground,
+                    minWidth: 100,
+                    width:
+                      props?.activity?.attachmentLayout === 'carousel'
+                        ? Dimensions.get('screen').width * 0.8
+                        : 'auto',
+                    padding: 8,
+                    borderRadius: 15,
+                    display:(props.activity?.attachmentLayout === 'carousel' ? "none" : undefined)
+                  },
+                  
+                ]}
+              >
+                {(props.title || props.avatar) && props.position !== 'left' && (
+                  <View
+                    style={[
+                      styles.rceMboxTitle,
+                      (props.type === 'text' || props.type === 'message') &&
+                        styles.rceMboxTitleClear,
+                    ]}
+                  ></View>
+                )}
+              
+
+                {props.activity?.attachmentLayout !== 'carousel' &&
+                  renderItemMessage()}
+
+                {(props.type === 'audio' ||
+                  props.activity?.channelData?.AudioFromTts) &&
+                  renderItemAudio()}
+
+                {props.activity.type === 'typing' ? renderTyping() : null}
+
+                <View style={[thatAbsoluteTime && styles.rceMboxTimeBlock]}>
+                  <Text
+                    style={{
+                      ...styles.rceMboxTimeText,
+                      color:
+                        props.position != 'right'
+                          ? appStyle?.userMessageBoxTextColor
+                          : appStyle?.chatBotMessageBoxTextColor,
+                    }}
+                  >
+                    {(props.activity?.timestamp || props.dateString) &&
+                      getTimeGenerate({ timestamp: props.activity.timestamp })}
+                  </Text>
                 </View>
-              )}
-
-            {props.activity?.attachmentLayout !== 'carousel' &&
-              renderItemMessage()}
-
-            {(props.type === 'audio' ||
-              props.activity?.channelData?.AudioFromTts) &&
-              renderItemAudio()}
-
-            {props.activity.type === 'typing' ? renderTyping() : null}
-
-            <View style={[thatAbsoluteTime && styles.rceMboxTimeBlock]}>
-              <Text
+              </View>
+              <View
                 style={{
-                  ...styles.rceMboxTimeText,
-                  color:
-                    props.position != 'right'
-                      ? appStyle?.userMessageBoxTextColor
-                      : appStyle?.chatBotMessageBoxTextColor,
+                  flexDirection: 'column',
+                  justifyContent: 'center',
                 }}
               >
-                {(props.activity?.timestamp || props.dateString) &&
-                  getTimeGenerate({ timestamp: props.activity.timestamp })}
-              </Text>
+                {props.activity?.attachmentLayout !== 'carousel' &&
+                  Array.isArray(props.activity?.attachments) &&
+                  props.activity?.attachments &&
+                  props.activity?.attachments[0]?.content?.buttons?.map(
+                    (button: any, index: number) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                          onPressButton(button?.value, button?.title)
+                        }
+                        style={{
+                          padding: 5,
+                          margin: 3,
+                          borderRadius: 10,
+                          borderColor: appStyle.chatBotMessageBoxBackground,
+                          borderWidth: 1.5,
+                        }}
+                      >
+                        <Text
+                          style={{ color: appStyle.userMessageBoxBackground }}
+                        >
+                          {button?.title}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  )}
+              </View>
             </View>
           </View>
         </View>

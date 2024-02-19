@@ -71,6 +71,8 @@ const useChat = ({
     client.onmessage((details: any, message: any) => {
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
+        // console.log("messageBody?.channelData", messageBody?.channelData)
+        // console.log("enableNdUi",enableNdUi)
       if (messageBody?.channelData) {
         if (enableNdUi) {
           if (messageBody?.channelData?.CustomActionData) {
@@ -82,7 +84,7 @@ const useChat = ({
         } else {
           if (messageBody?.channelData?.CustomProperties) {
             setResponseFunc(
-              messageBody?.channelData?.CustomAction,
+              messageBody?.channelData?.CustomActionData,
               messageBody?.channelData?.CustomProperties
             );
           }

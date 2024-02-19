@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View, StyleSheet } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 import { RobotIcon } from '../image';
 import { GeneralManager } from '../services';
@@ -16,6 +16,8 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     chatBotMessageBoxHeaderNameColor,
     userMessageBoxHeaderNameColor,
     userMessageBoxTextColor,
+    chatBotMessageBoxBackground,
+    chatBotMessageBoxTextColor,
   } = props.customizeConfiguration;
 
   const getUserName = (channel: any) => {
@@ -29,7 +31,15 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
       ? userMessageBoxHeaderNameColor || 'black'
       : chatBotMessageBoxHeaderNameColor || 'black';
   };
+  const getCurrentDate = () => {
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
 
+    //Alert.alert(date + '-' + month + '-' + year);
+    // You can turn it in to your desired format
+    return date + ' / ' + month + ' / ' + year; //format: d-m-y;
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -39,6 +49,18 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           scrollView?.current?.scrollToEnd({ animated: true })
         }
       >
+        <View style={styles.textContainer}>
+          <View
+            style={{
+              ...styles.textSubContainer,
+              backgroundColor: chatBotMessageBoxBackground,
+            }}
+          >
+            <Text style={{ ...styles.text, color: chatBotMessageBoxTextColor }}>
+              {getCurrentDate()}
+            </Text>
+          </View>
+        </View>
         {props.messageList
           .slice(1)
           .filter((x) => x.message !== '' && x.message !== '<p></p>')

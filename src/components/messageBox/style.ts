@@ -26,7 +26,7 @@ export default StyleSheet.create({
   },
 
   rceMbox: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     borderRadius: 10,
     borderTopRightRadius: 10,
     marginLeft: 20,
@@ -40,13 +40,13 @@ export default StyleSheet.create({
     maxWidth: width - 50,
     alignSelf: 'flex-end',
 
-    shadowColor: 'rgba(0,0,0,0.5)',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 4.22,
+    // shadowColor: 'rgba(0,0,0,0.5)',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.32,
+    // shadowRadius: 4.22,
 
     elevation: 2,
 
@@ -116,7 +116,8 @@ export default StyleSheet.create({
 
   rceMboxTitleAvatar: {
     display: 'flex',
-    marginRight: 5,
+    marginRight: 2,
+    marginLeft:5
   },
 
   rceMboxTitleText: {
