@@ -57,8 +57,8 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
       (props.activity.text || props.activity.message)
     );
 
-  const onPressButton = (text?: string) => {
-    props.sendMessage(text);
+  const onPressButton = (value?: string, title?: string) => {
+    props.sendMessage({message:value, displayMessage:title});
     props.changeInputData('');
   };
 
@@ -86,7 +86,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         textLineHeights +
         buttonsHeight +
         IMAGESIZE +
-        210;
+        80;
       setmaxHeight((prev) => {
         if (totalHeight > prev) {
           return totalHeight;
@@ -188,6 +188,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             style={{
               resizeMode: 'contain',
               width: image.width,
+              maxHeight: Dimensions.get('screen').height * 0.45,
               height: image.height,
               maxWidth: Dimensions.get('screen').width * 0.8,
               marginBottom: 10,
@@ -315,7 +316,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             (button: any, index: number) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => onPressButton(button?.value || button?.title)}
+                onPress={() => onPressButton(button?.value, button?.title)}
                 style={[
                   styles.rceMButton,
                   appStyle?.chatBotMessageBoxButtonBackground
@@ -383,7 +384,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           />
         )}
 
-        {item.title && (
+        {item?.title && (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -395,19 +396,19 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             {item.title}
           </Markdown>
         )}
-        {item.subtitle && (
-          <Markdown
-            styles={styles.rceMboxText}
-            color={
-              props.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
-          >
-            {item.subtitle}
-          </Markdown>
+        {item?.subtitle &&   (
+            <Markdown
+              styles={styles.rceMboxText}
+              color={
+                props.position != 'right'
+                  ? appStyle?.userMessageBoxTextColor
+                  : appStyle?.chatBotMessageBoxTextColor
+              }
+            >
+              {item.subtitle}
+            </Markdown>
         )}
-        {item.text && (
+        {item?.text &&   (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -423,7 +424,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         {item?.buttons?.map((button: any, index: number) => (
           <TouchableOpacity
             key={index}
-            onPress={() => onPressButton(button?.value || button?.title)}
+            onPress={() => onPressButton(button?.value, button?.title)}
             style={[
               styles.rceMButton,
               appStyle?.chatBotMessageBoxButtonBackground

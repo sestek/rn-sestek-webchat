@@ -23,7 +23,6 @@ export default StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     alignSelf: 'center',
-    textTransform: 'uppercase',
   },
 
   rceMbox: {

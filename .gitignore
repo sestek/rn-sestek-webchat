@@ -42,9 +42,10 @@ android.iml
 
 # Cocoapods
 #
-example/ios/Pods
+exampleTests/ios/Pods
 package-lock.json
-example/package-lock.json
+exampleTests/package-lock.json
+exampleTests/.env
 
 # node.js
 #

@@ -17,6 +17,7 @@
     "react-native-audio-record": "^0.2.2",
     "react-native-audio-recorder-player": "^3.4.0",
     "react-native-document-picker": "^8.2.2",
+    "react-native-dotenv": "^3.4.10",
     "react-native-fetch-blob": "^0.10.8",
     "react-native-flash-message": "^0.2.1",
     "react-native-webview": "^11.26.0"

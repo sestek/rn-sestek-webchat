@@ -41,10 +41,10 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
 
     // ! Artık nd ve knovvu ortamları eşit ikisinin de başında mobile prefix var
     // ! durum değişirse diye eklendi
-    if (defaultConfiguration?.enableNdUi) {
-      sessionId = 'Mobil' + sessionId;
-      defaultConfiguration.channel = 'NdUi';
-    }
+    // if (defaultConfiguration?.enableNdUi) {
+    //   sessionId = 'Mobil' + sessionId;
+    //   defaultConfiguration.channel = 'NdUi';
+    // }
 
     const modalRef = useRef<ModalCompRef>(null);
     const [closeModal, setCloseModal] = useState<boolean>(false);
@@ -53,7 +53,7 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
 
     const startConversation = () => {
       if (!start) {
-        sessionId = GeneralManager.createUUID();
+        sessionId = 'Mobil' + GeneralManager.createUUID();
         client = new SignalRClient(url || ChatModal.defaultProps?.url);
       }
       setStart(true);

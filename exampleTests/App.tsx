@@ -16,14 +16,13 @@ import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
-
+import config from './src/config'
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
 
   const pressStartConversation = () => {
     modalRef.current?.startConversation();
   };
-
   const pressEndConversation = () => {
     if (!modalRef.current?.conversationStatus) {
       showMessage({
@@ -38,6 +37,7 @@ export default function App() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
+    console.log("value", value )
   };
 
   useEffect(() => {
@@ -80,7 +80,6 @@ export default function App() {
   const customActionDataExample = {
     tel: '900000000000',
   };
-  const integrationId = '24943652-7235-d2ce-ff39-3a0af91ec61e';
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
@@ -131,7 +130,7 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={'ConnectionChathubUrl'}
+        url={config?.WEBCHATURL}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -143,12 +142,11 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'exampleTenant',
-          projectName: 'exampleProjectName',
-          integrationId: integrationId,
+          tenant: config?.TENANT,
+          projectName: config?.PROJECTNAME,
           channel: 'mobil',
           clientId: 'mobile-testing',
-          enableNdUi: true,
+          // enableNdUi: false, 
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),
         }}

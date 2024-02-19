@@ -77,7 +77,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
   const clickSendButton = () => {
     if (!inputData) return;
-    sendMessage && sendMessage(inputData && inputData);
+    sendMessage && sendMessage({message:inputData && inputData});
     changeInputData && changeInputData('');
   };
 

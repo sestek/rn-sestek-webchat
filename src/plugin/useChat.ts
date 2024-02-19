@@ -120,11 +120,20 @@ const useChat = ({
     });
   };
 
-  const sendMessage = async (message: string, bot: boolean = false) => {
+  const sendMessage = async ({
+    message,
+    displayMessage,
+    bot = false,
+  }: {
+    message?: string;
+    displayMessage?: string
+    bot: boolean;
+  }) => {
     if (message) {
+      const displayMessageText = displayMessage ? displayMessage : message;
       addMessageList({
         timestamp: new Date().getTime(),
-        message,
+        message: displayMessageText,
         customAction: '',
         customActionData: '',
         clientId: defaultConfiguration.clientId,
@@ -165,7 +174,7 @@ const useChat = ({
           /<\/?[^>]+(>|$)/g,
           ''
         );
-        sendMessage(message, true);
+        sendMessage({message:message, bot:true});
       })
       .catch((err: any) => {
         console.log(err);
