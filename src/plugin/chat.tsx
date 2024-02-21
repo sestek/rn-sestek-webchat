@@ -18,7 +18,6 @@ import { ChatIcon } from '../image';
 import type { PropsChatModal } from '../types';
 import { StyleContextProvider } from '../context/StyleContext';
 import { ChatModalProps } from '../types/plugin/ChatModalProps';
-import { ChatModalConstant } from '../constant/ChatModalConstant';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
 
@@ -168,6 +167,3 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
   }
 );
 
-ChatModal.defaultProps = {
-  url: ChatModalConstant.knovvu,
-};
