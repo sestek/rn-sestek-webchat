@@ -1,0 +1,6 @@
+{
+  "extends": "@tsconfig/react-native/tsconfig.json",
+  "paths": {
+    "react": [ "./node_modules/@types/react" ]
+  }
+}
