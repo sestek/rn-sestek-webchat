@@ -154,10 +154,11 @@
     ]
   },
   "dependencies": {
-    "@aspnet/signalr": "^1.0.27",
+    "@microsoft/signalr": "^8.0.0",
     "husky": "^8.0.1",
     "lodash": "^4.17.21",
     "react-native-snap-carousel": "^4.0.0-beta.6",
+    "react-native-url-polyfill": "^2.0.0",
     "simple-markdown": "^0.7.3"
   },
   "lint-staged": {

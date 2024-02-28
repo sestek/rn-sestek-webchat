@@ -143,7 +143,7 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
       });
-      await client.sendAsync(
+       client.sendAsync(
         sessionId,
         message,
         defaultConfiguration.customAction,

@@ -1,4 +1,5 @@
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
+import "react-native-url-polyfill/auto"
 
 class SignalRClient {
   connected: boolean;
@@ -43,7 +44,7 @@ class SignalRClient {
       let val = await this.reconnectAsync();
       return val;
     }
-    await this.connection.invoke('SendMessage', ...args).catch(() => {
+     this.connection.send('SendMessage', ...args).catch(() => {
       this.connected = false;
     });
   };
