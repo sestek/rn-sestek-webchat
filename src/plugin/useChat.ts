@@ -126,7 +126,7 @@ const useChat = ({
     bot = false,
   }: {
     message?: string;
-    displayMessage?: string
+    displayMessage?: string;
     bot: boolean;
   }) => {
     if (message) {
@@ -143,7 +143,7 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
       });
-       client.sendAsync(
+      client.sendAsync(
         sessionId,
         message,
         defaultConfiguration.customAction,
@@ -174,7 +174,7 @@ const useChat = ({
           /<\/?[^>]+(>|$)/g,
           ''
         );
-        sendMessage({message:message, bot:true});
+        sendMessage({ message: message, bot: true });
       })
       .catch((err: any) => {
         console.log(err);
@@ -340,8 +340,21 @@ const useChat = ({
     await client.startConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
   };
-
-  return [messageList, sendMessage, sendAudio, sendAttachment];
+  const sendEnd = async () => {
+     const dataToSend = {
+       message: 'Chat ended by client!',
+       customAction: 'endOfConversation',
+       customActionData: defaultConfiguration.customActionData,
+       clientId: defaultConfiguration.clientId,
+       tenant: defaultConfiguration.tenant,
+       channel: defaultConfiguration.channel,
+       project: defaultConfiguration.projectName,
+       conversationId: sessionId,
+       fullName: defaultConfiguration.fullName,
+     };
+     client.endConversation(JSON.stringify(dataToSend));
+  };
+  return [messageList, sendMessage, sendAudio, sendAttachment, sendEnd];
 };
 
 export { useChat };

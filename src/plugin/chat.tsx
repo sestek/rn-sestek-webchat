@@ -20,6 +20,7 @@ import { StyleContextProvider } from '../context/StyleContext';
 import { ChatModalProps } from '../types/plugin/ChatModalProps';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
+import { useChat } from '../plugin/useChat';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -50,6 +51,15 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const [start, setStart] = useState<boolean>(false);
     const [visible, setVisible] = useState<boolean>(false);
 
+
+    const generalChatHook  = useChat({
+      url: url ? url : '',
+      defaultConfiguration: defaultConfiguration,
+      sessionId: sessionId,
+      client: client,
+      rnfs: modules?.RNFS,
+    });
+
     const startConversation = () => {
       if (!start) {
         sessionId = 'Mobil' + GeneralManager.createUUID();
@@ -70,6 +80,8 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const endConversation = async () => {
       setStart(false);
       setVisible(false);
+        const endFunc = generalChatHook.length-1
+        generalChatHook[endFunc]()
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';

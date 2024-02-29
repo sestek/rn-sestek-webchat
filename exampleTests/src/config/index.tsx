@@ -1,4 +1,4 @@
-import {WEBCHATURL, TENANT, PROJECTNAME} from '@env'
+import {URL, TNAME, PNAME} from '@env'
 
 
-export default {WEBCHATURL, TENANT,PROJECTNAME}
+export default {URL, TNAME,PNAME}

@@ -77,8 +77,12 @@ class SignalRClient {
     await this.connection.invoke('ContinueConversation', ...args);
   };
 
-  endConversation = async (...args: any) => {
-    await this.connection.invoke('EndConversation', ...args);
+  endConversation = async (args: any) => {
+    if (!this.connected) {
+      let val = await this.reconnectAsync();
+      return val;
+    }
+     this.connection.send('EndConversation', args);
   };
 
   messageStatusChange = async (func: () => void) => {
