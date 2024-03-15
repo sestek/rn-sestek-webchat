@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
+import { AppState } from 'react-native';
 
 const useChat = ({
   defaultConfiguration,
@@ -9,10 +10,34 @@ const useChat = ({
   url,
 }: PropsUseChat) => {
   const { enableNdUi, getResponseData } = defaultConfiguration;
+
   const [messageList, setMessageList] = useState<any>([]);
+  const [historyCount, sethistoryCount] = useState(0);
+
+  const [background, setbackground] = useState(false);
+
+  useEffect(() => {
+    const _handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'background') {
+        setbackground(false);
+      } else {
+        console.log('back useChat !');
+        setbackground(true);
+      }
+    };
+    AppState.addEventListener('change', _handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', _handleAppStateChange);
+    };
+  }, []);
 
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
+      if (background) {
+        console.log('add background!');
+        getHistoryBackground();
+      }
       if (messages?.length > 0) {
         const messagesLength = messages.length;
         const lastElement = messages[messagesLength - 1];
@@ -38,6 +63,7 @@ const useChat = ({
   }, []);
 
   const initSocket = async () => {
+    console.log("init socket tetiklendi !")
     await client
       .connectAsync()
       .then(() => {
@@ -69,6 +95,7 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((details: any, message: any) => {
+      // console.log(message);
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
@@ -341,20 +368,108 @@ const useChat = ({
     defaultConfiguration.customAction = '';
   };
   const sendEnd = async () => {
-     const dataToSend = {
-       message: 'Chat ended by client!',
-       customAction: 'endOfConversation',
-       customActionData: defaultConfiguration.customActionData,
-       clientId: defaultConfiguration.clientId,
-       tenant: defaultConfiguration.tenant,
-       channel: defaultConfiguration.channel,
-       project: defaultConfiguration.projectName,
-       conversationId: sessionId,
-       fullName: defaultConfiguration.fullName,
-     };
-     client.endConversation(JSON.stringify(dataToSend));
+    const dataToSend = {
+      message: 'Chat ended by client!',
+      customAction: 'endOfConversation',
+      customActionData: defaultConfiguration.customActionData,
+      clientId: defaultConfiguration.clientId,
+      tenant: defaultConfiguration.tenant,
+      channel: defaultConfiguration.channel,
+      project: defaultConfiguration.projectName,
+      conversationId: sessionId,
+      fullName: defaultConfiguration.fullName,
+    };
+    client.endConversation(JSON.stringify(dataToSend));
   };
-  return [messageList, sendMessage, sendAudio, sendAttachment, sendEnd];
+
+  const getHistory = (propsMessage: any) => {
+    {
+      /**
+  
+    ekran kapattık kapat history count = 3
+    veri akıyorsa arka plan ise kontrolü ile history count  + 1
+    ekran açtık kalan kod aynı fark history count
+    
+  */
+    }
+    fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && data.length > 0) {
+          console.log('var olan : ', historyCount);
+          console.log('data : ', data.length);
+          console.log('data-gelen : ', data);
+          if (data.length > historyCount) {
+            for (let i = data.length - historyCount + 1; i < data.length; i++) {
+              addMessageList({
+                timestamp: new Date(data[i].dialogTime),
+                message: data[i]?.text,
+                channel: null,
+                conversationId: sessionId,
+                type: 'message',
+              });
+            }
+          } else if (historyCount > data.length) {
+            for (let i = 0; i < data.length; i++) {
+              addMessageList({
+                timestamp: new Date(data[i].dialogTime),
+                message: data[i]?.text,
+                channel: null,
+                conversationId: sessionId,
+                type: 'message',
+              });
+            }
+          }
+        }
+      });
+  };
+
+  const getHistoryBackground = () => {
+    fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && data.length > 0) {
+          sethistoryCount(data.length);
+        }
+      });
+  };
+
+  const conversationContinue = async () => {
+    console.log('continune chat !');
+    defaultConfiguration.customAction = 'ContinueConversation';
+    const startObj = {
+      timestamp: new Date().getTime(),
+      message: '',
+      customAction: 'ContinueConversation',
+      customActionData: defaultConfiguration.customActionData,
+      clientId: defaultConfiguration.clientId,
+      tenant: defaultConfiguration.tenant,
+      channel: defaultConfiguration.channel,
+      project: defaultConfiguration.projectName,
+      conversationId: sessionId,
+      fullName: defaultConfiguration.fullName,
+      userAgent: 'USERAGENT EKLENECEK',
+      browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
+    };
+    addMessageList(startObj);
+    await client.continueConversation(JSON.stringify(startObj));
+    defaultConfiguration.customAction = '';
+  };
+
+  return [
+    messageList,
+    sendMessage,
+    sendAudio,
+    sendAttachment,
+    sendEnd,
+    getHistory,
+    conversationContinue,
+    getHistoryBackground,
+  ];
 };
 
 export { useChat };

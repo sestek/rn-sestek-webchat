@@ -4,6 +4,8 @@ import React, {
   useImperativeHandle,
   useContext,
   useEffect,
+  useRef,
+  useCallback,
 } from 'react';
 import {
   Modal,
@@ -11,6 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
+  AppState,
 } from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from '../types';
@@ -36,7 +39,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       customizeConfiguration,
       closeConversation,
       closedModalManagment,
-      closeModal,
+      hideModal,
       visible,
       clickClosedConversationModalFunc,
     } = props;
@@ -46,7 +49,16 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { loading } = useLoading();
 
-    const [messageList, sendMessage, sendAudio, sendAttachment] = useChat({
+    const [
+      messageList,
+      sendMessage,
+      sendAudio,
+      sendAttachment,
+      sendEnd,
+      getHistory,
+      conversationContinue,
+      getHistoryBackground,
+    ] = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
       sessionId: sessionId,
@@ -84,18 +96,42 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       })();
     }, []);
 
+    const [background, setbackground] = useState(false);
+    useEffect(() => {
+      if (messageList && background) {
+        getHistory(messageList?.slice(1));
+        conversationContinue();
+        setbackground(false);
+      }
+    }, [messageList, background]);
+
+    useEffect(() => {
+      const _handleAppStateChange = (nextAppState) => {
+        if (nextAppState === 'active') {
+          setbackground(true);
+        } else {
+          getHistoryBackground();
+        }
+      };
+      AppState.addEventListener('change', _handleAppStateChange);
+
+      return () => {
+        AppState.removeEventListener('change', _handleAppStateChange);
+      };
+    }, []);
+
     return (
       <Modal
         animationType={'slide'}
         transparent={true}
         visible={visible && Object.keys(appStyle).length > 0}
         onRequestClose={() => {
-          closeModal && closeModal();
+          hideModal && hideModal();
         }}
       >
         {loading && (
           <LoadingModal
-            indicatorColor={customizeConfiguration.indicatorColor ?? "" }
+            indicatorColor={customizeConfiguration.indicatorColor ?? ''}
           />
         )}
 
@@ -122,10 +158,11 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             ]}
           >
             <HeaderComponent
-              closeModal={closeModal}
+              hideModal={hideModal}
               clickClosedConversationModalFunc={
                 clickClosedConversationModalFunc
               }
+              defaultConfiguration={defaultConfiguration}
               closeModalStatus={
                 customizeConfiguration?.closeModalSettings?.use ? true : false
               }

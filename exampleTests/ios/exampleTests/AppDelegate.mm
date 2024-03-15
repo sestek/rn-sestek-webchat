@@ -14,6 +14,12 @@
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    // Arka planda bir yenileme işlemi gerçekleştirilir
+    // Yenileme işlemi tamamlandığında completionHandler çağrılmalı
+    completionHandler(UIBackgroundFetchResultNewData); // Veya uygun sonuç
+}
+
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
 #if DEBUG

@@ -16,7 +16,9 @@ import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
-import config from './src/config'
+import config from './src/config';
+import BackgroundTimer from 'react-native-background-timer';
+
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
 
@@ -37,7 +39,7 @@ export default function App() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
-    console.log("value", value )
+    console.log('value', value);
   };
 
   useEffect(() => {
@@ -131,6 +133,7 @@ export default function App() {
       {/* @ts-expect-error Server Component */}
       <ChatModal
         url={config?.URL}
+        // url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -138,15 +141,19 @@ export default function App() {
           RNWebView: null,
           Record: AudioRecord,
           RNFileSelector: DocumentPicker,
+          testTimer: BackgroundTimer,
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: config?.TNAME,
-          projectName: config?.PNAME,
+          // tenant: config?.TNAME,
+          // projectName: config?.PNAME,
           channel: 'mobil',
           clientId: 'mobile-testing',
-          // enableNdUi: false, 
+          tenant: config.TNAME,
+          projectName: config.PNAME,
+
+          // enableNdUi: false,
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),
         }}

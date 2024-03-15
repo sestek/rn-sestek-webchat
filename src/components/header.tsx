@@ -1,5 +1,5 @@
-import React, { useContext, type FC } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import React, { useContext, type FC, useEffect } from 'react';
+import { AppState, Image, Text, TouchableOpacity, View } from 'react-native';
 import type { PropsHeaderComponent } from 'src/types';
 import { MinusIcon, MultiplyIcon } from '../image';
 import { StyleContext } from '../context/StyleContext';
@@ -10,12 +10,31 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     closeIcon,
     hideIcon,
     clickClosedConversationModalFunc,
-    closeModal,
+    hideModal,
     headerText,
     closeModalStatus,
     closeConversation,
+    defaultConfiguration,
   } = props;
   const { appStyle } = useContext(StyleContext);
+  // useEffect(() => {
+  //   if (defaultConfiguration.getResponseData) {
+  //     defaultConfiguration.getResponseData({ isBackground: false });
+  //   }
+  //   const handleChange = (nextAppState: any) => {
+  //     if (nextAppState === 'background') {
+  //       console.log("background!")
+  //       if (defaultConfiguration.getResponseData) {
+  //         defaultConfiguration.getResponseData({ isBackground: true });
+  //       }
+  //     } else if (nextAppState === 'active') {
+  //       if (defaultConfiguration.getResponseData) {
+  //         defaultConfiguration.getResponseData({ isBackground: false });
+  //       }
+  //     }
+  //   };
+  //   AppState?.addEventListener('change', handleChange);
+  // }, []);
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerContainer}>
@@ -23,7 +42,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           {headerText ?? HeaderComponent.defaultProps?.headerText!}
         </Text>
       </View>
-      <TouchableOpacity onPress={() => closeModal()} style={styles.center}>
+      <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
         {hideIcon ? (
           <Image style={styles.imageIcon} source={hideIcon.value} />
         ) : (

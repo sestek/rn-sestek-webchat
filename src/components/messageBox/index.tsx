@@ -57,7 +57,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     );
 
   const onPressButton = (value?: string, title?: string) => {
-    props.sendMessage({message:value, displayMessage:title});
+    props.sendMessage({ message: value, displayMessage: title });
     props.changeInputData('');
   };
 
@@ -395,19 +395,19 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             {item.title}
           </Markdown>
         )}
-        {!checked.includes(item?.subtitle) &&   (
-            <Markdown
-              styles={styles.rceMboxText}
-              color={
-                props.position != 'right'
-                  ? appStyle?.userMessageBoxTextColor
-                  : appStyle?.chatBotMessageBoxTextColor
-              }
-            >
-              {item.subtitle}
-            </Markdown>
+        {!checked.includes(item?.subtitle) && (
+          <Markdown
+            styles={styles.rceMboxText}
+            color={
+              props.position != 'right'
+                ? appStyle?.userMessageBoxTextColor
+                : appStyle?.chatBotMessageBoxTextColor
+            }
+          >
+            {item.subtitle}
+          </Markdown>
         )}
-        {!checked.includes(item?.text) &&   (
+        {!checked.includes(item?.text) && (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -420,34 +420,35 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           </Markdown>
         )}
 
-        {!checked.includes(item?.buttons) && item?.buttons?.map((button: any, index: number) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => onPressButton(button?.value, button?.title)}
-            style={[
-              styles.rceMButton,
-              appStyle?.chatBotMessageBoxButtonBackground
-                ? {
-                    backgroundColor:
-                      appStyle?.chatBotMessageBoxButtonBackground,
-                  }
-                : {},
-              {
-                borderWidth: 1,
-                borderColor: appStyle?.chatBotMessageBoxButtonBorderColor,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                ...styles.rceMButtonText,
-                color: appStyle?.chatBotMessageBoxButtonTextColor,
-              }}
+        {!checked.includes(item?.buttons) &&
+          item?.buttons?.map((button: any, index: number) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => onPressButton(button?.value, button?.title)}
+              style={[
+                styles.rceMButton,
+                appStyle?.chatBotMessageBoxButtonBackground
+                  ? {
+                      backgroundColor:
+                        appStyle?.chatBotMessageBoxButtonBackground,
+                    }
+                  : {},
+                {
+                  borderWidth: 1,
+                  borderColor: appStyle?.chatBotMessageBoxButtonBorderColor,
+                },
+              ]}
             >
-              {button?.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={{
+                  ...styles.rceMButtonText,
+                  color: appStyle?.chatBotMessageBoxButtonTextColor,
+                }}
+              >
+                {button?.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
       </View>
     );
   };

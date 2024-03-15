@@ -5,13 +5,7 @@ import React, {
   forwardRef,
   useRef,
 } from 'react';
-import {
-  Image,
-  StatusBar,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
 import ModalComponent, { ModalCompRef } from '../components/modal';
 import { ChatIcon } from '../image';
@@ -51,8 +45,7 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const [start, setStart] = useState<boolean>(false);
     const [visible, setVisible] = useState<boolean>(false);
 
-
-    const generalChatHook  = useChat({
+    const generalChatHook = useChat({
       url: url ? url : '',
       defaultConfiguration: defaultConfiguration,
       sessionId: sessionId,
@@ -80,8 +73,8 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const endConversation = async () => {
       setStart(false);
       setVisible(false);
-        const endFunc = generalChatHook.length-1
-        generalChatHook[endFunc]()
+      const endFunc = generalChatHook.length - 1;
+      generalChatHook[endFunc]();
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
@@ -163,7 +156,7 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
                 defaultConfiguration={defaultConfiguration}
                 visible={visible}
                 closeConversation={endConversation}
-                closeModal={triggerVisible}
+                hideModal={triggerVisible}
                 sessionId={sessionId}
                 client={client}
                 closedModalManagment={{ closeModal, setCloseModal }}
@@ -178,4 +171,3 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     );
   }
 );
-
