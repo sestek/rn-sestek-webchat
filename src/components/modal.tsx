@@ -4,15 +4,12 @@ import React, {
   useImperativeHandle,
   useContext,
   useEffect,
-  useRef,
-  useCallback,
 } from 'react';
 import {
   Modal,
   View,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
   AppState,
 } from 'react-native';
 import { useChat } from '../plugin/useChat';
@@ -110,7 +107,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
         if (nextAppState === 'active') {
           setbackground(true);
         } else {
-          getHistoryBackground();
+          getHistoryBackground(messageList?.slice(1));
         }
       };
       AppState.addEventListener('change', _handleAppStateChange);

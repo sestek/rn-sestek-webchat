@@ -17,24 +17,24 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     defaultConfiguration,
   } = props;
   const { appStyle } = useContext(StyleContext);
-  // useEffect(() => {
-  //   if (defaultConfiguration.getResponseData) {
-  //     defaultConfiguration.getResponseData({ isBackground: false });
-  //   }
-  //   const handleChange = (nextAppState: any) => {
-  //     if (nextAppState === 'background') {
-  //       console.log("background!")
-  //       if (defaultConfiguration.getResponseData) {
-  //         defaultConfiguration.getResponseData({ isBackground: true });
-  //       }
-  //     } else if (nextAppState === 'active') {
-  //       if (defaultConfiguration.getResponseData) {
-  //         defaultConfiguration.getResponseData({ isBackground: false });
-  //       }
-  //     }
-  //   };
-  //   AppState?.addEventListener('change', handleChange);
-  // }, []);
+  useEffect(() => {
+    // c-hook
+    if (defaultConfiguration.getResponseData) {
+      defaultConfiguration.getResponseData({ isBackground: false });
+    }
+    const handleChange = (nextAppState: any) => {
+      if (nextAppState === 'background') {
+        if (defaultConfiguration.getResponseData) {
+          defaultConfiguration.getResponseData({ isBackground: true });
+        }
+      } else if (nextAppState === 'active') {
+        if (defaultConfiguration.getResponseData) {
+          defaultConfiguration.getResponseData({ isBackground: false });
+        }
+      }
+    };
+    AppState?.addEventListener('change', handleChange);
+  }, []);
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerContainer}>

@@ -19,10 +19,9 @@ const useChat = ({
   useEffect(() => {
     const _handleAppStateChange = (nextAppState) => {
       if (nextAppState === 'background') {
-        setbackground(false);
-      } else {
-        console.log('back useChat !');
         setbackground(true);
+      } else {
+        setbackground(false);
       }
     };
     AppState.addEventListener('change', _handleAppStateChange);
@@ -35,7 +34,6 @@ const useChat = ({
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
       if (background) {
-        console.log('add background!');
         getHistoryBackground();
       }
       if (messages?.length > 0) {
@@ -63,7 +61,7 @@ const useChat = ({
   }, []);
 
   const initSocket = async () => {
-    console.log("init socket tetiklendi !")
+   
     await client
       .connectAsync()
       .then(() => {
@@ -95,7 +93,6 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((details: any, message: any) => {
-      // console.log(message);
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
@@ -384,13 +381,7 @@ const useChat = ({
 
   const getHistory = (propsMessage: any) => {
     {
-      /**
-  
-    ekran kapattık kapat history count = 3
-    veri akıyorsa arka plan ise kontrolü ile history count  + 1
-    ekran açtık kalan kod aynı fark history count
-    
-  */
+     
     }
     fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
       method: 'GET',
@@ -398,11 +389,9 @@ const useChat = ({
       .then((res) => res.json())
       .then((data: any) => {
         if (data && data.length > 0) {
-          console.log('var olan : ', historyCount);
-          console.log('data : ', data.length);
-          console.log('data-gelen : ', data);
+          
           if (data.length > historyCount) {
-            for (let i = data.length - historyCount + 1; i < data.length; i++) {
+            for (let i = historyCount; i < data.length; i++) {
               addMessageList({
                 timestamp: new Date(data[i].dialogTime),
                 message: data[i]?.text,
