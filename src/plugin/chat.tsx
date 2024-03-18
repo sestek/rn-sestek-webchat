@@ -45,7 +45,7 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const [start, setStart] = useState<boolean>(false);
     const [visible, setVisible] = useState<boolean>(false);
 
-    const generalChatHook = useChat({
+    const { sendEnd } = useChat({
       url: url ? url : '',
       defaultConfiguration: defaultConfiguration,
       sessionId: sessionId,
@@ -73,8 +73,7 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const endConversation = async () => {
       setStart(false);
       setVisible(false);
-      const endFunc = generalChatHook.length - 1;
-      generalChatHook[endFunc]();
+      sendEnd();
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';

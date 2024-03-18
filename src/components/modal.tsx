@@ -47,16 +47,15 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { loading } = useLoading();
 
-    const [
+    const {
       messageList,
       sendMessage,
       sendAudio,
       sendAttachment,
-      sendEnd,
       getHistory,
       conversationContinue,
       getHistoryBackground,
-    ] = useChat({
+    } = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
       sessionId: sessionId,

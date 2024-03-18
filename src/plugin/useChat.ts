@@ -430,7 +430,7 @@ const useChat = ({
     defaultConfiguration.customAction = '';
   };
 
-  return [
+  return {
     messageList,
     sendMessage,
     sendAudio,
@@ -439,7 +439,7 @@ const useChat = ({
     getHistory,
     conversationContinue,
     getHistoryBackground,
-  ];
+  };
 };
 
 export { useChat };
