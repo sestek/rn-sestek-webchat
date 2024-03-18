@@ -24,9 +24,9 @@ import Markdown from '../../plugin/markdown/index';
 import { Recorder } from '../../services';
 import TypingAnimation from '../../plugin/typing';
 import { StyleContext } from '../../context/StyleContext';
-import CarouselPage from '../carousel';
+import CarouselPage from './carousel';
 import { checked } from '../../constant/ChatModalConstant';
-
+import Typing from './typing';
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const WebView = props.modules.RNWebView;
 
@@ -467,18 +467,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     );
   };
 
-  const renderTyping = () => {
-    return (
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TypingAnimation></TypingAnimation>
-      </View>
-    );
-  };
   return (
     <View style={{ ...styles.rceContainerMbox }}>
       {props.type === 'system' ? null : (
@@ -586,7 +574,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   props.activity?.channelData?.AudioFromTts) &&
                   renderItemAudio()}
 
-                {props.activity.type === 'typing' ? renderTyping() : null}
+                {props.activity.type === 'typing' ? <Typing/> : null}
 
                 <View style={[thatAbsoluteTime && styles.rceMboxTimeBlock]}>
                   <Text

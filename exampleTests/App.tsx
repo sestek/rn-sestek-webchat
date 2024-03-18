@@ -17,7 +17,6 @@ import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
 import config from './src/config';
-import BackgroundTimer from 'react-native-background-timer';
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
@@ -132,8 +131,8 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={config?.URL}
-        // url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
+        // url={config?.URL}
+        url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -141,17 +140,16 @@ export default function App() {
           RNWebView: null,
           Record: AudioRecord,
           RNFileSelector: DocumentPicker,
-          testTimer: BackgroundTimer,
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          // tenant: config?.TNAME,
-          // projectName: config?.PNAME,
+          tenant: 'default',
+          projectName: 'TestHL',
           channel: 'mobil',
           clientId: 'mobile-testing',
-          tenant: config.TNAME,
-          projectName: config.PNAME,
+          // tenant: config.TNAME,
+          // projectName: config.PNAME,
 
           // enableNdUi: false,
           getResponseData: setResponse,
