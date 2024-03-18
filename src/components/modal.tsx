@@ -96,10 +96,10 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
     const { background } = useCheckBackground();
     useEffect(() => {
       if (background) {
-        getHistoryBackground();
+        getHistoryBackground && getHistoryBackground();
       } else {
-        getHistory();
-        conversationContinue();
+        getHistory && getHistory();
+        conversationContinue && conversationContinue();
       }
     }, [background]);
 

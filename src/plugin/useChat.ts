@@ -77,7 +77,6 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((details: any, message: any) => {
-      console.log(message);
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
