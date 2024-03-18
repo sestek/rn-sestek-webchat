@@ -38,7 +38,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   var positionCls = [
     styles.rceMbox,
     props.position === 'right' && styles.rceMboxRight,
-    
   ];
   var thatAbsoluteTime =
     props.type !== 'text' &&
@@ -124,7 +123,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 attach?.content?.images[0]?.url,
                 (width: number, height: number) => {
                   setCardList((prev: any) => [
-                    ...prev,  
+                    ...prev,
                     {
                       key,
                       title: attach?.content?.title,
@@ -380,7 +379,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         )}
 
         {item?.buttons?.map((button: any, index: number) => (
-        
           <TouchableOpacity
             key={index}
             onPress={() => onPressButton(button?.value, button?.title)}
@@ -483,6 +481,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           <View
             style={{
               flexDirection: props.position === 'right' ? 'row' : undefined,
+              // backgroundColor:"red", margin:5
             }}
           >
             {props.position === 'right' && props.avatar && (
@@ -491,55 +490,54 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
               </View>
             )}
             <View style={[positionCls]}>
-            {props.activity?.attachmentLayout === 'carousel' &&
-                  cardList.length > 1 && (
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <View style={{ flexDirection: 'row', width: '100%' }}>
-                        <View style={{ width: '100%' }}>
-                          <Carousel
-                            layout="stack"
-                            data={cardList}
-                            renderItem={renderItemCarousel}
-                            sliderWidth={Dimensions.get('screen').width * 0.8}
-                            itemWidth={Dimensions.get('screen').width * 0.7}
-                            inactiveSlideOpacity={0}
-                             onSnapToItem={(index) => changeActiveSlide(index)}
-                           />
-                           {/* {renderCarouselPagination()} */}
-                           <View
-                             style={{
-                               justifyContent: 'center',
-                               alignItems: 'center',
-                               marginTop: 10,
-                             }}
-                           >
-                             <View
-                               style={{
-                                 width: 45,
-                                 height: 25,
-                                 backgroundColor: '#0000001c',
-                                 justifyContent: 'center',
-                                 alignItems: 'center',
-                                 borderRadius: 12,
-                               }}
-                             >
-                               <Text style={{ fontSize: 10, color: 'black' }}>
-                                 {activeSlide + 1} / {cardList?.length}
-                               </Text>
-                             </View>
-                           </View>
-                         </View>
-                       </View>
-                     </View>
-                        // <CarouselPage data={cardList}/>
-
-                  )}
+              {props.activity?.attachmentLayout === 'carousel' &&
+                cardList.length > 1 && (
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                      <View style={{ width: '100%' }}>
+                        <Carousel
+                          layout="stack"
+                          data={cardList}
+                          renderItem={renderItemCarousel}
+                          sliderWidth={Dimensions.get('screen').width * 0.8}
+                          itemWidth={Dimensions.get('screen').width * 0.7}
+                          inactiveSlideOpacity={0}
+                          onSnapToItem={(index) => changeActiveSlide(index)}
+                        />
+                        {/* {renderCarouselPagination()} */}
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: 10,
+                          }}
+                        >
+                          <View
+                            style={{
+                              width: 45,
+                              height: 25,
+                              backgroundColor: '#0000001c',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderRadius: 12,
+                            }}
+                          >
+                            <Text style={{ fontSize: 10, color: 'black' }}>
+                              {activeSlide + 1} / {cardList?.length}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  // <CarouselPage data={cardList}/>
+                )}
               <View
                 style={[
                   styles.rceMboxBody,
@@ -555,9 +553,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                         : 'auto',
                     padding: 8,
                     borderRadius: 15,
-                    display:(props.activity?.attachmentLayout === 'carousel' ? "none" : undefined)
+                    display:
+                      props.activity?.attachmentLayout === 'carousel'
+                        ? 'none'
+                        : undefined,
                   },
-                  
                 ]}
               >
                 {(props.title || props.avatar) && props.position !== 'left' && (
@@ -569,7 +569,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     ]}
                   ></View>
                 )}
-              
 
                 {props.activity?.attachmentLayout !== 'carousel' &&
                   renderItemMessage()}
@@ -595,39 +594,43 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   </Text>
                 </View>
               </View>
-              <View
-                style={{
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                {props.activity?.attachmentLayout !== 'carousel' &&
-                  Array.isArray(props.activity?.attachments) &&
-                  props.activity?.attachments &&
-                  props.activity?.attachments[0]?.content?.buttons?.map(
-                    (button: any, index: number) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() =>
-                          onPressButton(button?.value, button?.title)
-                        }
-                        style={{
-                          padding: 5,
-                          margin: 3,
-                          borderRadius: 10,
-                          borderColor: appStyle.chatBotMessageBoxBackground,
-                          borderWidth: 1.5,
-                        }}
-                      >
-                        <Text
-                          style={{ color: appStyle.userMessageBoxBackground }}
+              {props.activity?.attachmentLayout !== 'carousel' &&
+                Array.isArray(props.activity?.attachments) &&
+                props.activity?.attachments[0] && (
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      paddingTop: 10,
+                    }}
+                  >
+                    {props.activity?.attachments[0]?.content?.buttons?.map(
+                      (button: any, index: number) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() =>
+                            onPressButton(button?.value, button?.title)
+                          }
+                          style={{
+                            padding: 5,
+                            margin: 3,
+                            paddingHorizontal: 10, 
+                            alignSelf: 'flex-start',
+                            borderRadius: 8,
+                            borderColor: appStyle.chatBotMessageBoxBackground,
+                            borderWidth: 1.5,
+                          }}
                         >
-                          {button?.title}
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                  )}
-              </View>
+                          <Text
+                            style={{ color: appStyle.userMessageBoxBackground }}
+                          >
+                            {button?.title}
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    )}
+                  </View>
+                )}
             </View>
           </View>
         </View>

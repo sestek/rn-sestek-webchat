@@ -8,6 +8,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     width: width,
     overflow: 'hidden',
+
   },
 
   rceMButton: {
@@ -57,18 +58,15 @@ export default StyleSheet.create({
     margin: 0,
     padding: 0,
     position: 'relative',
+    
   },
 
   rceMboxRight: {
     alignSelf: 'flex-start',
-    marginLeft: 5,
-    marginRight: 20,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
+    marginLeft: 0,
+     marginRight: 20,
+     borderTopRightRadius: 10,
+     borderTopLeftRadius: 10,
   },
 
   rceMboxText: {
@@ -116,8 +114,9 @@ export default StyleSheet.create({
 
   rceMboxTitleAvatar: {
     display: 'flex',
-    marginRight: 2,
-    marginLeft:5
+    marginLeft:5,
+    paddingTop:12
+
   },
 
   rceMboxTitleText: {
