@@ -5,4 +5,5 @@ export default interface PropsModules {
   RNWebView?: any;
   Record?: any;
   RNFileSelector?: any;
+  testTimer?: any;
 }

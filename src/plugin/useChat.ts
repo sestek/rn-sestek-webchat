@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
+import useCheckBackground from '../hook/useCheckBackground';
 
 const useChat = ({
   defaultConfiguration,
@@ -9,10 +10,17 @@ const useChat = ({
   url,
 }: PropsUseChat) => {
   const { enableNdUi, getResponseData } = defaultConfiguration;
+
   const [messageList, setMessageList] = useState<any>([]);
+  const [historyCount, sethistoryCount] = useState(0);
+
+  const { background } = useCheckBackground();
 
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
+      if (background) {
+        getHistoryBackground();
+      }
       if (messages?.length > 0) {
         const messagesLength = messages.length;
         const lastElement = messages[messagesLength - 1];
@@ -69,6 +77,7 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((details: any, message: any) => {
+      console.log(message);
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
         // console.log("messageBody?.channelData", messageBody?.channelData)
@@ -128,7 +137,7 @@ const useChat = ({
     bot = false,
   }: {
     message?: string;
-    displayMessage?: string
+    displayMessage?: string;
     bot: boolean;
   }) => {
     if (message) {
@@ -145,7 +154,7 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
       });
-      await client.sendAsync(
+      client.sendAsync(
         sessionId,
         message,
         defaultConfiguration.customAction,
@@ -176,7 +185,7 @@ const useChat = ({
           /<\/?[^>]+(>|$)/g,
           ''
         );
-        sendMessage({message:message, bot:true});
+        sendMessage({ message: message, bot: true });
       })
       .catch((err: any) => {
         console.log(err);
@@ -342,8 +351,97 @@ const useChat = ({
     await client.startConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
   };
+  const sendEnd = async () => {
+    const dataToSend = {
+      message: 'Chat ended by client!',
+      customAction: 'endOfConversation',
+      customActionData: defaultConfiguration.customActionData,
+      clientId: defaultConfiguration.clientId,
+      tenant: defaultConfiguration.tenant,
+      channel: defaultConfiguration.channel,
+      project: defaultConfiguration.projectName,
+      conversationId: sessionId,
+      fullName: defaultConfiguration.fullName,
+    };
+    client.endConversation(JSON.stringify(dataToSend));
+  };
 
-  return [messageList, sendMessage, sendAudio, sendAttachment];
+  const getHistory = () => {
+    fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && data.length > 0) {
+          if (data.length > historyCount) {
+            for (let i = historyCount; i < data.length; i++) {
+              addMessageList({
+                timestamp: new Date(data[i].dialogTime),
+                message: data[i]?.text,
+                channel: null,
+                conversationId: sessionId,
+                type: 'message',
+              });
+            }
+          } else if (historyCount > data.length) {
+            for (let i = 0; i < data.length; i++) {
+              addMessageList({
+                timestamp: new Date(data[i].dialogTime),
+                message: data[i]?.text,
+                channel: null,
+                conversationId: sessionId,
+                type: 'message',
+              });
+            }
+          }
+        }
+      });
+  };
+
+  const getHistoryBackground = () => {
+    fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && data.length > 0) {
+          sethistoryCount(data.length);
+        }
+      });
+  };
+
+  const conversationContinue = async () => {
+    console.log('continune chat !');
+    defaultConfiguration.customAction = 'ContinueConversation';
+    const startObj = {
+      timestamp: new Date().getTime(),
+      message: '',
+      customAction: 'ContinueConversation',
+      customActionData: defaultConfiguration.customActionData,
+      clientId: defaultConfiguration.clientId,
+      tenant: defaultConfiguration.tenant,
+      channel: defaultConfiguration.channel,
+      project: defaultConfiguration.projectName,
+      conversationId: sessionId,
+      fullName: defaultConfiguration.fullName,
+      userAgent: 'USERAGENT EKLENECEK',
+      browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
+    };
+    addMessageList(startObj);
+    await client.continueConversation(JSON.stringify(startObj));
+    defaultConfiguration.customAction = '';
+  };
+
+  return [
+    messageList,
+    sendMessage,
+    sendAudio,
+    sendAttachment,
+    sendEnd,
+    getHistory,
+    conversationContinue,
+    getHistoryBackground,
+  ];
 };
 
 export { useChat };

@@ -1,6 +1,9 @@
+import { PropsDefaultConfiguration } from '.';
+
 export default interface PropsHeaderComponent {
-  closeModal: Function;
+  hideModal: Function;
   clickClosedConversationModalFunc: Function;
+  defaultConfiguration: PropsDefaultConfiguration;
   headerText?: string;
   closeIcon?: any;
   hideIcon?: any;

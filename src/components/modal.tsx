@@ -10,7 +10,7 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
+  AppState,
 } from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from '../types';
@@ -24,6 +24,7 @@ import { ModalCompRef } from '../types/components/ModalComponent';
 import GenerateBody from './body/GenerateBody';
 import LoadingModal from './loadingModal';
 import { useLoading } from '../context/LoadingContext';
+import useCheckBackground from '../hook/useCheckBackground';
 
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
@@ -36,7 +37,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       customizeConfiguration,
       closeConversation,
       closedModalManagment,
-      closeModal,
+      hideModal,
       visible,
       clickClosedConversationModalFunc,
     } = props;
@@ -46,7 +47,16 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { loading } = useLoading();
 
-    const [messageList, sendMessage, sendAudio, sendAttachment] = useChat({
+    const [
+      messageList,
+      sendMessage,
+      sendAudio,
+      sendAttachment,
+      sendEnd,
+      getHistory,
+      conversationContinue,
+      getHistoryBackground,
+    ] = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
       sessionId: sessionId,
@@ -84,18 +94,28 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       })();
     }, []);
 
+    const { background } = useCheckBackground();
+    useEffect(() => {
+      if (background) {
+        getHistoryBackground();
+      } else {
+        getHistory();
+        conversationContinue();
+      }
+    }, [background]);
+
     return (
       <Modal
         animationType={'slide'}
         transparent={true}
         visible={visible && Object.keys(appStyle).length > 0}
         onRequestClose={() => {
-          closeModal && closeModal();
+          hideModal && hideModal();
         }}
       >
         {loading && (
           <LoadingModal
-            indicatorColor={customizeConfiguration.indicatorColor ?? "" }
+            indicatorColor={customizeConfiguration.indicatorColor ?? ''}
           />
         )}
 
@@ -122,10 +142,11 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             ]}
           >
             <HeaderComponent
-              closeModal={closeModal}
+              hideModal={hideModal}
               clickClosedConversationModalFunc={
                 clickClosedConversationModalFunc
               }
+              defaultConfiguration={defaultConfiguration}
               closeModalStatus={
                 customizeConfiguration?.closeModalSettings?.use ? true : false
               }

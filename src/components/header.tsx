@@ -1,21 +1,41 @@
-import React, { useContext, type FC } from 'react';
+import React, { useContext, type FC, useEffect } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import type { PropsHeaderComponent } from 'src/types';
 import { MinusIcon, MultiplyIcon } from '../image';
 import { StyleContext } from '../context/StyleContext';
 import { styles } from './header-styles';
+import useCheckBackground from '../hook/useCheckBackground';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
     closeIcon,
     hideIcon,
     clickClosedConversationModalFunc,
-    closeModal,
+    hideModal,
     headerText,
     closeModalStatus,
     closeConversation,
+    defaultConfiguration,
   } = props;
   const { appStyle } = useContext(StyleContext);
+  const { background } = useCheckBackground();
+
+  useEffect(() => {
+    if (defaultConfiguration.getResponseData) {
+      defaultConfiguration.getResponseData({ isBackground: false });
+    }
+  }, []);
+  useEffect(() => {
+    if (background) {
+      if (defaultConfiguration.getResponseData) {
+        defaultConfiguration.getResponseData({ isBackground: true });
+      }
+    } else if (background === false) {
+      if (defaultConfiguration.getResponseData) {
+        defaultConfiguration.getResponseData({ isBackground: false });
+      }
+    }
+  }, [background]);
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerContainer}>
@@ -23,7 +43,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           {headerText ?? HeaderComponent.defaultProps?.headerText!}
         </Text>
       </View>
-      <TouchableOpacity onPress={() => closeModal()} style={styles.center}>
+      <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
         {hideIcon ? (
           <Image style={styles.imageIcon} source={hideIcon.value} />
         ) : (

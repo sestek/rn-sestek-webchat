@@ -1,4 +1,5 @@
-import * as signalR from '@aspnet/signalr';
+import * as signalR from '@microsoft/signalr';
+import 'react-native-url-polyfill/auto';
 
 class SignalRClient {
   connected: boolean;
@@ -16,7 +17,11 @@ class SignalRClient {
   buildConnection = async () => {
     this.connection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Error)
-      .withUrl(this.newUrl ?? '')
+      .withAutomaticReconnect()
+      .withUrl(this.newUrl!, {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      })
       .build();
 
     this.connection.onerror = () => {
@@ -29,23 +34,35 @@ class SignalRClient {
   };
 
   connectAsync = async () => {
-    if (this.connection === undefined) {
+    if (
+      this.connection === undefined ||
+      this.connection?._connectionState === 'Disconnected'
+    ) {
       await this.buildConnection();
     }
     this.connected = true;
-    return await this.connection.start({
-      withCredentials: false,
-    });
+    return await this.connection
+      .start({
+        withCredentials: false,
+      })
+      .catch((e) => {
+        console.log('errorsssss !', e);
+        console.log(this.connection);
+        // this.reconnectAsync();
+      });
   };
 
   sendAsync = async (...args: any) => {
     if (!this.connected) {
-      let val = await this.reconnectAsync();
+      let val = this.reconnectAsync();
       return val;
     }
-    await this.connection.invoke('SendMessage', ...args).catch(() => {
-      this.connected = false;
-    });
+    this.connection
+      .send('SendMessage', ...args)
+      .then(() => {})
+      .catch(() => {
+        this.connected = false;
+      });
   };
 
   ontyping = async (func: (d: any, m: any) => void) => {
@@ -69,15 +86,31 @@ class SignalRClient {
   };
 
   startConversation = async (...args: any) => {
-    await this.connection.invoke('StartConversation', ...args);
+    if (
+      this.connection === undefined ||
+      this.connection?._connectionState === 'Disconnected'
+    ) {
+      return await this.buildConnection();
+    }
+    return await this.connection.send('StartConversation', ...args);
   };
 
   continueConversation = async (...args: any) => {
-    await this.connection.invoke('ContinueConversation', ...args);
+    if (
+      this.connection === undefined ||
+      this.connection?._connectionState === 'Disconnected'
+    ) {
+      return await this.buildConnection();
+    }
+    await this.connection.send('ContinueConversation', ...args);
   };
 
-  endConversation = async (...args: any) => {
-    await this.connection.invoke('EndConversation', ...args);
+  endConversation = async (args: any) => {
+    if (!this.connected) {
+      let val = await this.reconnectAsync();
+      return val;
+    }
+    this.connection.send('EndConversation', args);
   };
 
   messageStatusChange = async (func: () => void) => {

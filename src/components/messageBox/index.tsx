@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -17,7 +16,6 @@ import {
   Linking,
   Dimensions,
   useWindowDimensions,
-  Platform,
 } from 'react-native';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -27,6 +25,7 @@ import { Recorder } from '../../services';
 import TypingAnimation from '../../plugin/typing';
 import { StyleContext } from '../../context/StyleContext';
 import CarouselPage from '../carousel';
+import { checked } from '../../constant/ChatModalConstant';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const WebView = props.modules.RNWebView;
@@ -328,7 +327,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           borderLeftColor: '#00000022',
         }}
       >
-        {item?.url && (
+        {!checked.includes(item?.url) && (
           <Image
             source={{ uri: item.url }}
             style={{
@@ -341,7 +340,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           />
         )}
 
-        {item?.title && (
+        {!checked.includes(item?.title) && (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -353,7 +352,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             {item.title}
           </Markdown>
         )}
-        {item?.subtitle && (
+        {!checked.includes(item?.subtitle) && (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -365,7 +364,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             {item.subtitle}
           </Markdown>
         )}
-        {item?.text && (
+        {!checked.includes(item?.text) && (
           <Markdown
             styles={styles.rceMboxText}
             color={
@@ -395,6 +394,35 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             </Text>
           </TouchableOpacity>
         ))}
+        {!checked.includes(item?.buttons) &&
+          item?.buttons?.map((button: any, index: number) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => onPressButton(button?.value, button?.title)}
+              style={[
+                styles.rceMButton,
+                appStyle?.chatBotMessageBoxButtonBackground
+                  ? {
+                      backgroundColor:
+                        appStyle?.chatBotMessageBoxButtonBackground,
+                    }
+                  : {},
+                {
+                  borderWidth: 1,
+                  borderColor: appStyle?.chatBotMessageBoxButtonBorderColor,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  ...styles.rceMButtonText,
+                  color: appStyle?.chatBotMessageBoxButtonTextColor,
+                }}
+              >
+                {button?.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
       </View>
     );
   };

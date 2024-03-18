@@ -5,22 +5,16 @@ import React, {
   forwardRef,
   useRef,
 } from 'react';
-import {
-  Image,
-  StatusBar,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
 import ModalComponent, { ModalCompRef } from '../components/modal';
 import { ChatIcon } from '../image';
 import type { PropsChatModal } from '../types';
 import { StyleContextProvider } from '../context/StyleContext';
 import { ChatModalProps } from '../types/plugin/ChatModalProps';
-import { ChatModalConstant } from '../constant/ChatModalConstant';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
+import { useChat } from '../plugin/useChat';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -51,6 +45,14 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const [start, setStart] = useState<boolean>(false);
     const [visible, setVisible] = useState<boolean>(false);
 
+    const generalChatHook = useChat({
+      url: url ? url : '',
+      defaultConfiguration: defaultConfiguration,
+      sessionId: sessionId,
+      client: client,
+      rnfs: modules?.RNFS,
+    });
+
     const startConversation = () => {
       if (!start) {
         sessionId = 'Mobil' + GeneralManager.createUUID();
@@ -71,6 +73,8 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     const endConversation = async () => {
       setStart(false);
       setVisible(false);
+      const endFunc = generalChatHook.length - 1;
+      generalChatHook[endFunc]();
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
@@ -152,7 +156,7 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
                 defaultConfiguration={defaultConfiguration}
                 visible={visible}
                 closeConversation={endConversation}
-                closeModal={triggerVisible}
+                hideModal={triggerVisible}
                 sessionId={sessionId}
                 client={client}
                 closedModalManagment={{ closeModal, setCloseModal }}
@@ -167,7 +171,3 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
     );
   }
 );
-
-ChatModal.defaultProps = {
-  url: ChatModalConstant.knovvu,
-};
