@@ -375,25 +375,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           >
             {item.text}
           </Markdown>
-        )}
-
-        {item?.buttons?.map((button: any, index: number) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => onPressButton(button?.value, button?.title)}
-            style={{
-              padding: 5,
-              margin: 3,
-              borderRadius: 10,
-              borderColor: appStyle.chatBotMessageBoxBackground,
-              borderWidth: 1.5,
-            }}
-          >
-            <Text style={{ color: appStyle.userMessageBoxBackground }}>
-              {button?.title}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        )} 
         {!checked.includes(item?.buttons) &&
           item?.buttons?.map((button: any, index: number) => (
             <TouchableOpacity
@@ -538,7 +520,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                           inactiveSlideOpacity={0}
                           onSnapToItem={(index) => changeActiveSlide(index)}
                         />
-                        {/* {renderCarouselPagination()} */}
                         <View
                           style={{
                             justifyContent: 'center',

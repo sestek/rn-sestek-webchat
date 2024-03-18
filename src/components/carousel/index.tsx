@@ -138,7 +138,6 @@ const CarouselPage: React.FC<CarouselProps> = ({ data }) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           paddingHorizontal: 5,
-          backgroundColor:"blue",
         }}
       >
         <TouchableOpacity
