@@ -24,6 +24,7 @@ import { ModalCompRef } from '../types/components/ModalComponent';
 import GenerateBody from './body/GenerateBody';
 import LoadingModal from './loadingModal';
 import { useLoading } from '../context/LoadingContext';
+import useCheckBackground from '../hook/useCheckBackground';
 
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
@@ -93,29 +94,15 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       })();
     }, []);
 
-    const [background, setbackground] = useState(false);
+    const { background } = useCheckBackground();
     useEffect(() => {
-      if (messageList && background) {
-        getHistory(messageList?.slice(1));
+      if (background) {
+        getHistoryBackground();
+      } else {
+        getHistory();
         conversationContinue();
-        setbackground(false);
       }
-    }, [messageList, background]);
-
-    useEffect(() => {
-      const _handleAppStateChange = (nextAppState) => {
-        if (nextAppState === 'active') {
-          setbackground(true);
-        } else {
-          getHistoryBackground(messageList?.slice(1));
-        }
-      };
-      AppState.addEventListener('change', _handleAppStateChange);
-
-      return () => {
-        AppState.removeEventListener('change', _handleAppStateChange);
-      };
-    }, []);
+    }, [background]);
 
     return (
       <Modal

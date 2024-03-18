@@ -96,6 +96,12 @@ class SignalRClient {
   };
 
   continueConversation = async (...args: any) => {
+    if (
+      this.connection === undefined ||
+      this.connection?._connectionState === 'Disconnected'
+    ) {
+      return await this.buildConnection();
+    }
     await this.connection.send('ContinueConversation', ...args);
   };
 

@@ -1,9 +1,10 @@
 import React, { useContext, type FC, useEffect } from 'react';
-import { AppState, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import type { PropsHeaderComponent } from 'src/types';
 import { MinusIcon, MultiplyIcon } from '../image';
 import { StyleContext } from '../context/StyleContext';
 import { styles } from './header-styles';
+import useCheckBackground from '../hook/useCheckBackground';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
@@ -17,24 +18,24 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     defaultConfiguration,
   } = props;
   const { appStyle } = useContext(StyleContext);
+  const { background } = useCheckBackground();
+
   useEffect(() => {
-    // c-hook
     if (defaultConfiguration.getResponseData) {
       defaultConfiguration.getResponseData({ isBackground: false });
     }
-    const handleChange = (nextAppState: any) => {
-      if (nextAppState === 'background') {
-        if (defaultConfiguration.getResponseData) {
-          defaultConfiguration.getResponseData({ isBackground: true });
-        }
-      } else if (nextAppState === 'active') {
-        if (defaultConfiguration.getResponseData) {
-          defaultConfiguration.getResponseData({ isBackground: false });
-        }
-      }
-    };
-    AppState?.addEventListener('change', handleChange);
   }, []);
+  useEffect(() => {
+    if (background) {
+      if (defaultConfiguration.getResponseData) {
+        defaultConfiguration.getResponseData({ isBackground: true });
+      }
+    } else if (background === false) {
+      if (defaultConfiguration.getResponseData) {
+        defaultConfiguration.getResponseData({ isBackground: false });
+      }
+    }
+  }, [background]);
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerContainer}>

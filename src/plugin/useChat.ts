@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
-import { AppState } from 'react-native';
+import useCheckBackground from '../hook/useCheckBackground';
 
 const useChat = ({
   defaultConfiguration,
@@ -14,22 +14,7 @@ const useChat = ({
   const [messageList, setMessageList] = useState<any>([]);
   const [historyCount, sethistoryCount] = useState(0);
 
-  const [background, setbackground] = useState(false);
-
-  useEffect(() => {
-    const _handleAppStateChange = (nextAppState) => {
-      if (nextAppState === 'background') {
-        setbackground(true);
-      } else {
-        setbackground(false);
-      }
-    };
-    AppState.addEventListener('change', _handleAppStateChange);
-
-    return () => {
-      AppState.removeEventListener('change', _handleAppStateChange);
-    };
-  }, []);
+  const { background } = useCheckBackground();
 
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
@@ -61,7 +46,6 @@ const useChat = ({
   }, []);
 
   const initSocket = async () => {
-   
     await client
       .connectAsync()
       .then(() => {
@@ -93,6 +77,7 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((details: any, message: any) => {
+      console.log(message);
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
@@ -379,17 +364,13 @@ const useChat = ({
     client.endConversation(JSON.stringify(dataToSend));
   };
 
-  const getHistory = (propsMessage: any) => {
-    {
-     
-    }
+  const getHistory = () => {
     fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((data: any) => {
         if (data && data.length > 0) {
-          
           if (data.length > historyCount) {
             for (let i = historyCount; i < data.length; i++) {
               addMessageList({
