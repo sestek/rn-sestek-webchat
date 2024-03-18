@@ -18,15 +18,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import AudioComponent from './audio';
 import Markdown from '../../plugin/markdown/index';
-import { Recorder } from '../../services';
-import TypingAnimation from '../../plugin/typing';
 import { StyleContext } from '../../context/StyleContext';
 import CarouselPage from './carousel';
 import { checked } from '../../constant/ChatModalConstant';
-import Typing from './typing';
+import TypingMessage from './typingMessage';
+import AudioMessage from './auidoMessage';
+import CarouselMessage from './carouselMessage';
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const WebView = props.modules.RNWebView;
 
@@ -302,170 +300,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     );
   };
 
-  const renderItemCarousel = ({ item }: any) => {
-    // ! background props ile aynı olmalı
-
-    return (
-      <View
-        key={item.key}
-        style={{
-          backgroundColor:
-            props?.customizeConfiguration?.chatBotMessageBoxBackground,
-          height: maxHeight,
-          flexDirection: 'column',
-          width: '100%',
-          borderTopWidth: 1,
-          borderRightWidth: 1,
-          borderRightColor: '#00000022',
-          borderTopColor: '#00000022',
-          borderBottomWidth: 1,
-          borderBottomColor: '#00000022',
-          paddingRight: 15,
-          borderRadius: 10,
-          borderLeftWidth: 1,
-          paddingLeft: 15,
-          borderLeftColor: '#00000022',
-        }}
-      >
-        {!checked.includes(item?.url) && (
-          <Image
-            source={{ uri: item.url }}
-            style={{
-              resizeMode: 'contain',
-              width: '100%',
-              height: 300,
-              maxWidth: Dimensions.get('screen').width * 0.8,
-              marginBottom: 10,
-            }}
-          />
-        )}
-
-        {!checked.includes(item?.title) && (
-          <Markdown
-            styles={styles.rceMboxText}
-            color={
-              props.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
-          >
-            {item.title}
-          </Markdown>
-        )}
-        {!checked.includes(item?.subtitle) && (
-          <Markdown
-            styles={styles.rceMboxText}
-            color={
-              props.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
-          >
-            {item.subtitle}
-          </Markdown>
-        )}
-        {!checked.includes(item?.text) && (
-          <Markdown
-            styles={styles.rceMboxText}
-            color={
-              props.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
-          >
-            {item.text}
-          </Markdown>
-        )} 
-        {!checked.includes(item?.buttons) &&
-          item?.buttons?.map((button: any, index: number) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => onPressButton(button?.value, button?.title)}
-              style={[
-                styles.rceMButton,
-                appStyle?.chatBotMessageBoxButtonBackground
-                  ? {
-                      backgroundColor:
-                        appStyle?.chatBotMessageBoxButtonBackground,
-                    }
-                  : {},
-                {
-                  borderWidth: 1,
-                  borderColor: appStyle?.chatBotMessageBoxButtonBorderColor,
-                },
-              ]}
-            >
-              <Text
-                style={{
-                  ...styles.rceMButtonText,
-                  color: appStyle?.chatBotMessageBoxButtonTextColor,
-                }}
-              >
-                {button?.title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-      </View>
-    );
-  };
-
-  const renderItemAudio = () => {
-    if (!props.modules.AudioRecorderPlayer || !props.modules.RNFS) {
-      return null;
-    }
-
-    let url = props.activity?.message;
-    if (props.activity?.channelData?.AudioFromTts?.Data)
-      url = props.activity.channelData.AudioFromTts.Data;
-    return (
-      <>
-        <AudioComponent
-          url={
-            url && url.length > 1000
-              ? 'file://' +
-                new Recorder(
-                  props.modules.AudioRecorderPlayer,
-                  props.modules.RNFS,
-                  props.modules.Record
-                ).saveLocalFileAudio(url)
-              : url
-          }
-          modules={props.modules}
-          customizeConfiguration={props.customizeConfiguration}
-        />
-        <Text
-          style={{
-            marginVertical: props.activity?.text && 10,
-            color: props?.userMessageBoxTextColor ?? 'white',
-            paddingLeft: 10,
-          }}
-        >
-          {props.activity?.text}
-        </Text>
-      </>
-    );
-  };
-
-  const renderCarouselPagination = () => {
-    return (
-      <View>
-        <Pagination
-          dotsLength={cardList?.length || 0}
-          activeDotIndex={activeSlide}
-          containerStyle={{ paddingBottom: 8, paddingTop: 8 }}
-          dotStyle={{
-            width: 8,
-            height: 8,
-            borderRadius: 5,
-            backgroundColor: 'black',
-          }}
-          inactiveDotOpacity={0.4}
-          delayPressInDot={40}
-          inactiveDotScale={0.8}
-        />
-      </View>
-    );
-  };
 
   return (
     <View style={{ ...styles.rceContainerMbox }}>
@@ -490,49 +324,13 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             <View style={[positionCls]}>
               {props.activity?.attachmentLayout === 'carousel' &&
                 cardList.length > 1 && (
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <View style={{ flexDirection: 'row', width: '100%' }}>
-                      <View style={{ width: '100%' }}>
-                        <Carousel
-                          layout="stack"
-                          data={cardList}
-                          renderItem={renderItemCarousel}
-                          sliderWidth={Dimensions.get('screen').width * 0.8}
-                          itemWidth={Dimensions.get('screen').width * 0.7}
-                          inactiveSlideOpacity={0}
-                          onSnapToItem={(index) => changeActiveSlide(index)}
-                        />
-                        <View
-                          style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: 10,
-                          }}
-                        >
-                          <View
-                            style={{
-                              width: 45,
-                              height: 25,
-                              backgroundColor: '#0000001c',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              borderRadius: 12,
-                            }}
-                          >
-                            <Text style={{ fontSize: 10, color: 'black' }}>
-                              {activeSlide + 1} / {cardList?.length}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
+                  <CarouselMessage
+                    cardList={cardList}
+                    activeSlide={activeSlide}
+                    changeActiveSlide={changeActiveSlide}
+                    customizeProps = {props}
+                    maxHeight={maxHeight}
+                  />
                   // <CarouselPage data={cardList}/>
                 )}
               <View
@@ -571,10 +369,16 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   renderItemMessage()}
 
                 {(props.type === 'audio' ||
-                  props.activity?.channelData?.AudioFromTts) &&
-                  renderItemAudio()}
+                  props.activity?.channelData?.AudioFromTts) && (
+                  <AudioMessage
+                    modules={props.modules}
+                    customizeConfiguration={props.customizeConfiguration}
+                    activity={props.activity}
+                    userMessageBoxTextColor={props.userMessageBoxTextColor}
+                  />
+                )}
 
-                {props.activity.type === 'typing' ? <Typing/> : null}
+                {props.activity.type === 'typing' ? <TypingMessage /> : null}
 
                 <View style={[thatAbsoluteTime && styles.rceMboxTimeBlock]}>
                   <Text
@@ -611,7 +415,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                           style={{
                             padding: 5,
                             margin: 3,
-                            paddingHorizontal: 10, 
+                            paddingHorizontal: 10,
                             alignSelf: 'flex-start',
                             borderRadius: 8,
                             borderColor: appStyle.chatBotMessageBoxBackground,

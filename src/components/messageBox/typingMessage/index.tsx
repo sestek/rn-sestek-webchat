@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { View } from 'react-native';
 import TypingAnimation from "../../../plugin/typing"
-const Typing: FC = (props) => {
+const TypingMessage: FC = (props) => {
   return (
     <View
     style={{
@@ -16,4 +16,4 @@ const Typing: FC = (props) => {
 
 
 
-export default Typing;
+export default TypingMessage;

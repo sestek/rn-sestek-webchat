@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Recorder } from '../../services';
-import type { PropsAudio } from '../../types/';
-import { PlayIcon, PauseIcon, PlayIcon2, PauseIcon2 } from '../../image';
+import { Recorder } from '../../../services';
+import type { PropsAudio } from '../../../types';
+import { PlayIcon, PauseIcon, PlayIcon2, PauseIcon2 } from '../../../image';
 
 const AudioComponent: FC<PropsAudio> = (props) => {
   const [stateRecord, setStateRecord] = useState<any>({
