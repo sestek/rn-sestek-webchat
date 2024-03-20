@@ -3,6 +3,16 @@ import { Dimensions, StyleSheet } from 'react-native';
 const width = Dimensions.get('window').width;
 
 export default StyleSheet.create({
+  messageBoxContainer:{
+    display: 'flex',
+    flexDirection: 'column',
+    width: width,
+    overflow: 'hidden',
+  },
+ 
+  
+
+  ///////////////////////////////
   rceContainerMbox: {
     display: 'flex',
     flexDirection: 'column',

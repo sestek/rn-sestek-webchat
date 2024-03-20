@@ -131,25 +131,23 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        // url={config?.URL}
-        url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
+         url={config?.URL}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
           RNSlider: Slider,
-          RNWebView: null,
+          RNWebView: WebView,
           Record: AudioRecord,
           RNFileSelector: DocumentPicker,
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          tenant: 'default',
-          projectName: 'TestHL',
+
           channel: 'mobil',
           clientId: 'mobile-testing',
-          // tenant: config.TNAME,
-          // projectName: config.PNAME,
+           tenant: config.TNAME,
+           projectName: config.PNAME,
 
           // enableNdUi: false,
           getResponseData: setResponse,
