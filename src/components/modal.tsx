@@ -55,6 +55,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       getHistory,
       conversationContinue,
       getHistoryBackground,
+      sendEnd,
     } = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
@@ -65,6 +66,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     useImperativeHandle(ref, () => ({
       messageList: messageList,
+      sendEnd: sendEnd,
     }));
 
     const { appStyle, handleStyle, getCssIntegration } =

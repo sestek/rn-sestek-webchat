@@ -375,8 +375,6 @@ PODS:
   - React-jsinspector (0.72.3)
   - React-logger (0.72.3):
     - glog
-  - react-native-background-timer (2.4.1):
-    - React-Core
   - react-native-document-picker (8.2.2):
     - React-Core
   - react-native-fetch-blob (0.10.6):
@@ -497,6 +495,8 @@ PODS:
     - React
   - RNAudioRecorderPlayer (3.4.0):
     - React-Core
+  - RNCAsyncStorage (1.23.0):
+    - React-Core
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -548,7 +548,6 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
-  - react-native-background-timer (from `../node_modules/react-native-background-timer`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fetch-blob (from `../node_modules/react-native-fetch-blob`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -571,6 +570,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAudioRecord (from `../node_modules/react-native-audio-record`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -634,8 +634,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
-  react-native-background-timer:
-    :path: "../node_modules/react-native-background-timer"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
   react-native-fetch-blob:
@@ -680,6 +678,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-audio-record"
   RNAudioRecorderPlayer:
     :path: "../node_modules/react-native-audio-recorder-player"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -717,7 +717,6 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 59d1eb03af7d30b7d66589c410f13151271e8006
   React-jsinspector: b511447170f561157547bc0bef3f169663860be7
   React-logger: c5b527272d5f22eaa09bb3c3a690fee8f237ae95
-  react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
   react-native-document-picker: cd4d6b36a5207ad7a9e599ebb9eb0c2e84fa0b87
   react-native-fetch-blob: 0cbdf9764c75d9438c162427395f4bc35a857d5a
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
@@ -740,6 +739,7 @@ SPEC CHECKSUMS:
   ReactCommon: 3ccb8fb14e6b3277e38c73b0ff5e4a1b8db017a9
   RNAudioRecord: 162fee3b8fb628773ec704bf0333823125be2ed7
   RNAudioRecorderPlayer: 001f01049754e978c43af97162452c8563d5794a
+  RNCAsyncStorage: e31a32913b3b5d8a42621be993a8f51c34073f1f
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 8796b55dba14d7004f980b54bcc9833ee45b28ce
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

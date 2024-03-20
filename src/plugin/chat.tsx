@@ -14,12 +14,9 @@ import { StyleContextProvider } from '../context/StyleContext';
 import { ChatModalProps } from '../types/plugin/ChatModalProps';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
-import { useChat } from '../plugin/useChat';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
-
-console.log('session-id : ', sessionId);
 
 export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
   (props, ref) => {
@@ -33,33 +30,21 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
       chatStartButtonHide,
     } = customizeConfiguration;
 
-    // ! Artık nd ve knovvu ortamları eşit ikisinin de başında mobile prefix var
-    // ! durum değişirse diye eklendi
-    // if (defaultConfiguration?.enableNdUi) {
-    //   sessionId = 'Mobil' + sessionId;
-    //   defaultConfiguration.channel = 'NdUi';
-    // }
+    const { asyncStorage } = modules;
 
     const modalRef = useRef<ModalCompRef>(null);
     const [closeModal, setCloseModal] = useState<boolean>(false);
     const [start, setStart] = useState<boolean>(false);
     const [visible, setVisible] = useState<boolean>(false);
 
-    const { sendEnd } = useChat({
-      url: url ? url : '',
-      defaultConfiguration: defaultConfiguration,
-      sessionId: sessionId,
-      client: client,
-      rnfs: modules?.RNFS,
-    });
-
-    const startConversation = () => {
-      if (!start) {
-        sessionId = 'Mobil' + GeneralManager.createUUID();
-        client = new SignalRClient(url || ChatModal.defaultProps?.url);
+    const buildConversation = async () => {
+      sessionId = 'Mobil' + GeneralManager.createUUID();
+      if (asyncStorage) {
+        await asyncStorage.setItem('sessionId', sessionId);
       }
-      setStart(true);
-      setVisible(true);
+    };
+
+    const checkAudioFile = () => {
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
@@ -70,10 +55,40 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
       }
     };
 
+    const startConversation = async () => {
+      if (!start) {
+        buildConversation();
+        client = new SignalRClient(url || ChatModal.defaultProps?.url);
+      }
+      setStart(true);
+      setVisible(true);
+      checkAudioFile();
+    };
+
+    const startStorageSession = async () => {
+      if (!start) {
+        if (asyncStorage) {
+          const storageSessionId = await asyncStorage.getItem('sessionId');
+          if (storageSessionId) {
+            sessionId = storageSessionId;
+            defaultConfiguration.sendConversationStart = false;
+          } else {
+            buildConversation();
+          }
+        } else {
+          buildConversation();
+        }
+        client = new SignalRClient(url || ChatModal.defaultProps?.url);
+      }
+      setStart(true);
+      setVisible(true);
+      checkAudioFile();
+    };
+
     const endConversation = async () => {
       setStart(false);
       setVisible(false);
-      sendEnd();
+      modalRef.current?.sendEnd();
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
@@ -104,6 +119,9 @@ export const ChatModal = forwardRef<ChatModalProps, PropsChatModal>(
       },
       conversationStatus: start,
       messageList: modalRef.current?.messageList,
+      startStorageSession: () => {
+        startStorageSession();
+      },
     }));
 
     return (

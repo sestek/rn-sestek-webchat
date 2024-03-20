@@ -52,6 +52,7 @@ const useChat = ({
         if (defaultConfiguration.sendConversationStart === true) {
           sendConversationStart();
         }
+        conversationContinue();
       })
       .catch((e) => {
         console.error('connection error', JSON.stringify(e));
@@ -375,7 +376,10 @@ const useChat = ({
               addMessageList({
                 timestamp: new Date(data[i].dialogTime),
                 message: data[i]?.text,
-                channel: null,
+                channel:
+                  data[i].messageType === 'VirtualAgent'
+                    ? null
+                    : defaultConfiguration.channel,
                 conversationId: sessionId,
                 type: 'message',
               });
@@ -385,7 +389,10 @@ const useChat = ({
               addMessageList({
                 timestamp: new Date(data[i].dialogTime),
                 message: data[i]?.text,
-                channel: null,
+                channel:
+                  data[i].messageType === 'VirtualAgent'
+                    ? null
+                    : defaultConfiguration.channel,
                 conversationId: sessionId,
                 type: 'message',
               });
@@ -424,7 +431,7 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
     };
-    addMessageList(startObj);
+    // addMessageList(startObj);
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
   };
