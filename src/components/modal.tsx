@@ -48,10 +48,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       getHistory,
       conversationContinue,
       getHistoryBackground,
-<<<<<<< Updated upstream
       sendEnd,
-=======
->>>>>>> Stashed changes
     } = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
