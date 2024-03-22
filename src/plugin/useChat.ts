@@ -52,6 +52,7 @@ const useChat = ({
         if (defaultConfiguration.sendConversationStart === true) {
           sendConversationStart();
         }
+        conversationContinue();
       })
       .catch((e) => {
         console.error('connection error', JSON.stringify(e));
@@ -77,7 +78,6 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((details: any, message: any) => {
-      console.log(message);
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
         // console.log("messageBody?.channelData", messageBody?.channelData)
@@ -378,7 +378,10 @@ const useChat = ({
               addMessageList({
                 timestamp: new Date(data[i].dialogTime),
                 message: data[i]?.text,
-                channel: null,
+                channel:
+                  data[i].messageType === 'VirtualAgent'
+                    ? null
+                    : defaultConfiguration.channel,
                 conversationId: sessionId,
                 type: 'message',
               });
@@ -388,7 +391,10 @@ const useChat = ({
               addMessageList({
                 timestamp: new Date(data[i].dialogTime),
                 message: data[i]?.text,
-                channel: null,
+                channel:
+                  data[i].messageType === 'VirtualAgent'
+                    ? null
+                    : defaultConfiguration.channel,
                 conversationId: sessionId,
                 type: 'message',
               });
@@ -427,12 +433,12 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
     };
-    addMessageList(startObj);
+    // addMessageList(startObj);
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
   };
 
-  return [
+  return {
     messageList,
     sendMessage,
     sendAudio,
@@ -441,7 +447,7 @@ const useChat = ({
     getHistory,
     conversationContinue,
     getHistoryBackground,
-  ];
+  };
 };
 
 export { useChat };

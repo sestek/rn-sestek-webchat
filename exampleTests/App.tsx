@@ -17,6 +17,7 @@ import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
 import config from './src/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   const modalRef = useRef<ChatModalRef>(null);
@@ -24,6 +25,7 @@ export default function App() {
   const pressStartConversation = () => {
     modalRef.current?.startConversation();
   };
+
   const pressEndConversation = () => {
     if (!modalRef.current?.conversationStatus) {
       showMessage({
@@ -81,6 +83,11 @@ export default function App() {
   const customActionDataExample = {
     tel: '900000000000',
   };
+
+  const startStorageSession = () => {
+    modalRef.current?.startStorageSession();
+  };
+
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
@@ -92,6 +99,9 @@ export default function App() {
       </View>
 
       <View style={{flex: 1}}>
+        <Pressable style={styles.button} onPress={startStorageSession}>
+          <Text style={styles.text}>Deep Test2</Text>
+        </Pressable>
         <Pressable style={styles.button} onPress={pressStartConversation}>
           <Text style={styles.text}>Start Conversation</Text>
         </Pressable>
@@ -139,6 +149,7 @@ export default function App() {
           RNWebView: WebView,
           Record: AudioRecord,
           RNFileSelector: DocumentPicker,
+          asyncStorage: AsyncStorage,
         }}
         ref={modalRef}
         defaultConfiguration={{

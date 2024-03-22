@@ -50,15 +50,18 @@ If you use to slider, you must also install the "@miblanchard/react-native-slide
 
 ##### Step 1: Install react-native-document-picker
 
-RN >= 0.69 
+RN >= 0.69
+
 ```
 npm i --save react-native-document-picker@9.1.1
 ```
 
-0.63 >= RN < 0.69 
+0.63 >= RN < 0.69
+
 ```
 npm i --save react-native-document-picker@8.2.2
 ```
+
  You can follow the [link](https://www.npmjs.com/package/react-native-document-picker) below to integrate
 
 RN < 0.63 Older RN versions are not supported.
@@ -73,7 +76,6 @@ If you want to send files, you also need to install the "react-native-fetch-blob
 You can follow the [link](https://www.npmjs.com/package/react-native-fetch-blob) below to integrate
 
 --------------------------------------------------------------------------------------------------------
-
 
 ### Listening to event from conversation
 
@@ -91,6 +93,14 @@ customActionData: "{\"channel\":\"xxx\",\"phoneNumber\":\"xxx xxx xx xx\",\"cust
 
 ## Usage
 
+### If you want to restart an existing session you need to follow these steps (background, screen lock, kill)
+
+##### Step 1: Install @react-native-async-storage/async-storage
+
+```
+npm i --save @react-native-async-storage/async-storage
+```
+
 You may have a general understanding of how it works with the following snippet.
 
 ```javascript
@@ -100,6 +110,9 @@ import RNFetchBlob from 'react-native-fetch-blob'; //Required package to listen 
 import AudioRecord from 'react-native-audio-record'; //Required package to send audio files as waw
 import AudioRecord from 'react-native-audio-record'; //Required package to send audio files as waw
 import DocumentPicker from 'react-native-document-picker'
+
+import AsyncStorage from '@react-native-async-storage/async-storage';// for the start storage session
+
 
 const modalRef = useRef<ChatModalRef>(null);
 
@@ -166,6 +179,10 @@ const customActionDataExample = {
     tel: '900000000000',
 }; // send webchat custom action data
 
+const startStorageSession = () => {
+    modalRef.current?.startStorageSession();
+}; // start storage session
+
 
  <ChatModal
   url={`ConnectionChathubUrl`}
@@ -175,7 +192,8 @@ const customActionDataExample = {
     RNSlider: Slider,
     RNWebView: null,
     Record: AudioRecord,
-    RNFileSelector: DocumentPicker
+    RNFileSelector: DocumentPicker,
+    asyncStorage: AsyncStorage,
   }}
   ref={modalRef}
   defaultConfiguration={{

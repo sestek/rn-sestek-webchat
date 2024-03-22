@@ -47,16 +47,16 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { loading } = useLoading();
 
-    const [
+    const {
       messageList,
       sendMessage,
       sendAudio,
       sendAttachment,
-      sendEnd,
       getHistory,
       conversationContinue,
       getHistoryBackground,
-    ] = useChat({
+      sendEnd,
+    } = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
       sessionId: sessionId,
@@ -66,6 +66,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     useImperativeHandle(ref, () => ({
       messageList: messageList,
+      sendEnd: sendEnd,
     }));
 
     const { appStyle, handleStyle, getCssIntegration } =
@@ -97,10 +98,10 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
     const { background } = useCheckBackground();
     useEffect(() => {
       if (background) {
-        getHistoryBackground();
+        getHistoryBackground && getHistoryBackground();
       } else {
-        getHistory();
-        conversationContinue();
+        getHistory && getHistory();
+        conversationContinue && conversationContinue();
       }
     }, [background]);
 

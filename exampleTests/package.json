@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^2.2.0",
+    "@react-native-async-storage/async-storage": "^1.23.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "react": "18.2.0",
     "react-native": "0.72.3",
