@@ -45,6 +45,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     props.changeInputData('');
   };
 
+  const [imageList, setImageList] = useState<any>([]);
+  const [cardList, setCardList] = useState<any>([]);
+
   const [maxHeight, setmaxHeight] = useState(0);
   const totalFont = useWindowDimensions().fontScale;
   const screenWidth = Dimensions.get('screen').width * (1 / (totalFont * 10));
@@ -80,9 +83,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     },
     [cardList]
   );
-
-  const [imageList, setImageList] = useState<any>([]);
-  const [cardList, setCardList] = useState<any>([]);
 
   useEffect(() => {
     if (Array.isArray(attachmentsData)) {

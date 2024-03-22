@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react';
-import { SafeAreaView, ScrollView, Text, View, StyleSheet } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 import { RobotIcon } from '../image';
 import { GeneralManager } from '../services';
@@ -35,10 +35,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
     var year = new Date().getFullYear();
-
-    //Alert.alert(date + '-' + month + '-' + year);
-    // You can turn it in to your desired format
-    return date + ' / ' + month + ' / ' + year; //format: d-m-y;
+    return date + ' / ' + month + ' / ' + year;
   };
   return (
     <SafeAreaView style={styles.container}>

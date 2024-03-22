@@ -10,10 +10,8 @@ const useChat = ({
   url,
 }: PropsUseChat) => {
   const { enableNdUi, getResponseData } = defaultConfiguration;
-
   const [messageList, setMessageList] = useState<any>([]);
   const [historyCount, sethistoryCount] = useState(0);
-
   const { background } = useCheckBackground();
 
   const addMessageList = (message: any) => {
@@ -33,6 +31,7 @@ const useChat = ({
       return [message];
     });
   };
+
   const setResponseFunc = (customAction: any, customActionData: any) => {
     if (getResponseData) {
       getResponseData({ customAction, customActionData });
@@ -62,7 +61,7 @@ const useChat = ({
   };
 
   const funcTyping = () => {
-    client.ontyping((details: any, message: any) => {
+    client.ontyping((_: any, message: any) => {
       if (message === 'typing') {
         setMessageList((messages: any) => [
           ...messages,
@@ -77,11 +76,9 @@ const useChat = ({
   };
 
   const attachClientOnMessage = () => {
-    client.onmessage((details: any, message: any) => {
+    client.onmessage((_: any, message: any) => {
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
-        // console.log("messageBody?.channelData", messageBody?.channelData)
-        // console.log("enableNdUi",enableNdUi)
       if (messageBody?.channelData) {
         if (enableNdUi) {
           if (messageBody?.channelData?.CustomActionData) {
@@ -345,7 +342,7 @@ const useChat = ({
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
-      browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
+      browserLanguage: 'tr',
     };
     addMessageList(startObj);
     await client.startConversation(JSON.stringify(startObj));
@@ -417,7 +414,6 @@ const useChat = ({
   };
 
   const conversationContinue = async () => {
-    console.log('continune chat !');
     defaultConfiguration.customAction = 'ContinueConversation';
     const startObj = {
       timestamp: new Date().getTime(),
@@ -431,7 +427,7 @@ const useChat = ({
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
-      browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
+      browserLanguage: 'tr',
     };
     // addMessageList(startObj);
     await client.continueConversation(JSON.stringify(startObj));

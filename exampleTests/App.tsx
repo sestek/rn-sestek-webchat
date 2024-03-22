@@ -141,7 +141,7 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-         url={config?.URL}
+        url={config?.URL}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -154,11 +154,10 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-
           channel: 'mobil',
           clientId: 'mobile-testing',
-           tenant: config.TNAME,
-           projectName: config.PNAME,
+          tenant: config.TNAME,
+          projectName: config.PNAME,
 
           // enableNdUi: false,
           getResponseData: setResponse,

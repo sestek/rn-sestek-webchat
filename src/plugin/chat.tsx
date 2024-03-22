@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
-import ModalComponent, { ModalCompRef } from '../components/modal';
+import { ModalComponent, ModalCompRef } from '../components/modal';
 import { ChatIcon } from '../image';
 import type { PropsChatModal } from '../types';
 import { StyleContextProvider } from '../context/StyleContext';
