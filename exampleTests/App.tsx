@@ -8,7 +8,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import {ChatModal, ChatModalRef} from '../src/index';
+import {ChatModal, ChatModalProps} from '../src/index';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
@@ -20,7 +20,7 @@ import config from './src/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
-  const modalRef = useRef<ChatModalRef>(null);
+  const modalRef = useRef<ChatModalProps>(null);
 
   const pressStartConversation = () => {
     modalRef.current?.startConversation();
@@ -141,7 +141,8 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-         url={config?.URL}
+        url={config?.URL_}
+        // url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -157,8 +158,8 @@ export default function App() {
 
           channel: 'mobil',
           clientId: 'mobile-testing',
-           tenant: config.TNAME,
-           projectName: config.PNAME,
+          tenant: config.TNAME_,
+          projectName: config.PNAME_,
 
           // enableNdUi: false,
           getResponseData: setResponse,

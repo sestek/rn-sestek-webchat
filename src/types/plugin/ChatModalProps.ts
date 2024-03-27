@@ -4,13 +4,5 @@ export interface ChatModalProps {
   endConversation: () => void;
   conversationStatus: boolean;
   messageList: any;
+  startStorageSession: () => void;
 }
-
-/**
- *
- *
- * bot mesaj icon dışarı title remove
- * agent client api border
- * saat mesaj dışına
- * buton mesaj dışına
- */

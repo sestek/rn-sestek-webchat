@@ -138,7 +138,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
   return (
     <View style={{ flexDirection: 'column',alignItems:"flex-start" }}>
       {/* <View style={{ flexDirection: 'row', width: '100%' }}> */}
-        <View style={{ width: '100%' ,backgroundColor:"yellow",  }}>
+        <View style={{ width: '100%' }}>
           <Carousel
             layout="stack"
             data={cardList}

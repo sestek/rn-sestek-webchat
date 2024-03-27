@@ -1,3 +1,3 @@
-import { ChatModal, ChatModalRef } from './plugin/chat';
+import { ChatModal, ChatModalProps } from './plugin/chat';
 
-export { ChatModal, ChatModalRef };
+export { ChatModal, ChatModalProps };
