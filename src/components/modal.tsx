@@ -5,13 +5,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
-import {
-  Modal,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  AppState,
-} from 'react-native';
+import { Modal, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from '../types';
 import BodyComponent from './body';
@@ -203,4 +197,4 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   }
 );
 
-export default ModalComponent;
+export { ModalComponent, ModalCompRef };

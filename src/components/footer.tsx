@@ -24,7 +24,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const RNFileSelector = props.modules.RNFileSelector;
   const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
-  const {loading, setLoading} = useLoading()
+  const { loading, setLoading } = useLoading();
   const {
     modules,
     sendAudio,
@@ -36,7 +36,14 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     placeholderText,
   } = props;
 
-  const {bottomVoiceIcon,bottomVoiceStopIcon,bottomVoiceDisabledIcon,bottomAttachmentIcon, bottomSendIcon, permissionAudioCheck} = customizeConfiguration;
+  const {
+    bottomVoiceIcon,
+    bottomVoiceStopIcon,
+    bottomVoiceDisabledIcon,
+    bottomAttachmentIcon,
+    bottomSendIcon,
+    permissionAudioCheck,
+  } = customizeConfiguration;
 
   const Record =
     modules?.AudioRecorderPlayer && modules?.RNFS
@@ -77,7 +84,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
   const clickSendButton = () => {
     if (!inputData) return;
-    sendMessage && sendMessage({message:inputData && inputData});
+    sendMessage && sendMessage({ message: inputData && inputData });
     changeInputData && changeInputData('');
   };
 
@@ -103,7 +110,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await RNFileSelector.pick({
-          type: [RNFileSelector.types.allFiles], // Tüm dosya türlerini seçmek için
+          type: [RNFileSelector.types.allFiles],
         });
         resolve(res);
       } catch (err) {
@@ -119,21 +126,23 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const readAndConvertPickDocument = async () => {
     pickDocument()
       .then((res: any) => {
-        setLoading(true)
-        const path = Platform.OS === "android" ? res[0]?.uri : res[0]?.uri.replace("file://","")
-          const fileSizeBytes = res[0].size;
-         if(fileSizeBytes < MAX_FILE_SIZE_BYTES){
-          convertToBase64(path).then(data=>{
-            sendAttachment &&
-            sendAttachment(res[0]?.uri, data);
-          }).then(res=>{
-            setLoading(false)
-          });
-         }
-       
+        setLoading(true);
+        const path =
+          Platform.OS === 'android'
+            ? res[0]?.uri
+            : res[0]?.uri.replace('file://', '');
+        const fileSizeBytes = res[0].size;
+        if (fileSizeBytes < MAX_FILE_SIZE_BYTES) {
+          convertToBase64(path)
+            .then((data) => {
+              sendAttachment && sendAttachment(res[0]?.uri, data);
+            })
+            .then((res) => {
+              setLoading(false);
+            });
+        }
       })
       .catch((err) => console.log(err));
-     
   };
   return (
     <View style={styles.container}>
@@ -197,10 +206,10 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             style={styles.MicButtonIcon}
             source={
               recordStart
-                ? (bottomVoiceStopIcon?.value ?? RecordInIcon)
+                ? bottomVoiceStopIcon?.value ?? RecordInIcon
                 : disableRecord
-                ? (bottomVoiceDisabledIcon?.value ?? RecordDisable)
-                : (bottomVoiceIcon?.value ?? RecordOutIcon)
+                ? bottomVoiceDisabledIcon?.value ?? RecordDisable
+                : bottomVoiceIcon?.value ?? RecordOutIcon
             }
           />
         </TouchableOpacity>
@@ -212,7 +221,10 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           { backgroundColor: appStyle?.bottomInputSendButtonColor },
         ]}
       >
-        <Image style={[styles.SendButtonIcon]} source={bottomSendIcon?.value ?? SendIconWhite} />
+        <Image
+          style={[styles.SendButtonIcon]}
+          source={bottomSendIcon?.value ?? SendIconWhite}
+        />
       </TouchableOpacity>
     </View>
   );

@@ -1,4 +1,3 @@
-import {URL, TNAME, PNAME} from '@env'
+import {URL_, TNAME_, PNAME_} from '@env';
 
-
-export default {URL, TNAME,PNAME}
+export default {URL_, TNAME_, PNAME_};
