@@ -33,7 +33,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.title && (
           <Markdown
-            styles={styles.rceMboxText}
+            styles={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -47,7 +47,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.subtitle && (
           <Markdown
-            styles={styles.rceMboxText}
+            styles={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -60,7 +60,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
       {(generalProps.type === 'text' || generalProps.type === 'message') &&
         (generalProps.activity.text || generalProps.activity.message) && (
           <Markdown
-            styles={styles.rceMboxText}
+            styles={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -75,7 +75,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.text && (
           <Markdown
-            style={styles.rceMboxText}
+            style={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -89,17 +89,10 @@ const GeneralMessage: React.FC<Props> = (props) => {
         Array.isArray(generalProps?.activity?.entities) &&
         generalProps?.activity?.entities[0]?.geo && (
           <View
-            style={{
-              flex: 1,
-              maxHeight: Dimensions.get('screen').height * 0.5,
-              maxWidth: Dimensions.get('screen').width * 0.7,
-            }}
+            style={styles.generalMessageBoxWebviewContainer}
           >
             <View
-              style={{
-                height: Dimensions.get('screen').height * 0.3,
-                width: Dimensions.get('screen').width * 0.7,
-              }}
+              style={styles.generalMessageBoxInWebviewInContainer}
             >
               <WebView
                 ref={webViewRef}
@@ -122,7 +115,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
             </View>
 
             <Markdown
-              style={styles.rceMboxText}
+              style={styles.generalMessageBoxText}
               color={
                 generalProps.position != 'right'
                   ? appStyle?.userMessageBoxTextColor
@@ -132,7 +125,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
               {generalProps.activity.entities[0]?.geo?.name}
             </Markdown>
             <Markdown
-              style={styles.rceMboxText}
+              style={styles.generalMessageBoxText}
               color={
                 generalProps.position != 'right'
                   ? appStyle?.userMessageBoxTextColor
@@ -142,7 +135,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
               {generalProps.activity.entities[0]?.address}
             </Markdown>
             <Markdown
-              style={styles.rceMboxText}
+              style={styles.generalMessageBoxText}
               color={
                 generalProps.position != 'right'
                   ? appStyle?.userMessageBoxTextColor

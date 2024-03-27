@@ -29,8 +29,8 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const changeActiveSlide = (number: number) => setActiveSlide(number);
   const { appStyle } = useContext(StyleContext);
   var positionCls = [
-    styles.rceMbox,
-    messageBoxPosition === 'right' && styles.rceMboxRight,
+    styles.messageBox,
+    messageBoxPosition === 'right' && styles.messageBoxRight,
   ];
   var thatAbsoluteTime =
     messageType !== 'text' &&
@@ -165,18 +165,14 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   return (
     <View style={{ ...styles.messageBoxContainer }}>
       {messageType === 'system' ? null : (
-        <View
-          style={{
-            flexDirection: 'column',
-          }}
-        >
+        <View style={{ ...styles.messageBoxInContainer }}>
           <View
             style={{
               flexDirection: messageBoxPosition === 'right' ? 'row' : undefined,
             }}
           >
             {messageBoxPosition === 'right' && props.avatar && (
-              <View style={styles.rceMboxTitleAvatar}>
+              <View style={styles.messageBoxAvatarContainer}>
                 <Avatar width={28} height={28} src={props.avatar} />
               </View>
             )}
@@ -193,32 +189,29 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
               )}
               <View
                 style={[
-                  styles.rceMboxBody,
+                  styles.messageBoxBody,
                   {
                     backgroundColor:
                       messageBoxPosition != 'right'
                         ? appStyle?.userMessageBoxBackground
                         : appStyle?.chatBotMessageBoxBackground,
-                    minWidth: 100,
                     width: carouselType
                       ? Dimensions.get('screen').width * 0.8
                       : 'auto',
-                    padding: 8,
-                    borderRadius: 15,
                     display: carouselType ? 'none' : undefined,
                   },
                 ]}
               >
-                {(props.title || props.avatar) &&
+                {/* {(props.title || props.avatar) &&
                   messageBoxPosition !== 'left' && (
                     <View
                       style={[
-                        styles.rceMboxTitle,
+                        styles.messageBoxTitle,
                         (messageType === 'text' || messageType === 'message') &&
                           styles.rceMboxTitleClear,
                       ]}
                     ></View>
-                  )}
+                  )} */}
 
                 {!carouselType && (
                   <GeneralMessage
@@ -240,10 +233,10 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
                 {props.activity.type === 'typing' ? <TypingMessage /> : null}
 
-                <View style={[thatAbsoluteTime && styles.rceMboxTimeBlock]}>
+                <View style={[thatAbsoluteTime && styles.messageBoxTimeBlock]}>
                   <Text
                     style={{
-                      ...styles.rceMboxTimeText,
+                      ...styles.messageBoxTimeBlockText,
                       color:
                         messageBoxPosition != 'right'
                           ? appStyle?.userMessageBoxTextColor

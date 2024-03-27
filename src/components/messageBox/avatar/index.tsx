@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 import { Image, View } from 'react-native';
 import type { PropsAvatar } from '../../../types/';
-import styles from './style';
+import styles from '../style';
 
 const Avatar: FC<PropsAvatar> = (props) => {
   return (
-    <View style={styles.rceAvatarContainer}>
+    <View style={styles.messageBoxAvatarTitleContainer}>
       <Image
         style={[
-          styles.rceAvatarDefault,
+          styles.messageBoxAvatarDefaultSize,
           { width: props.width, height: props.height },
         ]}
         source={props.src}

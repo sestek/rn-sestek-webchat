@@ -50,7 +50,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
               borderRadius: 10,
               borderLeftWidth: 1,
               paddingLeft: 15,
-              borderLeftColor: '#00000022',
+              borderLeftColor: '#00000022', 
             }}
           >
             {!checked.includes(item?.url) && (
@@ -68,7 +68,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
     
             {!checked.includes(item?.title) && (
               <Markdown
-                styles={styles.rceMboxText}
+                styles={styles.generalMessageBoxText}
                 color={
                     customizeProps.position != 'right'
                     ? appStyle?.userMessageBoxTextColor
@@ -80,7 +80,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
             )}
             {!checked.includes(item?.subtitle) && (
               <Markdown
-                styles={styles.rceMboxText}
+                styles={styles.generalMessageBoxText}
                 color={
                     customizeProps.position != 'right'
                     ? appStyle?.userMessageBoxTextColor
@@ -92,7 +92,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
             )}
             {!checked.includes(item?.text) && (
               <Markdown
-                styles={styles.rceMboxText}
+                styles={styles.generalMessageBoxText}
                 color={
                     customizeProps.position != 'right'
                     ? appStyle?.userMessageBoxTextColor
@@ -108,7 +108,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
                   key={index}
                   onPress={() => onPressButton(button?.value, button?.title)}
                   style={[
-                    styles.rceMButton,
+                    styles.generalMessageBoxButton,
                     appStyle?.chatBotMessageBoxButtonBackground
                       ? {
                           backgroundColor:
@@ -123,7 +123,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
                 >
                   <Text
                     style={{
-                      ...styles.rceMButtonText,
+                      ...styles.generalMessageBoxButtonText,
                       color: appStyle?.chatBotMessageBoxButtonTextColor,
                     }}
                   >
@@ -136,9 +136,9 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
       };
     
   return (
-    <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <View style={{ flexDirection: 'row', width: '100%' }}>
-        <View style={{ width: '100%' }}>
+    <View style={{ flexDirection: 'column',alignItems:"flex-start" }}>
+      {/* <View style={{ flexDirection: 'row', width: '100%' }}> */}
+        <View style={{ width: '100%' ,backgroundColor:"yellow",  }}>
           <Carousel
             layout="stack"
             data={cardList}
@@ -165,7 +165,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
             </View>
           </View>
         </View>
-      </View>
+      {/* </View> */}
     </View>
   );
 };
