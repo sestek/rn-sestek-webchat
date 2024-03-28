@@ -76,12 +76,11 @@ export default StyleSheet.create({
     paddingTop: 12,
   },
 
-
   messageBoxAvatarDefaultSize: {
     width: 50,
     height: 50,
-    borderRadius:25,
-    overflow: 'hidden'
+    borderRadius: 25,
+    overflow: 'hidden',
   },
 
   generalMessageBoxText: {

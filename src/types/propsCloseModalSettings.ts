@@ -1,16 +1,20 @@
-interface PropsCloseModalSettings {
+export interface PropsCloseModalSettings {
   text: string;
   textColor: string;
   background: string;
   buttons: ButtonGroupsType;
+  closeModal?: any;
+  setCloseModal?: any;
+  closeConversation?: any;
+  closeModalSettings?: any;
 }
 
-interface ButtonGroupsType {
+export interface ButtonGroupsType {
   yesButton: ButtonTypes;
   noButton: ButtonTypes;
 }
 
-interface ButtonTypes {
+export interface ButtonTypes {
   text: string;
   textColor: string;
   borderColor: string | '';

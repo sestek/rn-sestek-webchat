@@ -26,7 +26,7 @@ class Recorder {
       wavFile: 'sestek_bot_audio/' + GeneralManager.createUUID() + '.wav',
     };
     this.recordPack.init(options);
-    this.recordPack.on('data', async (data: any) => {});
+    this.recordPack.on('data', async () => {});
     this.recordPack.start();
   };
 
@@ -48,7 +48,7 @@ class Recorder {
   saveLocalFileAudio = (data: string) => {
     const dirs = this.rnfs.fs.dirs.DocumentDir + '/sestek_bot_audio';
     const path = `${dirs}/${GeneralManager.createUUID()}.wav`;
-    this.rnfs.fs.createFile(path, data, 'base64').then((res: any) => {});
+    this.rnfs.fs.createFile(path, data, 'base64').then(() => {});
     return path;
   };
 

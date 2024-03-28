@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
-import { PlayIcon, PauseIcon, PlayIcon2, PauseIcon2 } from '../../../image';
+import { PlayIcon2, PauseIcon2 } from '../../../image';
 
 const AudioComponent: FC<PropsAudio> = (props) => {
   const [stateRecord, setStateRecord] = useState<any>({
@@ -22,14 +22,13 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   const RNSlider = props.modules.RNSlider;
   const AuidoProp = props.customizeConfiguration;
 
-  //GET DURATION
   useEffect(() => {
     getDuration();
   }, []);
 
   const getDuration = async () => {
     await recorder.audioRecorderPlayer.startPlayer(props.url);
-    recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
+    recorder.audioRecorderPlayer.addPlayBackListener((e: any, _: any) => {
       recorder.currentDurationSec = e.duration;
       setStateRecord({
         playTime: '00:00:00',
@@ -62,7 +61,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     } else {
       await recorder.audioRecorderPlayer.startPlayer(props.url);
     }
-    recorder.audioRecorderPlayer.addPlayBackListener((e: any, x: any) => {
+    recorder.audioRecorderPlayer.addPlayBackListener((e: any, _: any) => {
       recorder.currentPositionSec = e.currentPosition;
       recorder.currentDurationSec = e.duration;
       setStateRecord({

@@ -37,7 +37,7 @@ export default interface PropsCustomizeConfiguration {
   sliderPlayImage?: BodyColorOrImageType;
   sliderPauseImage?: BodyColorOrImageType;
   closeModalSettings?: CloseModalSettings;
-  indicatorColor?:string;
+  indicatorColor?: string;
   permissionAudioCheck?: () => Promise<void>;
 }
 

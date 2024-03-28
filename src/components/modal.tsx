@@ -63,8 +63,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       sendEnd: sendEnd,
     }));
 
-    const { appStyle, handleStyle, getCssIntegration } =
-      useContext(StyleContext);
+    const { appStyle, handleStyle } = useContext(StyleContext);
 
     useEffect(() => {
       (async () => {

@@ -4,8 +4,8 @@ import Markdown from '../../../plugin/markdown/index';
 import styles from '../style';
 
 interface Props {
-  imageList: any[]; 
-  appStyle: any; 
+  imageList: any[];
+  appStyle: any;
   generalProps: any;
 }
 const GeneralMessage: React.FC<Props> = (props) => {
@@ -33,7 +33,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.title && (
           <Markdown
-            styles={styles.generalMessageBoxText}
+            style={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -47,7 +47,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.subtitle && (
           <Markdown
-            styles={styles.generalMessageBoxText}
+            style={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -60,7 +60,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
       {(generalProps.type === 'text' || generalProps.type === 'message') &&
         (generalProps.activity.text || generalProps.activity.message) && (
           <Markdown
-            styles={styles.generalMessageBoxText}
+            style={styles.generalMessageBoxText}
             color={
               generalProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -88,12 +88,8 @@ const GeneralMessage: React.FC<Props> = (props) => {
       {WebView &&
         Array.isArray(generalProps?.activity?.entities) &&
         generalProps?.activity?.entities[0]?.geo && (
-          <View
-            style={styles.generalMessageBoxWebviewContainer}
-          >
-            <View
-              style={styles.generalMessageBoxInWebviewInContainer}
-            >
+          <View style={styles.generalMessageBoxWebviewContainer}>
+            <View style={styles.generalMessageBoxInWebviewInContainer}>
               <WebView
                 ref={webViewRef}
                 scrollEnabled={false}
@@ -105,7 +101,9 @@ const GeneralMessage: React.FC<Props> = (props) => {
                   ) {
                     webViewRef?.current?.stopLoading();
                   }
-                  Linking.openURL(event.url);
+                  Linking.openURL(
+                    `https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc`
+                  );
                 }}
                 source={{
                   html: `<iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>`,

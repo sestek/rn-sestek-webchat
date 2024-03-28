@@ -45,10 +45,8 @@ class SignalRClient {
       .start({
         withCredentials: false,
       })
-      .catch((e) => {
-        console.log('errorsssss !', e);
-        console.log(this.connection);
-        // this.reconnectAsync();
+      .catch(() => {
+        this.reconnectAsync();
       });
   };
 
@@ -76,7 +74,7 @@ class SignalRClient {
   };
 
   receiveMessage = async () => {
-    await this.connection.on('ReceiveMessage', (message: any) => {});
+    await this.connection.on('ReceiveMessage', () => {});
   };
 
   reconnectAsync = async () => {

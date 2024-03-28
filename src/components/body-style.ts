@@ -21,18 +21,19 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff', // Arka plan rengi
+    backgroundColor: '#ffffff',
   },
   textSubContainer: {
-    backgroundColor: '#ff0000', // Metnin kapladığı kısımın arka plan rengi
+    backgroundColor: '#ff0000',
     padding: 5,
     borderRadius: 10,
-    marginTop:10,
-    marginBottom:10
+    marginTop: 10,
+    marginBottom: 10,
   },
   text: {
-    textAlign: 'center', // Metni ortala
-    color: 'black', // Metin rengi
+    textAlign: 'center',
+    color: 'black',
     letterSpacing: 0.7,
+    fontSize: 11,
   },
 });

@@ -1,11 +1,41 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { View } from 'react-native';
 import { merge, isEqual, isArray } from 'lodash';
 import SimpleMarkdown from 'simple-markdown';
 import styles from './styles';
 
-class Markdown extends Component {
-  constructor(props) {
+interface CustomToken {
+  type: string;
+  content?: string;
+  target?: string;
+  href?: string;
+  title?: string;
+  level?: number;
+  text?: string;
+  depth?: number;
+  children?: CustomToken[];
+}
+
+interface MarkdownProps {
+  enableLightBox?: boolean;
+  navigator?: any;
+  imageParam?: any;
+  onLink?: any;
+  bgImage?: any;
+  onImageOpen?: any;
+  onImageClose?: any;
+  rules?: any;
+  color?: string;
+  style?: any;
+  onLoad?: () => void;
+  children: ReactNode;
+}
+
+class Markdown extends Component<MarkdownProps> {
+  parse: (source: string) => CustomToken[];
+  renderer: (tree: CustomToken[]) => JSX.Element;
+
+  constructor(props: MarkdownProps) {
     super(props);
     if (props.enableLightBox && !props.navigator) {
       throw new Error(
@@ -25,17 +55,17 @@ class Markdown extends Component {
     };
     const mergedStyles = merge(
       {},
-      { ...styles, text: { color: props.color, ...props.styles } }
+      { ...styles, text: { color: props.color, ...props.style } }
     );
-    var rules = require('./rules')(mergedStyles, opts);
+    let rules = require('./rules')(mergedStyles, opts);
     rules = merge({}, SimpleMarkdown.defaultRules, rules, opts.rules);
 
     const parser = SimpleMarkdown.parserFor(rules);
-    this.parse = function (source) {
+    this.parse = function (source: string) {
       const blockSource = source + '\n\n';
-      return parser(blockSource, { inline: false });
+      return parser(blockSource, { inline: false }) as CustomToken[];
     };
-    this.renderer = SimpleMarkdown.outputFor(rules, 'react');
+    this.renderer = SimpleMarkdown.outputFor(rules, 'react' as any);
   }
 
   componentDidMount() {
@@ -44,14 +74,21 @@ class Markdown extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps: any) {
+  shouldComponentUpdate(nextProps: MarkdownProps) {
     return !isEqual(nextProps.children, this.props.children);
   }
 
   render() {
-    const child = isArray(this.props.children)
-      ? this.props.children.join('')
-      : this.props.children;
+    const { children } = this.props;
+
+    let child: string;
+    if (typeof children === 'string') {
+      child = children;
+    } else if (isArray(children)) {
+      child = children.join('');
+    } else {
+      child = '';
+    }
 
     const tree = this.parse(child);
 

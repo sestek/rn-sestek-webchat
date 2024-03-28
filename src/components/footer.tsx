@@ -24,7 +24,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const RNFileSelector = props.modules.RNFileSelector;
   const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
-  const { loading, setLoading } = useLoading();
+  const { setLoading } = useLoading();
   const {
     modules,
     sendAudio,
@@ -137,7 +137,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             .then((data) => {
               sendAttachment && sendAttachment(res[0]?.uri, data);
             })
-            .then((res) => {
+            .then(() => {
               setLoading(false);
             });
         }

@@ -16,6 +16,8 @@ const useChat = ({
 
   const { background } = useCheckBackground();
 
+  const parseUrl = url ? url.split('/webchat')[0] : '';
+
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
       if (background) {
@@ -77,11 +79,9 @@ const useChat = ({
   };
 
   const attachClientOnMessage = () => {
-    client.onmessage((details: any, message: any) => {
+    client.onmessage((_: any, message: any) => {
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
-        // console.log("messageBody?.channelData", messageBody?.channelData)
-        // console.log("enableNdUi",enableNdUi)
       if (messageBody?.channelData) {
         if (enableNdUi) {
           if (messageBody?.channelData?.CustomActionData) {
@@ -268,9 +268,6 @@ const useChat = ({
         },
         formData
       )
-      .then(async (resp: any) => {
-        console.log('resp', resp);
-      })
       .catch((err: any) => {
         console.log(err);
       })
@@ -367,57 +364,60 @@ const useChat = ({
   };
 
   const getHistory = () => {
-    fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((data: any) => {
-        if (data && data.length > 0) {
-          if (data.length > historyCount) {
-            for (let i = historyCount; i < data.length; i++) {
-              addMessageList({
-                timestamp: new Date(data[i].dialogTime),
-                message: data[i]?.text,
-                channel:
-                  data[i].messageType === 'VirtualAgent'
-                    ? null
-                    : defaultConfiguration.channel,
-                conversationId: sessionId,
-                type: 'message',
-              });
-            }
-          } else if (historyCount > data.length) {
-            for (let i = 0; i < data.length; i++) {
-              addMessageList({
-                timestamp: new Date(data[i].dialogTime),
-                message: data[i]?.text,
-                channel:
-                  data[i].messageType === 'VirtualAgent'
-                    ? null
-                    : defaultConfiguration.channel,
-                conversationId: sessionId,
-                type: 'message',
-              });
+    if (parseUrl) {
+      fetch(parseUrl + '/webchat/history/' + sessionId, {
+        method: 'GET',
+      })
+        .then((res) => res.json())
+        .then((data: any) => {
+          if (data && data.length > 0) {
+            if (data.length > historyCount) {
+              for (let i = historyCount; i < data.length; i++) {
+                addMessageList({
+                  timestamp: new Date(data[i].dialogTime),
+                  message: data[i]?.text,
+                  channel:
+                    data[i].messageType === 'VirtualAgent'
+                      ? null
+                      : defaultConfiguration.channel,
+                  conversationId: sessionId,
+                  type: 'message',
+                });
+              }
+            } else if (historyCount > data.length) {
+              for (let i = 0; i < data.length; i++) {
+                addMessageList({
+                  timestamp: new Date(data[i].dialogTime),
+                  message: data[i]?.text,
+                  channel:
+                    data[i].messageType === 'VirtualAgent'
+                      ? null
+                      : defaultConfiguration.channel,
+                  conversationId: sessionId,
+                  type: 'message',
+                });
+              }
             }
           }
-        }
-      });
+        });
+    }
   };
 
   const getHistoryBackground = () => {
-    fetch('https://va.tr.knovvu.com/webchat/history/' + sessionId, {
-      method: 'GET',
-    })
-      .then((res) => res.json())
-      .then((data: any) => {
-        if (data && data.length > 0) {
-          sethistoryCount(data.length);
-        }
-      });
+    if (parseUrl) {
+      fetch(parseUrl + '/webchat/history/' + sessionId, {
+        method: 'GET',
+      })
+        .then((res) => res.json())
+        .then((data: any) => {
+          if (data && data.length > 0) {
+            sethistoryCount(data.length);
+          }
+        });
+    }
   };
 
   const conversationContinue = async () => {
-    console.log('continune chat !');
     defaultConfiguration.customAction = 'ContinueConversation';
     const startObj = {
       timestamp: new Date().getTime(),
@@ -433,7 +433,6 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
     };
-    // addMessageList(startObj);
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
   };

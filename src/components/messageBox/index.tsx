@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
-import CarouselPage from './carousel';
+// import CarouselPage from './carousel';
 import TypingMessage from './typingMessage';
 import AudioMessage from './auidoMessage';
 import CarouselMessage from './carouselMessage';
@@ -24,6 +24,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const attachmentsData = props?.activity?.attachments;
   const carouselType =
     props?.activity?.attachmentLayout === 'carousel' ? true : false;
+
+  const [imageList, setImageList] = useState<any>([]);
+  const [cardList, setCardList] = useState<any>([]);
 
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const changeActiveSlide = (number: number) => setActiveSlide(number);
@@ -80,9 +83,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     },
     [cardList]
   );
-
-  const [imageList, setImageList] = useState<any>([]);
-  const [cardList, setCardList] = useState<any>([]);
 
   useEffect(() => {
     if (Array.isArray(attachmentsData)) {

@@ -1,9 +1,18 @@
 import React from 'react';
 import { Text } from 'react-native';
-import AudioComponent from './audio'
+import AudioComponent from './audio';
 import { Recorder } from '../../../services';
+import PropsModules from 'src/types/propsModules';
+import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
 
-const AudioMessage = (props) => {
+interface AudioMessageProps {
+  modules: PropsModules;
+  customizeConfiguration: PropsCustomizeConfiguration;
+  activity: any;
+  userMessageBoxTextColor: string;
+}
+
+const AudioMessage = (props: AudioMessageProps) => {
   if (!props.modules.AudioRecorderPlayer || !props.modules.RNFS) {
     return null;
   }
