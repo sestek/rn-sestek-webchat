@@ -98,7 +98,6 @@ const GeneralMessage: React.FC<Props> = (props) => {
                 ref={webViewRef}
                 scrollEnabled={false}
                 onNavigationStateChange={(event: any) => {
-                    console.log("djhgdfjgsdfjhgdh")
                   const uri = 'https://www.google.com/maps/dir';
                   if (
                     webViewRef?.current?.stopLoading &&
