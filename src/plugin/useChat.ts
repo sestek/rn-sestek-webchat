@@ -16,7 +16,7 @@ const useChat = ({
 
   const { background } = useCheckBackground();
 
-  const parseUrl = url ? url.split('/webchat')[0] : '';
+  const parseUrl = url ? url.split('/chathub')[0] : '';
 
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
@@ -365,7 +365,7 @@ const useChat = ({
 
   const getHistory = () => {
     if (parseUrl) {
-      fetch(parseUrl + '/webchat/history/' + sessionId, {
+      fetch(parseUrl + '/history/' + sessionId, {
         method: 'GET',
       })
         .then((res) => res.json())
@@ -405,7 +405,7 @@ const useChat = ({
 
   const getHistoryBackground = () => {
     if (parseUrl) {
-      fetch(parseUrl + '/webchat/history/' + sessionId, {
+      fetch(parseUrl + '/history/' + sessionId, {
         method: 'GET',
       })
         .then((res) => res.json())

@@ -14,7 +14,10 @@ import {
 } from 'react-native';
 
 import SimpleMarkdown from 'simple-markdown';
-import { map, includes, head, noop, some, size } from 'lodash';
+import { map, includes, noop, some, size } from 'lodash';
+interface Options {
+  imageParam?: string;
+}
 
 module.exports = function (
   styles: {
@@ -90,7 +93,7 @@ module.exports = function (
     text: any;
     u: any;
   },
-  opts = {}
+  opts: Options = {}
 ) {
   const LINK_INSIDE = '(?:\\[[^\\]]*\\]|[^\\]]|\\](?=[^\\[]*\\]))*';
   const LINK_HREF_AND_TITLE =
@@ -142,7 +145,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.autolink,
             onPress: _pressHandler,
           },
@@ -168,15 +171,19 @@ module.exports = function (
         state.withinQuote = true;
 
         const img = React.createElement(View, {
-          key: state.key - state.key,
-          style: [styles.blockQuoteSectionBar, styles.blockQuoteBar],
+          key: Math.floor(Math.random()*9000) +1000 - state.key,
+          style: [
+            styles.blockQuoteSectionBar,
+            styles.blockQuoteBar,
+          ] as ViewStyle[],
         });
+        const blockQuoteTextStyles = [styles.blockQuoteText] as TextStyle[];
 
         let blockQuote = React.createElement(
           Text,
           {
-            key: state.key,
-            style: styles.blockQuoteText,
+            key: Math.floor(Math.random()*9000) +1000,
+            style: blockQuoteTextStyles,
           },
           output(node.content, state)
         );
@@ -184,19 +191,22 @@ module.exports = function (
         return React.createElement(
           View,
           {
-            key: state.key,
-            style: [styles.blockQuoteSection, styles.blockQuoteText],
+            key: Math.floor(Math.random()*9000) +1000,
+            style: [
+              styles.blockQuoteSection,
+              styles.blockQuoteText,
+            ] as ViewStyle[],
           },
           [img, blockQuote]
         );
       },
     },
     br: {
-      react: function (node: any, output: any, { ...state }: any) {
+      react: function () {
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.br,
           },
           '\n\n'
@@ -214,14 +224,13 @@ module.exports = function (
             | null
             | undefined;
         },
-        output: any,
         { ...state }: any
       ) {
         state.withinText = true;
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.codeBlock,
           },
           node.content
@@ -247,7 +256,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.del,
             selectable: true,
           },
@@ -278,7 +287,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.em,
             selectable: true,
           },
@@ -314,7 +323,7 @@ module.exports = function (
         const ret = React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: state.style,
             selectable: true,
           },
@@ -324,16 +333,16 @@ module.exports = function (
       },
     },
     hr: {
-      react: function (node: any, output: any, { ...state }: any) {
-        return React.createElement(View, { key: state.key, style: styles.hr });
+      react: function () {
+        return React.createElement(View, { key: Math.floor(Math.random()*9000) +1000, style: styles.hr });
       },
     },
     image: {
-      react: function (node: { target: any }, output: any, { ...state }: any) {
+      react: function (node: { target: any }) {
         var imageParam = opts.imageParam ? opts.imageParam : '';
         var target = node.target + imageParam;
         var image = React.createElement(Image, {
-          key: state.key,
+          key: Math.floor(Math.random()*9000) +1000,
           // resizeMode: 'contain',
           source: { uri: target },
           style: styles.image,
@@ -361,7 +370,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.inlineCode,
           },
           output(node.content, state)
@@ -395,7 +404,7 @@ module.exports = function (
         const link = React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.autolink,
             onPress: _pressHandler,
           },
@@ -438,18 +447,23 @@ module.exports = function (
 
           var content = output(item, state);
           var listItem;
+          const listItemTextStyles = [styles.listItemText] as TextStyle[];
+
           if (
-            includes(
-              ['text', 'paragraph', 'strong'],
-              (head(item) || {}).type
-            ) &&
-            state.withinList == false
+            item &&
+            item.length > 0 &&
+            typeof item === 'object' && // item bir nesne mi diye kontrol edin
+            includes(['text', 'paragraph', 'strong'], item.type) &&
+            state.withinList === false
           ) {
             state.withinList = true;
             listItem = React.createElement(
               Text,
               {
-                style: [styles.listItemText, { marginBottom: 0 }],
+                style: [
+                  styles.listItemTextStyles,
+                  { marginBottom: 0 },
+                ],
                 key: 1,
               },
               content
@@ -458,7 +472,7 @@ module.exports = function (
             listItem = React.createElement(
               View,
               {
-                style: styles.listItemText,
+                style: listItemTextStyles,
                 key: 1,
               },
               content
@@ -479,7 +493,7 @@ module.exports = function (
 
         return React.createElement(
           View,
-          { key: state.key, style: styles.list },
+          { key: Math.floor(Math.random()*9000) +1000, style: styles.list },
           items
         );
       },
@@ -508,14 +522,19 @@ module.exports = function (
 
           var content = output(item, state);
           var listItem;
+          const listItemTextStylesSub = [styles.listItemText] as TextStyle[];
+
           state.withinList = true;
           if (
-            includes(['text', 'paragraph', 'strong'], (head(item) || {}).type)
+            item &&
+            item.length > 0 &&
+            typeof item === 'object' && // item bir nesne mi diye kontrol edin
+            includes(['text', 'paragraph', 'strong'], item.type)
           ) {
             listItem = React.createElement(
               Text,
               {
-                style: styles.listItemText,
+                style: listItemTextStylesSub,
                 key: 1,
               },
               content
@@ -543,7 +562,7 @@ module.exports = function (
 
         return React.createElement(
           View,
-          { key: state.key, style: styles.sublist },
+          { key: Math.floor(Math.random()*9000) +1000, style: styles.sublist },
           items
         );
       },
@@ -567,7 +586,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.mailto,
             onPress: noop,
           },
@@ -576,11 +595,11 @@ module.exports = function (
       },
     },
     newline: {
-      react: function (node: any, output: any, { ...state }: any) {
+      react: function () {
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.newline,
           },
           '\n'
@@ -598,34 +617,37 @@ module.exports = function (
       ) {
         let paragraphStyle = styles.paragraph;
         // Allow image to drop in next line within the paragraph
-        if (some(node.content, { type: 'image' })) {
-          state.withinParagraphWithImage = true;
-          var paragraph = React.createElement(
-            View,
-            {
-              key: state.key,
-              style: styles.paragraphWithImage,
-            },
-            output(node.content, state)
-          );
-          state.withinParagraphWithImage = false;
-          return paragraph;
-        } else if (
-          size(node.content) < 3 &&
-          some(node.content, { type: 'strong' })
-        ) {
-          // align to center for Strong only content
-          // require a check of content array size below 3,
-          // as parse will include additional space as `text`
-          paragraphStyle = styles.paragraphCenter;
+        if (Array.isArray(node.content)) {
+          if (some(node.content, { type: 'image' })) {
+            state.withinParagraphWithImage = true;
+            var paragraph = React.createElement(
+              View,
+              {
+                key: Math.floor(Math.random()*9000) +1000,
+                style: styles.paragraphWithImage,
+              },
+              output(node.content, state)
+            );
+            state.withinParagraphWithImage = false;
+            return paragraph;
+          } else if (
+            size(node.content) < 3 &&
+            some(node.content, { type: 'strong' })
+          ) {
+            // align to center for Strong only content
+            // require a check of content array size below 3,
+            // as parse will include additional space as `text`
+            paragraphStyle = styles.paragraphCenter;
+          }
         }
+
         if (state.withinList) {
           paragraphStyle = [paragraphStyle, styles.noMargin];
         }
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: paragraphStyle,
             selectable: true,
           },
@@ -656,7 +678,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: state.style,
             selectable: true,
           },
@@ -711,7 +733,7 @@ module.exports = function (
 
         return React.createElement(
           View,
-          { key: state.key, style: styles.table },
+          { key: Math.floor(Math.random()*9000) +1000, style: styles.table },
           [header, rows]
         );
       },
@@ -727,7 +749,6 @@ module.exports = function (
             | null
             | undefined;
         },
-        output: any,
         { ...state }: any
       ) {
         let textStyle = {
@@ -746,7 +767,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: textStyle,
             selectable: true,
           },
@@ -778,7 +799,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.strong,
             selectable: true,
           },
@@ -808,7 +829,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: state.key,
+            key: Math.floor(Math.random()*9000) +1000,
             style: styles.autolink,
             onPress: _pressHandler,
           },

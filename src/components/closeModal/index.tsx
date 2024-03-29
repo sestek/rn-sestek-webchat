@@ -8,7 +8,7 @@ export interface InProps {
   closeConversation: Function;
 }
 
-const CloseModal = forwardRef<InProps, PropsCloseModalSettings>((props) => {
+const CloseModal = forwardRef<InProps, PropsCloseModalSettings>((props,ref) => {
   const { closeModal, setCloseModal, closeConversation, closeModalSettings } =
     props;
   return (
