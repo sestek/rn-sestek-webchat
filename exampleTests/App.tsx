@@ -155,7 +155,6 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-
           channel: 'mobil',
           clientId: 'mobile-testing',
           tenant: config.TNAME_,

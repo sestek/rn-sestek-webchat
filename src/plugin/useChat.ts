@@ -64,7 +64,7 @@ const useChat = ({
   };
 
   const funcTyping = () => {
-    client.ontyping((details: any, message: any) => {
+    client.ontyping((_: any, message: any) => {
       if (message === 'typing') {
         setMessageList((messages: any) => [
           ...messages,

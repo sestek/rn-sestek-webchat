@@ -1,5 +1,11 @@
 import React, { useRef } from 'react';
-import { View, Dimensions, Linking, Image } from 'react-native';
+import {
+  View,
+  Dimensions,
+  Linking,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import Markdown from '../../../plugin/markdown/index';
 import styles from '../style';
 
@@ -89,7 +95,14 @@ const GeneralMessage: React.FC<Props> = (props) => {
         Array.isArray(generalProps?.activity?.entities) &&
         generalProps?.activity?.entities[0]?.geo && (
           <View style={styles.generalMessageBoxWebviewContainer}>
-            <View style={styles.generalMessageBoxInWebviewInContainer}>
+            <TouchableOpacity
+              style={styles.generalMessageBoxInWebviewInContainer}
+              onPress={() => {
+                Linking.openURL(
+                  `https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc`
+                );
+              }}
+            >
               <WebView
                 ref={webViewRef}
                 scrollEnabled={false}
@@ -101,15 +114,12 @@ const GeneralMessage: React.FC<Props> = (props) => {
                   ) {
                     webViewRef?.current?.stopLoading();
                   }
-                  Linking.openURL(
-                    `https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc`
-                  );
                 }}
                 source={{
                   html: `<iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>`,
                 }}
               />
-            </View>
+            </TouchableOpacity>
 
             <Markdown
               style={styles.generalMessageBoxText}

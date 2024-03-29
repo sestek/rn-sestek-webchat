@@ -1,8 +1,8 @@
 export interface PropsCloseModalSettings {
-  text: string;
-  textColor: string;
-  background: string;
-  buttons: ButtonGroupsType;
+  text?: string;
+  textColor?: string;
+  background?: string;
+  buttons?: ButtonGroupsType;
   closeModal?: any;
   setCloseModal?: any;
   closeConversation?: any;
