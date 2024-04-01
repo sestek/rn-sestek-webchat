@@ -104,7 +104,7 @@ npm i --save @react-native-async-storage/async-storage
 You may have a general understanding of how it works with the following snippet.
 
 ```javascript
-import { ChatModal, ChatModalRef } from 'rn-sestek-webchat';
+import { ChatModal, ChatModalProps } from 'rn-sestek-webchat';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player'; //Required package to listen to audio files
 import RNFetchBlob from 'react-native-fetch-blob'; //Required package to listen to audio files
 import AudioRecord from 'react-native-audio-record'; //Required package to send audio files as waw
@@ -114,7 +114,7 @@ import DocumentPicker from 'react-native-document-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage';// for the start storage session
 
 
-const modalRef = useRef<ChatModalRef>(null);
+const modalRef = useRef<ChatModalProps>(null);
 
 const pressStartConversation = () => {
     modalRef.current?.startConversation();
