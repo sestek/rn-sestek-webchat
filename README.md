@@ -181,8 +181,9 @@ const customActionDataExample = {
 
 const startStorageSession = () => {
     modalRef.current?.startStorageSession();
-}; // start storage session and it should also be used in the case where modal hide does not work depending on navigation, i.e. in the case of an existing sessionID. When this function is used, the session will continue where it left off.
-
+}; 
+// start storage session and it should also be used in the case where modal hide does not work depending on navigation,
+// i.e. in the case of an existing sessionID. When this function is used, the session will continue where it left off.
 
  <ChatModal
   url={`ConnectionChathubUrl`}
