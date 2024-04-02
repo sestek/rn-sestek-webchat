@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native'; 
+import { View, Text, TouchableOpacity } from 'react-native';
 
 interface ButtonProps {
   value: string;
@@ -12,29 +12,40 @@ interface Props {
   appStyle: any;
 }
 
-const OutsideButton: React.FC<Props> = ({ attachmentsData, onPressButton, appStyle }) => {
+const OutsideButton: React.FC<Props> = ({
+  attachmentsData,
+  onPressButton,
+  appStyle,
+}) => {
   return (
-    <View style={{
-      flexDirection: 'column',
-      justifyContent: 'center',
-      paddingTop: 10,
-    }}>
-      {attachmentsData[0]?.content?.buttons?.map((button: ButtonProps, index: number) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => onPressButton(button?.value, button?.title)}
-          style={{
-            padding: 5,
-            margin: 3,
-            paddingHorizontal: 10,
-            alignSelf: 'flex-start',
-            borderRadius: 8,
-            borderColor: appStyle.chatBotMessageBoxBackground,
-            borderWidth: 1.5,
-          }}>
-          <Text style={{ color: appStyle.userMessageBoxBackground }}>{button?.title}</Text>
-        </TouchableOpacity>
-      ))}
+    <View
+      style={{
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingTop: 10,
+      }}
+    >
+      {attachmentsData[0]?.content?.buttons?.map(
+        (button: ButtonProps, index: number) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => onPressButton(button?.value, button?.title)}
+            style={{
+              padding: 5,
+              margin: 3,
+              paddingHorizontal: 10,
+              alignSelf: 'flex-start',
+              borderRadius: 8,
+              borderColor: appStyle.chatBotMessageBoxButtonBorderColor,
+              borderWidth: 1.5,
+            }}
+          >
+            <Text style={{ color: appStyle.chatBotMessageBoxButtonTextColor }}>
+              {button?.title}
+            </Text>
+          </TouchableOpacity>
+        )
+      )}
     </View>
   );
 };

@@ -222,8 +222,8 @@ export default function App() {
           chatBotMessageBoxHeaderName: 'Knovvu',
           chatBotMessageBoxHeaderNameColor: 'black',
           chatBotMessageBoxButtonBackground: 'white',
-          chatBotMessageBoxButtonTextColor: 'black',
-          chatBotMessageBoxButtonBorderColor: '#863CEB',
+          chatBotMessageBoxButtonTextColor: '#863CEB',
+          chatBotMessageBoxButtonBorderColor: '#EFEFEF',
           // Chat Body
           chatBody: {type: 'color', value: 'white'},
           // Chat Start Button

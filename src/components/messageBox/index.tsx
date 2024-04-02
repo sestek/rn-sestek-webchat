@@ -160,7 +160,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const getTimeGenerate = (props: any) => {
     const date = new Date(props?.timestamp);
     return `${date.getHours()}:${
-      date.getMinutes() < 10 && '0'
+      date.getMinutes() < 10 ? '0' : ''
     }${date.getMinutes()}`;
   };
 

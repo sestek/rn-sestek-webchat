@@ -17,8 +17,8 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     userMessageBoxTextColor,
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
+    chatBody,
   } = props.customizeConfiguration;
-
   const { scrollViewRef } = props;
 
   const getUserName = (channel: any) => {
@@ -47,7 +47,9 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           scrollViewRef?.current?.scrollToEnd({ animated: true })
         }
       >
-        <View style={styles.textContainer}>
+        <View
+          style={[styles.textContainer, { backgroundColor: chatBody?.value }]}
+        >
           <View
             style={{
               ...styles.textSubContainer,

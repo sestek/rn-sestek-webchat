@@ -27,6 +27,7 @@ export default interface PropsCustomizeConfiguration {
   chatBotMessageBoxButtonBorderColor?: string;
   chatBotMessageBoxButtonTextColor?: string;
   chatBody?: BodyColorOrImageType;
+  chatBodyTimeBackground?: string;
   chatStartButtonHide?: boolean;
   chatStartButton?: IconType;
   chatStartButtonBackground?: string;
