@@ -141,7 +141,7 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={config?.URL_}
+        url={config?._URL}
         // url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
@@ -157,8 +157,8 @@ export default function App() {
           sendConversationStart: true,
           channel: 'mobil',
           clientId: 'mobile-testing',
-          tenant: config.TNAME_,
-          projectName: config.PNAME_,
+          tenant: config._TNAME,
+          projectName: config._PNAME,
 
           // enableNdUi: false,
           getResponseData: setResponse,
@@ -179,6 +179,7 @@ export default function App() {
           },
           // Bottom
           bottomColor: 'white',
+          bottomInputBackgroundColor: 'white',
           bottomInputText: 'Bottom input text..',
           bottomInputBorderColor: '#d5d5d5',
           bottomInputSendButtonColor: '#7743DB',

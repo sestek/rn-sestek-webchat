@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 import { RobotIcon } from '../image';
@@ -7,7 +7,6 @@ import { styles } from './body-style';
 import MessageBox from './messageBox';
 
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
-  const scrollView = useRef<ScrollView>(null);
   const {
     userMessageBoxIcon,
     chatBotMessageIcon,
@@ -19,6 +18,8 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
   } = props.customizeConfiguration;
+
+  const { scrollViewRef } = props;
 
   const getUserName = (channel: any) => {
     return channel
@@ -40,10 +41,10 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        ref={scrollView}
+        ref={scrollViewRef}
         keyboardShouldPersistTaps="handled"
         onContentSizeChange={() =>
-          scrollView?.current?.scrollToEnd({ animated: true })
+          scrollViewRef?.current?.scrollToEnd({ animated: true })
         }
       >
         <View style={styles.textContainer}>

@@ -34,6 +34,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     changeInputData,
     customizeConfiguration,
     placeholderText,
+    scrollViewRef,
   } = props;
 
   const {
@@ -151,15 +152,18 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           style={[
             styles.textInput,
             {
-              borderTopWidth: 1,
-              borderBottomWidth: 1,
-              borderLeftWidth: 1,
               borderColor: appStyle?.bottomInputBorderColor,
               borderTopRightRadius: recorder ? 0 : 10,
               borderBottomRightRadius: recorder ? 0 : 10,
               borderRightWidth: recorder ? 0 : 1,
+              backgroundColor: appStyle?.bottomInputBackgroundColor,
             },
           ]}
+          onFocus={() => {
+            setTimeout(() => {
+              scrollViewRef?.current?.scrollToEnd({ animated: true });
+            }, 250);
+          }}
           value={inputData && inputData}
           onChangeText={(text: string) =>
             changeInputData && changeInputData(text)
@@ -178,8 +182,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             styles.AttachmentButton,
             {
               borderColor: appStyle?.bottomInputBorderColor,
-              borderBottomWidth: 1,
-              borderTopWidth: 1,
+              backgroundColor: appStyle?.bottomInputBackgroundColor,
             },
           ]}
         >
@@ -197,8 +200,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             {
               borderRightWidth: 1,
               borderColor: appStyle?.bottomInputBorderColor,
-              borderBottomWidth: 1,
-              borderTopWidth: 1,
+              backgroundColor: appStyle?.bottomInputBackgroundColor,
             },
           ]}
         >

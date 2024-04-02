@@ -22,6 +22,8 @@ const StyleContextProvider = (props: any) => {
       headerText: propsCustomizeConfiguration?.headerText,
       headerTextColor: propsCustomizeConfiguration?.headerTextColor,
       bottomColor: propsCustomizeConfiguration?.bottomColor,
+      bottomInputBackgroundColor:
+        propsCustomizeConfiguration?.bottomInputBackgroundColor,
       bottomInputSendButtonColor:
         propsCustomizeConfiguration?.bottomInputSendButtonColor,
       bottomInputBorderColor:

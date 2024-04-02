@@ -1,3 +1,4 @@
+import { ScrollView } from 'react-native';
 import type PropsCustomizeConfiguration from './propsCustomizeConfiguration';
 import type PropsModules from './propsModules';
 
@@ -10,4 +11,5 @@ export default interface PropsFooterComponent {
   sendAttachment?: any;
   modules: PropsModules;
   customizeConfiguration: PropsCustomizeConfiguration;
+  scrollViewRef: React.RefObject<ScrollView>;
 }

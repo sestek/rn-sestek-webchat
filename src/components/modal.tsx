@@ -4,8 +4,15 @@ import React, {
   useImperativeHandle,
   useContext,
   useEffect,
+  useRef,
 } from 'react';
-import { Modal, View, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  Modal,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { useChat } from '../plugin/useChat';
 import type { PropsModalComponent } from '../types';
 import BodyComponent from './body';
@@ -38,7 +45,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const [inputData, setInputData] = useState<string>('');
     const changeInputData = (text: string) => setInputData(text);
-
+    const scrollViewRef = useRef<ScrollView>(null);
     const { loading } = useLoading();
 
     const {
@@ -167,6 +174,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                   messageList={messageList}
                   changeInputData={changeInputData}
                   sendMessage={sendMessage}
+                  scrollViewRef={scrollViewRef}
                 />
               }
             />
@@ -188,6 +196,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
               sendAudio={sendAudio}
               placeholderText={appStyle?.bottomInputText}
               sendAttachment={sendAttachment}
+              scrollViewRef={scrollViewRef}
             />
           </View>
         </KeyboardAvoidingView>

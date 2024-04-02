@@ -6,6 +6,7 @@ export default interface PropsCustomizeConfiguration {
   headerCloseIcon?: IconType;
   bottomColor?: string;
   bottomInputText?: string;
+  bottomInputBackgroundColor?: string;
   bottomInputBorderColor?: string;
   bottomVoiceIcon?: IconType;
   bottomVoiceStopIcon?: IconType;
