@@ -224,6 +224,7 @@ export default function App() {
           chatBotMessageBoxButtonBackground: 'white',
           chatBotMessageBoxButtonTextColor: '#863CEB',
           chatBotMessageBoxButtonBorderColor: '#EFEFEF',
+          chatBotMessageBoxAvatarIconSize: 28,
           // Carousel
           chatBotCarouselSettings: {
             // nexButtonIcon: {
@@ -242,6 +243,7 @@ export default function App() {
           },
           // Chat Body
           chatBody: {type: 'color', value: 'white'},
+          chatBodyMessageBoxGap: 20,
           // Chat Start Button
           chatStartButton: {
             type: 'component',

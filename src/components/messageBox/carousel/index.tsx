@@ -114,7 +114,6 @@ const Index = ({
         showsHorizontalScrollIndicator={false}
         style={{
           flexGrow: 0,
-          marginTop: 16,
         }}
         onScroll={onScroll}
       >
@@ -127,7 +126,6 @@ const Index = ({
                 backgroundColor: '#F5F5F5',
                 borderRadius: 10,
                 width: CARD_WIDTH,
-                marginBottom: 8,
               }}
             >
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>

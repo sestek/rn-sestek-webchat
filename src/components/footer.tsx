@@ -22,7 +22,7 @@ import { useLoading } from '../context/LoadingContext';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const RNFSModule = props.modules.RNFS;
   const RNFileSelector = props.modules.RNFileSelector;
-  const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+  const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
   const { setLoading } = useLoading();
   const {

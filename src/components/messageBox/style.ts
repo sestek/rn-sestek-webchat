@@ -9,15 +9,11 @@ export default StyleSheet.create({
     borderTopRightRadius: 10,
     marginLeft: 20,
     marginRight: 5,
-    marginTop: 3,
     flexDirection: 'column',
-    paddingTop: 7,
     paddingLeft: 9,
-    paddingBottom: 16,
     paddingRight: 9,
     maxWidth: width - 50,
     alignSelf: 'flex-end',
-    marginBottom: 10,
   },
 
   messageBoxRight: {
@@ -77,8 +73,10 @@ export default StyleSheet.create({
   },
 
   messageBoxAvatarDefaultSize: {
-    width: 50,
-    height: 50,
+    maxHeight: 50,
+    maxWidth: 50,
+    minHeight: 15,
+    minWidth: 15,
     borderRadius: 25,
     overflow: 'hidden',
   },

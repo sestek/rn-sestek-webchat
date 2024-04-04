@@ -11,7 +11,6 @@ import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js
 // import CarouselPage from './carousel';
 import TypingMessage from './typingMessage';
 import AudioMessage from './auidoMessage';
-import CarouselMessage from './carouselMessage';
 import GeneralMessage from './generalMessage';
 import OutsideButton from './outsideButtonMessageBox';
 import Avatar from './avatar';
@@ -29,12 +28,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const [imageList, setImageList] = useState<any>([]);
   const [cardList, setCardList] = useState<any>([]);
 
-  const [activeSlide, setActiveSlide] = useState<number>(0);
-  const changeActiveSlide = (number: number) => setActiveSlide(number);
   const { appStyle } = useContext(StyleContext);
   var positionCls = [
     styles.messageBox,
     messageBoxPosition === 'right' && styles.messageBoxRight,
+    { marginBottom: props?.customizeConfiguration?.chatBodyMessageBoxGap ?? 20 },
   ];
   var thatAbsoluteTime =
     messageType !== 'text' &&
@@ -182,18 +180,21 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           >
             {messageBoxPosition === 'right' && props.avatar && (
               <View style={styles.messageBoxAvatarContainer}>
-                <Avatar width={28} height={28} src={props.avatar} />
+                <Avatar
+                  width={
+                    props.customizeConfiguration
+                      .chatBotMessageBoxAvatarIconSize ?? 28
+                  }
+                  height={
+                    props.customizeConfiguration
+                      .chatBotMessageBoxAvatarIconSize ?? 28
+                  }
+                  src={props.avatar}
+                />
               </View>
             )}
             <View style={[positionCls]}>
               {carouselType && cardList.length > 1 && (
-                // <CarouselMessage
-                //   cardList={cardList}
-                //   activeSlide={activeSlide}
-                //   changeActiveSlide={changeActiveSlide}
-                //   customizeProps={props}
-                //   maxHeight={maxHeight}
-                // />
                 <CarouselPage
                   data={cardList}
                   onPressButton={onPressButton}
@@ -215,17 +216,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   },
                 ]}
               >
-                {/* {(props.title || props.avatar) &&
-                  messageBoxPosition !== 'left' && (
-                    <View
-                      style={[
-                        styles.messageBoxTitle,
-                        (messageType === 'text' || messageType === 'message') &&
-                          styles.rceMboxTitleClear,
-                      ]}
-                    ></View>
-                  )} */}
-
                 {!carouselType && (
                   <GeneralMessage
                     imageList={imageList}

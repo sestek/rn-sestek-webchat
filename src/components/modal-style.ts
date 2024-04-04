@@ -6,7 +6,6 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-    // paddingTop: 10,
   },
   header: {
     height: Platform.OS === 'android' ? 45 : 80,
