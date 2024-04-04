@@ -57,10 +57,10 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     return Math.ceil(text.length / screenWidth) * 20 * totalFont;
   };
 
-  var audioMesType = ''
+  var audioMesType = '';
 
-  if(props?.activity?.attachments && props?.activity?.attachments[0]){
-    audioMesType = props?.activity?.attachments[0].contentType
+  if (props?.activity?.attachments && props?.activity?.attachments[0]) {
+    audioMesType = props?.activity?.attachments[0].contentType;
   }
 
   const calculateHeight = useCallback(
@@ -194,7 +194,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 //   customizeProps={props}
                 //   maxHeight={maxHeight}
                 // />
-                <CarouselPage data={cardList} onPressButton={onPressButton} />
+                <CarouselPage
+                  data={cardList}
+                  onPressButton={onPressButton}
+                  customizeConfiguration={props.customizeConfiguration}
+                />
               )}
               <View
                 style={[
@@ -229,8 +233,8 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     generalProps={props}
                   />
                 )}
-               {(messageType === 'audio' ||
-                 audioMesType ==="audio/base64") && (
+                {(messageType === 'audio' ||
+                  audioMesType === 'audio/base64') && (
                   <AudioMessage
                     modules={props.modules}
                     customizeConfiguration={props.customizeConfiguration}

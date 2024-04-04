@@ -1,49 +1,52 @@
 import React, { useContext, useRef, useState } from 'react';
-import {
-  ScrollView,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-} from 'react-native';
+import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import { StyleContext } from '../../../context/StyleContext';
+import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
 
-const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
+const Index = ({
+  data,
+  onPressButton,
+  customizeConfiguration,
+}: {
+  data: any;
+  onPressButton: any;
+  customizeConfiguration: PropsCustomizeConfiguration;
+}) => {
   const CARD_WIDTH = 220;
   const MARGINLEFT = 10;
   const SNAP_INTERVAL = CARD_WIDTH + (MARGINLEFT - 4.8) * 2;
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const onScroll = (event) => {
+  const onScroll = (event: any) => {
     const newIndex = Math.round(
       event.nativeEvent.contentOffset.x / SNAP_INTERVAL
     );
-    console.log(event.nativeEvent.contentOffset.x);
     setCurrentIndex(newIndex);
   };
 
   const handleScrollLeft = () => {
-    // az
     if (currentIndex > 0) {
       const newOffset = (currentIndex - 1) * SNAP_INTERVAL + MARGINLEFT - 62;
-      scrollViewRef.current.scrollTo({ x: newOffset, animated: true });
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ x: newOffset, animated: true });
+      }
       setCurrentIndex(currentIndex - 1);
     }
   };
 
   const handleScrollRight = () => {
-    // falza
     if (currentIndex < data.length - 1) {
       const newOffset = (currentIndex + 1) * SNAP_INTERVAL - MARGINLEFT - 55;
-      scrollViewRef.current.scrollTo({ x: newOffset, animated: true });
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ x: newOffset, animated: true });
+      }
       setCurrentIndex(currentIndex + 1);
     }
   };
   const { appStyle } = useContext(StyleContext);
-  // sağ sol icon ve arka plan
-  // carousel buton border buton text color buton background
+
+  const carouselStyle = customizeConfiguration?.chatBotCarouselSettings;
   return (
     <View style={{ flex: 1 }}>
       <TouchableOpacity
@@ -62,7 +65,14 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         }}
       >
         <Image
-          source={require('../../../image/back.png')}
+          source={
+            carouselStyle?.prevButtonIcon?.type === 'component'
+              ? carouselStyle?.prevButtonIcon?.value ??
+                require('../../../image/back.png')
+              : carouselStyle?.prevButtonIcon?.value
+              ? { uri: carouselStyle?.prevButtonIcon?.value }
+              : require('../../../image/back.png')
+          }
           style={{ height: 14, width: 14, marginRight: 3 }}
         />
       </TouchableOpacity>
@@ -82,7 +92,14 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         }}
       >
         <Image
-          source={require('../../../image/next.png')}
+          source={
+            carouselStyle?.nexButtonIcon?.type === 'component'
+              ? carouselStyle?.nexButtonIcon?.value ??
+                require('../../../image/next.png')
+              : carouselStyle?.nexButtonIcon?.value
+              ? { uri: carouselStyle?.nexButtonIcon?.value }
+              : require('../../../image/next.png')
+          }
           style={{ height: 14, width: 14, marginLeft: 3 }}
         />
       </TouchableOpacity>
@@ -91,6 +108,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         horizontal={true}
         pagingEnabled={true}
         decelerationRate={0}
+        scrollEventThrottle={16}
         snapToInterval={SNAP_INTERVAL}
         snapToAlignment="center"
         showsHorizontalScrollIndicator={false}
@@ -129,7 +147,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                   marginTop: 10,
                   fontSize: 16,
                   fontWeight: '500',
-                  color: '#000000',
+                  color: appStyle?.chatBotMessageBoxTextColor,
                 }}
               >
                 {item?.title && item.title.length > 46
@@ -142,15 +160,13 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                   marginTop: 8,
                   fontSize: 14,
                   fontWeight: '400',
-                  color: '#00000088',
+                  color: appStyle?.chatBotMessageBoxTextColor,
                   opacity: 0.5,
                 }}
               >
-                {/* {item?.subtitle && item.subtitle.length > 70
+                {item?.subtitle && item.subtitle.length > 70
                   ? item.subtitle.substring(0, 65) + '...'
-                  : item.subtitle} */}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam
-                eum reprehenderit saepe, neque tenetur
+                  : item.subtitle}
               </Text>
               {item?.buttons &&
                 item.buttons.map((btn: any, idx: number) => {
@@ -163,20 +179,24 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                         marginTop: 10,
                         marginHorizontal: 12,
                         flex: 1,
-                        // borderColor:
-                        //   appStyle.chatBotMessageBoxButtonBorderColor,
-                        borderColor: '#E2E2E4',
+                        borderColor:
+                          carouselStyle?.buttonGroup?.borderColor ?? '#E2E2E4',
                         borderRadius: 8,
                         borderWidth: 1.5,
                         padding: 10,
-                        backgroundColor: 'white',
+                        backgroundColor:
+                          carouselStyle?.buttonGroup?.backgroundColor ??
+                          'white',
                         marginBottom:
                           item?.buttons?.length - 1 === idx ? 15 : 0,
                       }}
+                      key={idx}
                     >
                       <Text
                         style={{
-                          color: appStyle.chatBotMessageBoxButtonTextColor,
+                          color:
+                            carouselStyle?.buttonGroup?.textColor ??
+                            appStyle.chatBotMessageBoxButtonTextColor,
                         }}
                       >
                         {btn?.title}

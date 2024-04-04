@@ -26,6 +26,7 @@ export default interface PropsCustomizeConfiguration {
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
   chatBotMessageBoxButtonTextColor?: string;
+  chatBotCarouselSettings?: CarouselSettings;
   chatBody?: BodyColorOrImageType;
   chatBodyTimeBackground?: string;
   chatStartButtonHide?: boolean;
@@ -33,7 +34,7 @@ export default interface PropsCustomizeConfiguration {
   chatStartButtonBackground?: string;
   chatStartButtonBackgroundSize?: number;
   userMessageBoxBackground?: string;
-  audioSliderSettings?: AudioSliderSettings
+  audioSliderSettings?: AudioSliderSettings;
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
   permissionAudioCheck?: () => Promise<void>;
@@ -47,6 +48,16 @@ interface BodyColorOrImageType {
 export interface IconType {
   type: 'uri' | 'component';
   value: any;
+}
+
+interface CarouselSettings {
+  nexButtonIcon?: IconType;
+  prevButtonIcon?: IconType;
+  buttonGroup?: {
+    borderColor?: string;
+    backgroundColor?: string;
+    textColor?: string;
+  };
 }
 
 interface CloseModalSettings {

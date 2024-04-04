@@ -224,6 +224,22 @@ export default function App() {
           chatBotMessageBoxButtonBackground: 'white',
           chatBotMessageBoxButtonTextColor: '#863CEB',
           chatBotMessageBoxButtonBorderColor: '#EFEFEF',
+          // Carousel
+          chatBotCarouselSettings: {
+            // nexButtonIcon: {
+            //   type: 'component',
+            //   value: require('./example.png'),
+            // },
+            // prevButtonIcon: {
+            //   type: 'component',
+            //   value: require('./example.png'),
+            // },
+            buttonGroup: {
+              borderColor: '#E2E2E4',
+              backgroundColor: '#ffffff',
+              textColor: '#863CEB',
+            },
+          },
           // Chat Body
           chatBody: {type: 'color', value: 'white'},
           // Chat Start Button
@@ -235,11 +251,11 @@ export default function App() {
           chatStartButtonBackgroundSize: 70,
           chatStartButtonHide: false,
           // Slider
-          audioSliderSettings:{
+          audioSliderSettings: {
             userSliderMinimumTrackTintColor: '#C3ACD0',
             userSliderMaximumTrackTintColor: 'white',
             userSliderThumbTintColor: '#C3ACD0',
-            userSliderPlayImage:{
+            userSliderPlayImage: {
               type: 'component',
               value: require('../src/image/play-audio.png'),
             },
@@ -248,17 +264,17 @@ export default function App() {
               value: require('../src/image/pause-audio.png'),
             },
             //bot
-             botSliderMinimumTrackTintColor: "red",
-             botSliderMaximumTrackTintColor:"blue",
-             botSliderThumbTintColor: "black",
-             botSliderPlayImage: {
+            botSliderMinimumTrackTintColor: 'red',
+            botSliderMaximumTrackTintColor: 'blue',
+            botSliderThumbTintColor: 'black',
+            botSliderPlayImage: {
               type: 'component',
               value: require('../src/image/play-audio.png'),
             },
-             botSliderPauseImage: {
+            botSliderPauseImage: {
               type: 'component',
               value: require('../src/image/pause-audio.png'),
-            }
+            },
           },
           // Before Func
           permissionAudioCheck: permissionAudioCheck,
