@@ -57,6 +57,12 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     return Math.ceil(text.length / screenWidth) * 20 * totalFont;
   };
 
+  var audioMesType = ''
+
+  if(props?.activity?.attachments && props?.activity?.attachments[0]){
+    audioMesType = props?.activity?.attachments[0].contentType
+  }
+
   const calculateHeight = useCallback(
     (props: any) => {
       const { title, subtitle, text, images, buttons } = props;
@@ -223,14 +229,14 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     generalProps={props}
                   />
                 )}
-
-                {(messageType === 'audio' ||
-                  props.activity?.channelData?.AudioFromTts) && (
+               {(messageType === 'audio' ||
+                 audioMesType ==="audio/base64") && (
                   <AudioMessage
                     modules={props.modules}
                     customizeConfiguration={props.customizeConfiguration}
                     activity={props.activity}
                     userMessageBoxTextColor={props.userMessageBoxTextColor}
+                    inlineText={true}
                   />
                 )}
 

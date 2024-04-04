@@ -243,7 +243,10 @@ const useChat = ({
     });
     formData.push({
       name: 'customActionData',
-      data: defaultConfiguration.customActionData || '{}',
+      data: JSON.stringify({
+        ...defaultConfiguration.customAction,
+        ResponseType: 'AudioBase64',
+      }) || `{ResponseType: 'AudioBase64'}`,
     });
     formData.push({
       name: 'channel',

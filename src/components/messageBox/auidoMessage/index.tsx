@@ -10,16 +10,20 @@ interface AudioMessageProps {
   customizeConfiguration: PropsCustomizeConfiguration;
   activity: any;
   userMessageBoxTextColor: string;
+  inlineText?: boolean;
 }
 
 const AudioMessage = (props: AudioMessageProps) => {
   if (!props.modules.AudioRecorderPlayer || !props.modules.RNFS) {
     return null;
   }
-
   let url = props.activity?.message;
-  if (props.activity?.channelData?.AudioFromTts?.Data)
-    url = props.activity.channelData.AudioFromTts.Data;
+  let position = 'right';
+  if (props?.activity?.attachments && props?.activity?.attachments[0]) {
+    url = props?.activity?.attachments[0]?.content;
+    position = 'left';
+  }
+
   return (
     <>
       <AudioComponent
@@ -35,16 +39,19 @@ const AudioMessage = (props: AudioMessageProps) => {
         }
         modules={props.modules}
         customizeConfiguration={props.customizeConfiguration}
+        position = {position}
       />
-      <Text
-        style={{
-          marginVertical: props.activity?.text && 10,
-          color: props?.userMessageBoxTextColor ?? 'white',
-          paddingLeft: 10,
-        }}
-      >
-        {props.activity?.text}
-      </Text>
+      {position === 'right' && (
+        <Text
+          style={{
+            marginVertical: props.activity?.text && 10,
+            color: props?.userMessageBoxTextColor ?? 'white',
+            paddingLeft: 10,
+          }}
+        >
+          {props.activity?.text}
+        </Text>
+      )}
     </>
   );
 };
