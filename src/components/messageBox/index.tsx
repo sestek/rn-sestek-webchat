@@ -17,6 +17,7 @@ import OutsideButton from './outsideButtonMessageBox';
 import Avatar from './avatar';
 import { StyleContext } from '../../context/StyleContext';
 import styles from './style';
+import CarouselPage from './carousel';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const messageType = props.type ? props.type : '';
@@ -180,14 +181,14 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
             )}
             <View style={[positionCls]}>
               {carouselType && cardList.length > 1 && (
-                <CarouselMessage
-                  cardList={cardList}
-                  activeSlide={activeSlide}
-                  changeActiveSlide={changeActiveSlide}
-                  customizeProps={props}
-                  maxHeight={maxHeight}
-                />
-                // <CarouselPage data={cardList}/>
+                // <CarouselMessage
+                //   cardList={cardList}
+                //   activeSlide={activeSlide}
+                //   changeActiveSlide={changeActiveSlide}
+                //   customizeProps={props}
+                //   maxHeight={maxHeight}
+                // />
+                <CarouselPage data={cardList} onPressButton={onPressButton} />
               )}
               <View
                 style={[

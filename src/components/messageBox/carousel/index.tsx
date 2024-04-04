@@ -1,158 +1,195 @@
-import React, { useState, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
-  View,
-  Text,
   ScrollView,
+  Text,
+  View,
   TouchableOpacity,
-  Image,
   Dimensions,
+  Image,
 } from 'react-native';
-interface CarouselItem {
-  key: number;
-  title: string;
-  subtitle?: string;
-  text: string;
-  url: any;
-}
+import { StyleContext } from '../../../context/StyleContext';
 
-const MAX_TEXT_LENGTH = 100;
-
-interface CarouselProps {
-  data: CarouselItem[];
-}
-
-const CarouselPage: React.FC<CarouselProps> = ({ data }) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
+  const CARD_WIDTH = 220;
+  const MARGINLEFT = 10;
+  const SNAP_INTERVAL = CARD_WIDTH + (MARGINLEFT - 4.8) * 2;
   const scrollViewRef = useRef<ScrollView>(null);
-  const windowWidth = Dimensions.get('window').width * 0.65;
-  const containerWidth = windowWidth - 20;
-  const imageWidth = containerWidth - 15;
-  const padding = 0;
-  const scrollToIndex = (index: number) => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({
-        x: index * (windowWidth + padding),
-        animated: true,
-      });
-    }
-  };
-  const [showFullText, setShowFullText] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const shortenText = (text: string) => {
-    if (text.length <= MAX_TEXT_LENGTH) {
-      return text;
-    } else {
-      return text.slice(0, MAX_TEXT_LENGTH) + '...';
+  const onScroll = (event) => {
+    const newIndex = Math.round(
+      event.nativeEvent.contentOffset.x / SNAP_INTERVAL
+    );
+    console.log(event.nativeEvent.contentOffset.x);
+    setCurrentIndex(newIndex);
+  };
+
+  const handleScrollLeft = () => {
+    // az
+    if (currentIndex > 0) {
+      const newOffset = (currentIndex - 1) * SNAP_INTERVAL + MARGINLEFT - 62;
+      scrollViewRef.current.scrollTo({ x: newOffset, animated: true });
+      setCurrentIndex(currentIndex - 1);
     }
   };
 
-  const handleReadMore = () => {
-    setShowFullText(true);
+  const handleScrollRight = () => {
+    // falza
+    if (currentIndex < data.length - 1) {
+      const newOffset = (currentIndex + 1) * SNAP_INTERVAL - MARGINLEFT - 55;
+      scrollViewRef.current.scrollTo({ x: newOffset, animated: true });
+      setCurrentIndex(currentIndex + 1);
+    }
   };
-  const handleToggleText = () => {
-    setShowFullText(!showFullText);
-  };
-  const renderItem = ({ item }: { item: CarouselItem }) => (
-    <View
-      style={{
-        padding: 15,
-        borderColor: 'red',
-        borderWidth: 1,
-        borderRadius: 20,
-        maxWidth: containerWidth,
-      }}
-    >
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Image
-          source={{ uri: item.url }}
-          style={{ width: imageWidth, height: imageWidth, borderRadius: 5 }}
-        />
-      </View>
-      <View
-        style={{
-          alignItems: 'flex-start',
-          paddingTop: 10,
-          maxWidth: 200,
-        }}
-      >
-        <Text style={{ fontWeight: 'bold' }}>{item.title}</Text>
-        <Text>{showFullText ? item.text : shortenText(item.text)}</Text>
-        {showFullText && (
-          <TouchableOpacity onPress={handleToggleText}>
-            <Text style={{ color: 'blue', marginTop: 5 }}>Close</Text>
-          </TouchableOpacity>
-        )}
-        {!showFullText && item.text.length > MAX_TEXT_LENGTH && (
-          <TouchableOpacity onPress={handleReadMore}>
-            <Text style={{ color: 'blue', marginTop: 5 }}>Read More</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
-
+  const { appStyle } = useContext(StyleContext);
+  // sağ sol icon ve arka plan
+  // carousel buton border buton text color buton background
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
-        scrollEventThrottle={100}
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={(event) => {
-          const index = Math.round(
-            event.nativeEvent.contentOffset.x / (windowWidth + padding)
-          );
-          setCurrentIndex(index);
-        }}
-      >
-        {data.map((item, index) => (
-          <View
-            key={item.key}
-            style={{
-              width: windowWidth - padding,
-              backgroundColor: 'transparent',
-              display: 'flex',
-              alignItems: 'center',
-              alignContent: 'center',
-              borderColor: '#ccd9eb',
-              borderWidth: 1,
-              marginLeft: index === 0 ? 20 : 0,
-              margin: padding,
-            }}
-          >
-            {renderItem({ item })}
-          </View>
-        ))}
-      </ScrollView>
-
-      <View
+      <TouchableOpacity
+        onPress={handleScrollLeft}
         style={{
           position: 'absolute',
+          left: -40,
+          top: 150,
           zIndex: 1,
-          top: '50%',
-          left: 0,
-          right: 0,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingHorizontal: 5,
+          height: 30,
+          width: 30,
+          borderRadius: 16,
+          backgroundColor: '#414141',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <TouchableOpacity
-          onPress={() => scrollToIndex(currentIndex - 1)}
-          style={{ backgroundColor: 'pink' }}
-        >
-          <Text>{'<'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => scrollToIndex(currentIndex + 1)}
-          style={{ backgroundColor: 'pink' }}
-        >
-          <Text>{'>'}</Text>
-        </TouchableOpacity>
-      </View>
+        <Image
+          source={require('../../../image/back.png')}
+          style={{ height: 14, width: 14, marginRight: 3 }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleScrollRight}
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: 150,
+          zIndex: 1,
+          height: 30,
+          width: 30,
+          borderRadius: 16,
+          backgroundColor: '#414141',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Image
+          source={require('../../../image/next.png')}
+          style={{ height: 14, width: 14, marginLeft: 3 }}
+        />
+      </TouchableOpacity>
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal={true}
+        pagingEnabled={true}
+        decelerationRate={0}
+        snapToInterval={SNAP_INTERVAL}
+        snapToAlignment="center"
+        showsHorizontalScrollIndicator={false}
+        style={{
+          flexGrow: 0,
+          marginTop: 16,
+        }}
+        onScroll={onScroll}
+      >
+        {data.map((item: any, idx: number) => {
+          return (
+            <View
+              key={idx}
+              style={{
+                marginLeft: idx !== 0 ? 10 : 0,
+                backgroundColor: '#F5F5F5',
+                borderRadius: 10,
+                width: CARD_WIDTH,
+                marginBottom: 8,
+              }}
+            >
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Image
+                  source={{ uri: item.url }}
+                  style={{
+                    width: '90%',
+                    height: 170,
+                    borderRadius: 5,
+                    marginTop: 10,
+                  }}
+                />
+              </View>
+              <Text
+                style={{
+                  paddingHorizontal: 12,
+                  marginTop: 10,
+                  fontSize: 16,
+                  fontWeight: '500',
+                  color: '#000000',
+                }}
+              >
+                {item?.title && item.title.length > 46
+                  ? item.title.substring(0, 43) + '...'
+                  : item.title}
+              </Text>
+              <Text
+                style={{
+                  paddingHorizontal: 12,
+                  marginTop: 8,
+                  fontSize: 14,
+                  fontWeight: '400',
+                  color: '#00000088',
+                  opacity: 0.5,
+                }}
+              >
+                {/* {item?.subtitle && item.subtitle.length > 70
+                  ? item.subtitle.substring(0, 65) + '...'
+                  : item.subtitle} */}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam
+                eum reprehenderit saepe, neque tenetur
+              </Text>
+              {item?.buttons &&
+                item.buttons.map((btn: any, idx: number) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        onPressButton(btn?.value, btn?.title);
+                      }}
+                      style={{
+                        marginTop: 10,
+                        marginHorizontal: 12,
+                        flex: 1,
+                        // borderColor:
+                        //   appStyle.chatBotMessageBoxButtonBorderColor,
+                        borderColor: '#E2E2E4',
+                        borderRadius: 8,
+                        borderWidth: 1.5,
+                        padding: 10,
+                        backgroundColor: 'white',
+                        marginBottom:
+                          item?.buttons?.length - 1 === idx ? 15 : 0,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: appStyle.chatBotMessageBoxButtonTextColor,
+                        }}
+                      >
+                        {btn?.title}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 };
 
-export default CarouselPage;
+export default Index;
