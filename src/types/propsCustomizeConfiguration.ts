@@ -33,11 +33,7 @@ export default interface PropsCustomizeConfiguration {
   chatStartButtonBackground?: string;
   chatStartButtonBackgroundSize?: number;
   userMessageBoxBackground?: string;
-  sliderMinimumTrackTintColor?: string;
-  sliderMaximumTrackTintColor?: string;
-  sliderThumbTintColor?: string;
-  sliderPlayImage?: BodyColorOrImageType;
-  sliderPauseImage?: BodyColorOrImageType;
+  audioSliderSettings?: AudioSliderSettings
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
   permissionAudioCheck?: () => Promise<void>;
@@ -72,4 +68,17 @@ interface CloseModalSettings {
       borderColor: string;
     };
   };
+}
+
+export interface AudioSliderSettings {
+  userSliderMinimumTrackTintColor: string;
+  userSliderMaximumTrackTintColor: string;
+  userSliderThumbTintColor: string;
+  userSliderPlayImage: IconType;
+  userSliderPauseImage: IconType;
+  botSliderMinimumTrackTintColor: string;
+  botSliderMaximumTrackTintColor: string;
+  botSliderThumbTintColor: string;
+  botSliderPlayImage: IconType;
+  botSliderPauseImage: IconType;
 }

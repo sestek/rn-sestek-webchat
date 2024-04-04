@@ -235,16 +235,30 @@ export default function App() {
           chatStartButtonBackgroundSize: 70,
           chatStartButtonHide: false,
           // Slider
-          sliderMaximumTrackTintColor: 'white',
-          sliderThumbTintColor: '#C3ACD0',
-          sliderMinimumTrackTintColor: '#C3ACD0',
-          sliderPauseImage: {
-            type: 'image',
-            value: require('../src/image/pause-audio.png'),
-          },
-          sliderPlayImage: {
-            type: 'image',
-            value: require('../src/image/play-audio.png'),
+          audioSliderSettings:{
+            userSliderMinimumTrackTintColor: '#C3ACD0',
+            userSliderMaximumTrackTintColor: 'white',
+            userSliderThumbTintColor: '#C3ACD0',
+            userSliderPlayImage:{
+              type: 'component',
+              value: require('../src/image/play-audio.png'),
+            },
+            userSliderPauseImage: {
+              type: 'component',
+              value: require('../src/image/pause-audio.png'),
+            },
+            //bot
+             botSliderMinimumTrackTintColor: "red",
+             botSliderMaximumTrackTintColor:"blue",
+             botSliderThumbTintColor: "black",
+             botSliderPlayImage: {
+              type: 'component',
+              value: require('../src/image/play-audio.png'),
+            },
+             botSliderPauseImage: {
+              type: 'component',
+              value: require('../src/image/pause-audio.png'),
+            }
           },
           // Before Func
           permissionAudioCheck: permissionAudioCheck,
