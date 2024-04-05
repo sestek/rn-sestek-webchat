@@ -1,6 +1,6 @@
 {
   "name": "rn-sestek-webchat",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "React Native Sestek Webchat Plugin",
   "module": "src/index",
   "react-native": "src/index",
