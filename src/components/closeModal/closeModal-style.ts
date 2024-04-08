@@ -29,6 +29,7 @@ export const styles = (props?: any) =>
       marginBottom: 15,
       textAlign: 'center',
       fontWeight: '400',
+      color: props?.textColor,
     },
     buttonContainer: { flexDirection: 'row' },
     yesButton: {

@@ -1,17 +1,30 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Image, View } from 'react-native';
 import type { PropsAvatar } from '../../../types/';
 import styles from '../style';
 
 const Avatar: FC<PropsAvatar> = (props) => {
-  return (
+  const [isUriValid, setIsUriValid] = useState(true);
+
+  const handleImageError = () => {
+    setIsUriValid(false);
+  };
+
+  const imageSource = isUriValid
+    ? typeof props.src === 'object'
+      ? { uri: props.src.uri }
+      : props.src
+    : require('../../../image/error.png');
+
+    return (
     <View style={styles.messageBoxAvatarTitleContainer}>
       <Image
         style={[
           styles.messageBoxAvatarDefaultSize,
           { width: props.width, height: props.height },
         ]}
-        source={props.src}
+        source={imageSource}
+        onError={handleImageError}
       />
       {props.sideElement}
     </View>

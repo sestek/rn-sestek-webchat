@@ -2,8 +2,10 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "rn-sestek-webchat": ["./src/index"]
+      "rn-sestek-webchat": ["src/index"],
+      "*": ["src/*"]
     },
+    "declaration": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
@@ -23,5 +25,5 @@
     "strict": true,
     "target": "esnext"
   },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "src/plugin/typing/index.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/plugin/typing/index.tsx"]
 }
