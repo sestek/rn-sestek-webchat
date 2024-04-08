@@ -266,8 +266,10 @@ const startStorageSession = () => {
     chatBotMessageBoxButtonBackground: 'white',
     chatBotMessageBoxButtonTextColor: 'black',
     chatBotMessageBoxButtonBorderColor: '#863CEB',
+    chatBotMessageBoxAvatarIconSize: 28,
     // Chat Body
     chatBody: {type: 'color', value: 'white'},
+    chatBodyMessageBoxGap: 20,
     // Chat Start Button
     chatStartButton: {
       type: 'component',
@@ -276,17 +278,46 @@ const startStorageSession = () => {
     chatStartButtonBackground: 'white',
     chatStartButtonBackgroundSize: 70,
     chatStartButtonHide: false,
+    //Carousel
+    chatBotCarouselSettings: {
+      nexButtonIcon: {
+        type: 'component',
+        value: require('./example.png'),
+      },
+      prevButtonIcon: {
+        type: 'component',
+        value: require('./example.png'),
+      },
+      buttonGroup: {
+        borderColor: '#E2E2E4',
+        backgroundColor: '#ffffff',
+        textColor: '#863CEB',
+      },
+    },
     // Slider
-    sliderMaximumTrackTintColor: 'white',
-    sliderThumbTintColor: '#C3ACD0',
-    sliderMinimumTrackTintColor: '#C3ACD0',
-    sliderPauseImage: {
-      type: 'image',
+    audioSliderSettings:{
+    userSliderMinimumTrackTintColor: '#C3ACD0',
+    userSliderMaximumTrackTintColor: 'white',
+    userSliderThumbTintColor: '#C3ACD0',
+    userSliderPlayImage:{
+      type: 'component',
+      value: require('../src/image/play-audio.png'),
+    },
+    userSliderPauseImage: {
+      type: 'component',
       value: require('../src/image/pause-audio.png'),
     },
-    sliderPlayImage: {
-      type: 'image',
+    //bot
+    botSliderMinimumTrackTintColor: "red",
+    botSliderMaximumTrackTintColor:"blue",
+    botSliderThumbTintColor: "black",
+    botSliderPlayImage: {
+      type: 'component',
       value: require('../src/image/play-audio.png'),
+    },
+    botSliderPauseImage: {
+      type: 'component',
+      value: require('../src/image/pause-audio.png'),
     },
     // Before Func
     permissionAudioCheck: permissionAudioCheck,
