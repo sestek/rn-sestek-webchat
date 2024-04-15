@@ -144,6 +144,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             ]}
           >
             <HeaderComponent
+              customizeConfiguration={customizeConfiguration}
               hideModal={hideModal}
               clickClosedConversationModalFunc={
                 clickClosedConversationModalFunc

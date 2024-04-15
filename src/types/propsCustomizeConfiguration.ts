@@ -4,6 +4,7 @@ export default interface PropsCustomizeConfiguration {
   headerTextColor?: string;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
+  headerAlignmentType?: HeaderAlignmentType;
   bottomColor?: string;
   bottomInputText?: string;
   bottomInputBackgroundColor?: string;
@@ -46,6 +47,8 @@ interface BodyColorOrImageType {
   type: 'image' | 'color';
   value: any;
 }
+
+type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
 export interface IconType {
   type: 'uri' | 'component';

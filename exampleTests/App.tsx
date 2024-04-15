@@ -177,6 +177,7 @@ export default function App() {
             type: 'component',
             value: require('./src/images/close.png'),
           },
+          headerAlignmentType: 'textToCenter',
           // Bottom
           bottomColor: 'white',
           bottomInputBackgroundColor: 'white',

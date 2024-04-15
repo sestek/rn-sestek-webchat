@@ -1,6 +1,6 @@
 import React, { useContext, type FC, useEffect } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import type { PropsHeaderComponent } from 'src/types';
+import type { PropsHeaderComponent } from '../types';
 import { MinusIcon, MultiplyIcon } from '../image';
 import { StyleContext } from '../context/StyleContext';
 import { styles } from './header-styles';
@@ -36,36 +36,74 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
       }
     }
   }, [background]);
-  return (
-    <View style={styles.headerContainer}>
-      <View style={styles.headerContainer}>
+  const { headerAlignmentType } = props.customizeConfiguration;
+
+  const HeaderText = () => {
+    return (
+      <View
+        style={[
+          styles.headerTextContainer,
+          headerAlignmentType === 'textToLeft' && {
+            flex: 1,
+            flexDirection: 'row',
+          },
+        ]}
+      >
         <Text style={[styles.headerText, { color: appStyle?.headerTextColor }]}>
           {headerText ?? HeaderComponent.defaultProps?.headerText!}
         </Text>
       </View>
-      <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
-        {hideIcon ? (
-          <Image style={styles.imageIcon} source={hideIcon.value} />
-        ) : (
-          <Image style={styles.hideDefaultIcon} source={MinusIcon} />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          if (closeModalStatus) {
-            clickClosedConversationModalFunc();
-          } else {
-            closeConversation();
-          }
-        }}
-        style={styles.center}
+    );
+  };
+  return (
+    <View
+      style={[
+        styles.headerContainer,
+        headerAlignmentType === 'textToRight' && {
+          flexDirection: 'row-reverse',
+        },
+      ]}
+    >
+      {headerAlignmentType !== 'textToCenter' && <HeaderText />}
+      <View
+        style={[
+          { flexDirection: 'row' },
+          headerAlignmentType === 'textToCenter' && {
+            flex: 1,
+            justifyContent: 'space-between',
+          },
+          headerAlignmentType === 'textToRight' && {
+            flex: 1,
+            flexDirection: 'row-reverse',
+            justifyContent: 'flex-end',
+          },
+        ]}
       >
-        {closeIcon ? (
-          <Image style={styles.imageIcon} source={closeIcon.value} />
-        ) : (
-          <Image style={styles.closeDefaultIcon} source={MultiplyIcon} />
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
+          {hideIcon ? (
+            <Image style={styles.imageIcon} source={hideIcon.value} />
+          ) : (
+            <Image style={styles.hideDefaultIcon} source={MinusIcon} />
+          )}
+        </TouchableOpacity>
+        {headerAlignmentType === 'textToCenter' && <HeaderText />}
+        <TouchableOpacity
+          onPress={() => {
+            if (closeModalStatus) {
+              clickClosedConversationModalFunc();
+            } else {
+              closeConversation();
+            }
+          }}
+          style={styles.center}
+        >
+          {closeIcon ? (
+            <Image style={styles.imageIcon} source={closeIcon.value} />
+          ) : (
+            <Image style={styles.closeDefaultIcon} source={MultiplyIcon} />
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
