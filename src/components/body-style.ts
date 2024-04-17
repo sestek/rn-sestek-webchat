@@ -33,6 +33,5 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     letterSpacing: 0.7,
-    fontSize: 11,
   },
 });

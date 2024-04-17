@@ -19,6 +19,11 @@ const GeneralMessage: React.FC<Props> = (props) => {
   const webViewRef = useRef<any>();
   const WebView = generalProps.modules.RNWebView;
 
+  const messageColor =
+    generalProps?.position != 'right'
+      ? appStyle?.userMessageBoxTextColor
+      : appStyle?.chatBotMessageBoxTextColor;
+
   return (
     <>
       {imageList.map((image, index) => (
@@ -39,12 +44,9 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.title && (
           <Markdown
-            style={styles.generalMessageBoxText}
-            color={
-              generalProps.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
+            color={messageColor}
+            fontSettings={appStyle?.fontSettings}
+            textType="title"
           >
             {generalProps.activity?.attachments[0]?.content?.title}
           </Markdown>
@@ -53,12 +55,9 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.subtitle && (
           <Markdown
-            style={styles.generalMessageBoxText}
-            color={
-              generalProps.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
+            color={messageColor}
+            fontSettings={appStyle?.fontSettings}
+            textType="subtitle"
           >
             {generalProps.activity?.attachments[0]?.content?.subtitle}
           </Markdown>
@@ -66,12 +65,9 @@ const GeneralMessage: React.FC<Props> = (props) => {
       {(generalProps.type === 'text' || generalProps.type === 'message') &&
         (generalProps.activity.text || generalProps.activity.message) && (
           <Markdown
-            style={styles.generalMessageBoxText}
-            color={
-              generalProps.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
+            color={messageColor}
+            fontSettings={appStyle?.fontSettings}
+            textType="text"
           >
             {generalProps.activity.text || generalProps.activity.message}
           </Markdown>
@@ -81,12 +77,9 @@ const GeneralMessage: React.FC<Props> = (props) => {
         generalProps.activity?.attachments &&
         generalProps.activity?.attachments[0]?.content?.text && (
           <Markdown
-            style={styles.generalMessageBoxText}
-            color={
-              generalProps.position != 'right'
-                ? appStyle?.userMessageBoxTextColor
-                : appStyle?.chatBotMessageBoxTextColor
-            }
+            color={messageColor}
+            fontSettings={appStyle?.fontSettings}
+            textType="text"
           >
             {generalProps.activity?.attachments[0]?.content?.text}
           </Markdown>
@@ -122,32 +115,23 @@ const GeneralMessage: React.FC<Props> = (props) => {
             </TouchableOpacity>
 
             <Markdown
-              style={styles.generalMessageBoxText}
-              color={
-                generalProps.position != 'right'
-                  ? appStyle?.userMessageBoxTextColor
-                  : appStyle?.chatBotMessageBoxTextColor
-              }
+              color={messageColor}
+              fontSettings={appStyle?.fontSettings}
+              textType="title"
             >
               {generalProps.activity.entities[0]?.geo?.name}
             </Markdown>
             <Markdown
-              style={styles.generalMessageBoxText}
-              color={
-                generalProps.position != 'right'
-                  ? appStyle?.userMessageBoxTextColor
-                  : appStyle?.chatBotMessageBoxTextColor
-              }
+              color={messageColor}
+              fontSettings={appStyle?.fontSettings}
+              textType="subtitle"
             >
               {generalProps.activity.entities[0]?.address}
             </Markdown>
             <Markdown
-              style={styles.generalMessageBoxText}
-              color={
-                generalProps.position != 'right'
-                  ? appStyle?.userMessageBoxTextColor
-                  : appStyle?.chatBotMessageBoxTextColor
-              }
+              color={messageColor}
+              fontSettings={appStyle?.fontSettings}
+              textType="text"
             >
               {generalProps.activity.entities[0]?.hasMap}
             </Markdown>

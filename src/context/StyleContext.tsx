@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import {fontSettings} from '../constant/ChatModalConstant'
 
 interface contextType {
   appStyle: any;
@@ -13,6 +14,7 @@ const StyleContext = createContext<contextType>({
 
 const StyleContextProvider = (props: any) => {
   const [appStyle, setAppStyle] = useState<object>({});
+
   const handleStyle = (
     propsCustomizeConfiguration: any,
     tenant: string,
@@ -58,6 +60,7 @@ const StyleContextProvider = (props: any) => {
         propsCustomizeConfiguration?.chatBotMessageBoxButtonBorderColor,
       chatBotMessageBoxButtonTextColor:
         propsCustomizeConfiguration?.chatBotMessageBoxButtonTextColor,
+      fontSettings :  propsCustomizeConfiguration?.fontSettings ?? fontSettings
     });
   };
 

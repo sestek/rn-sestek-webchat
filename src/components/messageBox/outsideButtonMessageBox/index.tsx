@@ -40,7 +40,7 @@ const OutsideButton: React.FC<Props> = ({
               borderWidth: 1.5,
             }}
           >
-            <Text style={{ color: appStyle.chatBotMessageBoxButtonTextColor }}>
+            <Text style={{ color: appStyle.chatBotMessageBoxButtonTextColor, fontSize:appStyle?.fontSettings.descriptionFontSize }}>
               {button?.title}
             </Text>
           </TouchableOpacity>

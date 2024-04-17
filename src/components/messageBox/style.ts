@@ -57,7 +57,6 @@ export default StyleSheet.create({
   },
   messageBoxTimeBlockText: {
     textAlign: 'right',
-    fontSize: 12,
   },
   messageBoxTitle: {
     margin: 0,
@@ -81,11 +80,6 @@ export default StyleSheet.create({
     overflow: 'hidden',
   },
 
-  generalMessageBoxText: {
-    fontSize: 13.6,
-    lineHeight: 20,
-  },
-
   generalMessageBoxWebviewContainer: {
     flex: 1,
     maxHeight: Dimensions.get('screen').height * 0.5,
@@ -97,7 +91,6 @@ export default StyleSheet.create({
   },
 
   generalMessageBoxButtonText: {
-    fontSize: 12,
     color: '#fff',
     fontWeight: 'bold',
     alignSelf: 'center',

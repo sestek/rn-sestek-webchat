@@ -15,6 +15,8 @@ import {
 
 import SimpleMarkdown from 'simple-markdown';
 import { map, includes, noop, some, size } from 'lodash';
+import { FontSettings } from 'types/propsCustomizeConfiguration';
+import { fontSettings as fontSettingsData } from 'constant/ChatModalConstant';
 interface Options {
   imageParam?: string;
 }
@@ -93,8 +95,12 @@ module.exports = function (
     text: any;
     u: any;
   },
-  opts: Options = {}
+  opts: Options = {},
+  fontSettings?: FontSettings,
+  textType?: string
 ) {
+  const { titleFontSize, subtitleFontSize, descriptionFontSize } =
+    fontSettings ?? fontSettingsData;
   const LINK_INSIDE = '(?:\\[[^\\]]*\\]|[^\\]]|\\](?=[^\\[]*\\]))*';
   const LINK_HREF_AND_TITLE =
     '\\s*<?([^\\s]*?)>?(?:\\s+[\'"]([\\s\\S]*?)[\'"])?\\s*';
@@ -122,6 +128,12 @@ module.exports = function (
       content: parseInline(parse, capture[2], state),
     };
   };
+  let fontSize =
+    textType === 'title'
+      ? titleFontSize
+      : textType === 'subtitle'
+      ? subtitleFontSize
+      : descriptionFontSize;
   return {
     autolink: {
       react: function (
@@ -145,8 +157,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.autolink,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.autolink, fontSize: descriptionFontSize },
             onPress: _pressHandler,
           },
           output(node.content, state)
@@ -171,7 +183,7 @@ module.exports = function (
         state.withinQuote = true;
 
         const img = React.createElement(View, {
-          key: Math.floor(Math.random()*9000) +1000 - state.key,
+          key: Math.floor(Math.random() * 9000) + 1000 - state.key,
           style: [
             styles.blockQuoteSectionBar,
             styles.blockQuoteBar,
@@ -182,8 +194,8 @@ module.exports = function (
         let blockQuote = React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: blockQuoteTextStyles,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...blockQuoteTextStyles, fontSize: descriptionFontSize },
           },
           output(node.content, state)
         );
@@ -191,7 +203,7 @@ module.exports = function (
         return React.createElement(
           View,
           {
-            key: Math.floor(Math.random()*9000) +1000,
+            key: Math.floor(Math.random() * 9000) + 1000,
             style: [
               styles.blockQuoteSection,
               styles.blockQuoteText,
@@ -206,7 +218,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
+            key: Math.floor(Math.random() * 9000) + 1000,
             style: styles.br,
           },
           '\n\n'
@@ -227,11 +239,12 @@ module.exports = function (
         { ...state }: any
       ) {
         state.withinText = true;
+
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.codeBlock,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.codeBlock, fontSize: descriptionFontSize },
           },
           node.content
         );
@@ -256,7 +269,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
+            key: Math.floor(Math.random() * 9000) + 1000,
             style: styles.del,
             selectable: true,
           },
@@ -287,8 +300,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.em,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.em, fontSize: fontSize },
             selectable: true,
           },
           output(node.content, state)
@@ -323,7 +336,7 @@ module.exports = function (
         const ret = React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
+            key: Math.floor(Math.random() * 9000) + 1000,
             style: state.style,
             selectable: true,
           },
@@ -334,7 +347,10 @@ module.exports = function (
     },
     hr: {
       react: function () {
-        return React.createElement(View, { key: Math.floor(Math.random()*9000) +1000, style: styles.hr });
+        return React.createElement(View, {
+          key: Math.floor(Math.random() * 9000) + 1000,
+          style: styles.hr,
+        });
       },
     },
     image: {
@@ -342,7 +358,7 @@ module.exports = function (
         var imageParam = opts.imageParam ? opts.imageParam : '';
         var target = node.target + imageParam;
         var image = React.createElement(Image, {
-          key: Math.floor(Math.random()*9000) +1000,
+          key: Math.floor(Math.random() * 9000) + 1000,
           // resizeMode: 'contain',
           source: { uri: target },
           style: styles.image,
@@ -370,8 +386,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.inlineCode,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.inlineCode, fontSize: descriptionFontSize },
           },
           output(node.content, state)
         );
@@ -404,8 +420,8 @@ module.exports = function (
         const link = React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.autolink,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.autolink, fontSize: descriptionFontSize },
             onPress: _pressHandler,
           },
           output(node.content, state)
@@ -428,13 +444,25 @@ module.exports = function (
           if (node.ordered) {
             bullet = React.createElement(
               Text,
-              { key: 0, style: styles.listItemNumber },
+              {
+                key: 0,
+                style: {
+                  ...styles.listItemNumber,
+                  fontSize: descriptionFontSize,
+                },
+              },
               numberIndex + '. '
             );
           } else {
             bullet = React.createElement(
               Text,
-              { key: 0, style: styles.listItemBullet },
+              {
+                key: 0,
+                style: {
+                  ...styles.listItemBullet,
+                  fontSize: descriptionFontSize,
+                },
+              },
               '\u2022 '
             );
           }
@@ -462,7 +490,7 @@ module.exports = function (
               {
                 style: [
                   styles.listItemTextStyles,
-                  { marginBottom: 0 },
+                  { marginBottom: 0, fontSize: descriptionFontSize },
                 ],
                 key: 1,
               },
@@ -493,7 +521,7 @@ module.exports = function (
 
         return React.createElement(
           View,
-          { key: Math.floor(Math.random()*9000) +1000, style: styles.list },
+          { key: Math.floor(Math.random() * 9000) + 1000, style: styles.list },
           items
         );
       },
@@ -509,13 +537,25 @@ module.exports = function (
           if (node.ordered) {
             bullet = React.createElement(
               Text,
-              { key: 0, style: styles.listItemNumber },
+              {
+                key: 0,
+                style: {
+                  ...styles.listItemNumber,
+                  fontSize: descriptionFontSize,
+                },
+              },
               i + 1 + '. '
             );
           } else {
             bullet = React.createElement(
               Text,
-              { key: 0, style: styles.listItemBullet },
+              {
+                key: 0,
+                style: {
+                  ...styles.listItemBullet,
+                  fontSize: descriptionFontSize,
+                },
+              },
               '\u2022 '
             );
           }
@@ -534,7 +574,10 @@ module.exports = function (
             listItem = React.createElement(
               Text,
               {
-                style: listItemTextStylesSub,
+                style: {
+                  ...listItemTextStylesSub,
+                  fontSize: descriptionFontSize,
+                },
                 key: 1,
               },
               content
@@ -562,7 +605,10 @@ module.exports = function (
 
         return React.createElement(
           View,
-          { key: Math.floor(Math.random()*9000) +1000, style: styles.sublist },
+          {
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: styles.sublist,
+          },
           items
         );
       },
@@ -586,8 +632,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.mailto,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.mailto, fontSize: descriptionFontSize },
             onPress: noop,
           },
           output(node.content, state)
@@ -599,7 +645,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
+            key: Math.floor(Math.random() * 9000) + 1000,
             style: styles.newline,
           },
           '\n'
@@ -623,7 +669,7 @@ module.exports = function (
             var paragraph = React.createElement(
               View,
               {
-                key: Math.floor(Math.random()*9000) +1000,
+                key: Math.floor(Math.random() * 9000) + 1000,
                 style: styles.paragraphWithImage,
               },
               output(node.content, state)
@@ -647,8 +693,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: paragraphStyle,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...paragraphStyle, fontSize: fontSize },
             selectable: true,
           },
           output(node.content, state)
@@ -678,8 +724,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: state.style,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...state.style, fontSize: fontSize },
             selectable: true,
           },
           output(node.content, state)
@@ -700,7 +746,10 @@ module.exports = function (
             Text,
             {
               key: i,
-              style: styles.tableHeaderCell,
+              style: {
+                ...styles.tableHeaderCell,
+                fontSize: descriptionFontSize,
+              },
               selectable: true,
             },
             output(content, state)
@@ -733,7 +782,7 @@ module.exports = function (
 
         return React.createElement(
           View,
-          { key: Math.floor(Math.random()*9000) +1000, style: styles.table },
+          { key: Math.floor(Math.random() * 9000) + 1000, style: styles.table },
           [header, rows]
         );
       },
@@ -767,7 +816,7 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
+            key: Math.floor(Math.random() * 9000) + 1000,
             style: textStyle,
             selectable: true,
           },
@@ -799,8 +848,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.strong,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.strong, fontSize: fontSize },
             selectable: true,
           },
           output(node.content, state)
@@ -829,8 +878,8 @@ module.exports = function (
         return React.createElement(
           Text,
           {
-            key: Math.floor(Math.random()*9000) +1000,
-            style: styles.autolink,
+            key: Math.floor(Math.random() * 9000) + 1000,
+            style: { ...styles.autolink, fontSize: fontSize },
             onPress: _pressHandler,
           },
           output(node.content, state)

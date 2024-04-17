@@ -4,6 +4,7 @@ import { Dimensions, StyleSheet, Platform } from 'react-native';
 export default StyleSheet.create({
     autolink: {
         color: 'blue',
+        fontWeight:'bold'
     },
     blockQuoteText: {
         color: 'grey'
@@ -44,27 +45,7 @@ export default StyleSheet.create({
     em: {
         fontStyle: 'italic',
     },
-    heading: {
-        fontWeight: '200',
-    },
-    heading1: {
-        fontSize: 32,
-    },
-    heading2: {
-        fontSize: 24,
-    },
-    heading3: {
-        fontSize: 18,
-    },
-    heading4: {
-        fontSize: 16,
-    },
-    heading5: {
-        fontSize: 13,
-    },
-    heading6: {
-        fontSize: 11,
-    },
+   
     hr: {
         backgroundColor: '#cccccc',
         height: 1,

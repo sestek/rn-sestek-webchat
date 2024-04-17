@@ -2,6 +2,7 @@ import React, { useContext, useRef, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import { StyleContext } from '../../../context/StyleContext';
 import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
+import Markdown from '../../../plugin/markdown';
 
 const Index = ({
   data,
@@ -126,6 +127,7 @@ const Index = ({
                 backgroundColor: '#F5F5F5',
                 borderRadius: 10,
                 width: CARD_WIDTH,
+                paddingHorizontal: 12
               }}
             >
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -139,33 +141,26 @@ const Index = ({
                   }}
                 />
               </View>
-              <Text
-                style={{
-                  paddingHorizontal: 12,
-                  marginTop: 10,
-                  fontSize: 16,
-                  fontWeight: '500',
-                  color: appStyle?.chatBotMessageBoxTextColor,
-                }}
+              <Markdown
+                fontSettings={appStyle?.fontSettings}
+                color={appStyle?.chatBotMessageBoxTextColor}
+                textType="title"
               >
                 {item?.title && item.title.length > 46
                   ? item.title.substring(0, 43) + '...'
                   : item.title}
-              </Text>
-              <Text
-                style={{
-                  paddingHorizontal: 12,
-                  marginTop: 8,
-                  fontSize: 14,
-                  fontWeight: '400',
-                  color: appStyle?.chatBotMessageBoxTextColor,
-                  opacity: 0.5,
-                }}
+              </Markdown>
+              <Markdown
+              style={{opacity: 0.5}}
+                fontSettings={appStyle?.fontSettings}
+                color={appStyle?.chatBotMessageBoxTextColor}
+                textType="text"
               >
-                {item?.subtitle && item.subtitle.length > 70
+               {item?.text && item.text.length > 70
                   ? item.subtitle.substring(0, 65) + '...'
                   : item.subtitle}
-              </Text>
+              </Markdown>
+          
               {item?.buttons &&
                 item.buttons.map((btn: any, idx: number) => {
                   return (
@@ -195,6 +190,7 @@ const Index = ({
                           color:
                             carouselStyle?.buttonGroup?.textColor ??
                             appStyle.chatBotMessageBoxButtonTextColor,
+                            fontSize:appStyle?.fontSettings.descriptionFontSize
                         }}
                       >
                         {btn?.title}

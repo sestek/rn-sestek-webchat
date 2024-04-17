@@ -40,6 +40,7 @@ export default interface PropsCustomizeConfiguration {
   audioSliderSettings?: AudioSliderSettings;
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
+  fontSettings?: FontSettings;
   permissionAudioCheck?: () => Promise<void>;
 }
 
@@ -53,6 +54,12 @@ type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 export interface IconType {
   type: 'uri' | 'component';
   value: any;
+}
+
+export interface FontSettings {
+  titleFontSize?:number;
+  subtitleFontSize?:number;
+  descriptionFontSize?:number;
 }
 
 interface CarouselSettings {

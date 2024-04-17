@@ -141,8 +141,8 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={config?.URL_}
-        // url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
+         url={config?.URL_}
+        //url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -282,6 +282,12 @@ export default function App() {
           // Before Func
           permissionAudioCheck: permissionAudioCheck,
           indicatorColor: '#863CEB',
+          // FontSettings
+          fontSettings: {
+            titleFontSize:18,
+            subtitleFontSize: 16,
+            descriptionFontSize: 13,
+          },
           // Close Modal
           closeModalSettings: {
             use: true,

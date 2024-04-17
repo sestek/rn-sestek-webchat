@@ -10,7 +10,7 @@
 npm install rn-sestek-webchat --save
 ```
 
---------------------------------------------------------------------------------------------------------
+---
 
 ### If you want to send and listen audio you have to follow the steps below
 
@@ -44,7 +44,7 @@ npm i --save @miblanchard/react-native-slider
 
 If you use to slider, you must also install the "@miblanchard/react-native-slider" package. You can follow the [link](https://www.npmjs.com/package/@miblanchard/react-native-slider) below to integrate
 
---------------------------------------------------------------------------------------------------------
+---
 
 ### If you want to send files and pictures, you need to follow these steps
 
@@ -62,7 +62,7 @@ npm i --save react-native-document-picker@9.1.1
 npm i --save react-native-document-picker@8.2.2
 ```
 
- You can follow the [link](https://www.npmjs.com/package/react-native-document-picker) below to integrate
+You can follow the [link](https://www.npmjs.com/package/react-native-document-picker) below to integrate
 
 RN < 0.63 Older RN versions are not supported.
 
@@ -75,7 +75,7 @@ npm i --save react-native-fetch-blob@0.10.8
 If you want to send files, you also need to install the "react-native-fetch-blob" package. Because we need it to read the selected file and convert it to base64.
 You can follow the [link](https://www.npmjs.com/package/react-native-fetch-blob) below to integrate
 
---------------------------------------------------------------------------------------------------------
+---
 
 ### Listening to event from conversation
 
@@ -89,7 +89,7 @@ The CustomActionData field can be used for any custom information wanted to be p
 It is recommended to be sent in key/value pairs. i.e.
 customActionData: "{\"channel\":\"xxx\",\"phoneNumber\":\"xxx xxx xx xx\",\"customerName\":\"John Doe\"}",
 
---------------------------------------------------------------------------------------------------------
+---
 
 ## Usage
 
@@ -181,7 +181,7 @@ const customActionDataExample = {
 
 const startStorageSession = () => {
     modalRef.current?.startStorageSession();
-}; 
+};
 // start storage session and it should also be used in the case where modal hide does not work depending on navigation,
 // i.e. in the case of an existing sessionID. When this function is used, the session will continue where it left off.
 
@@ -323,6 +323,12 @@ const startStorageSession = () => {
     permissionAudioCheck: permissionAudioCheck,
     //loading indicator
     indicatorColor : "#863CEB",
+    //FontSettings
+    fontSettings: {
+      titleFontSize:18, 
+      subtitleFontSize: 16,
+      descriptionFontSize: 13,
+    },
     // Close Modal
     closeModalSettings: {
       use: true,
@@ -403,6 +409,7 @@ You can customize your external components with the following values
   sliderPauseImage?: BodyColorOrImageType;
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
+  fontSettings?: FontSettings;
   permissionAudioCheck?: () => Promise<void>;
 }
 
@@ -414,6 +421,11 @@ interface BodyColorOrImageType {
 export interface IconType {
   type: 'uri' | 'component';
   value: any;
+}
+export interface FontSettings {
+  titleFontSize?:number;
+  subtitleFontSize?:number;
+  descriptionFontSize?:number;
 }
 
 interface CloseModalSettings {

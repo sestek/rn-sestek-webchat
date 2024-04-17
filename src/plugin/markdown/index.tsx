@@ -3,7 +3,8 @@ import { View } from 'react-native';
 import { merge, isEqual, isArray } from 'lodash';
 import SimpleMarkdown from 'simple-markdown';
 import styles from './styles';
-
+import { FontSettings } from 'types/propsCustomizeConfiguration';
+import { fontSettings } from '../../constant/ChatModalConstant';
 interface CustomToken {
   type: string;
   content?: string;
@@ -29,6 +30,8 @@ interface MarkdownProps {
   style?: any;
   onLoad?: () => void;
   children: ReactNode;
+  fontSettings?: FontSettings;
+  textType?: string;
 }
 
 class Markdown extends Component<MarkdownProps> {
@@ -53,11 +56,44 @@ class Markdown extends Component<MarkdownProps> {
       onImageClose: props.onImageClose,
       rules: props.rules,
     };
+
+    const { titleFontSize } = props?.fontSettings || fontSettings;
+
+    let customMarkDownStyle = {
+      ...styles,
+      heading: {
+        fontWeight: '200',
+      },
+      heading1: {
+        fontSize: titleFontSize + 12,
+      },
+      heading2: {
+        fontSize: titleFontSize + 6,
+      },
+      heading3: {
+        fontSize: titleFontSize,
+      },
+      heading4: {
+        fontSize: titleFontSize - 2,
+      },
+      heading5: {
+        fontSize: titleFontSize - 5,
+      },
+      heading6: {
+        fontSize: titleFontSize - 9,
+      },
+    };
     const mergedStyles = merge(
       {},
-      { ...styles, text: { color: props.color, ...props.style } }
+      { ...customMarkDownStyle, text: { color: props.color, ...props.style } }
     );
-    let rules = require('./rules')(mergedStyles, opts);
+    let rules = require('./rules')(
+      mergedStyles,
+      opts,
+      props?.fontSettings,
+      props?.textType
+    );
+
     rules = merge({}, SimpleMarkdown.defaultRules, rules, opts.rules);
 
     const parser = SimpleMarkdown.parserFor(rules);

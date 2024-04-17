@@ -18,6 +18,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
     chatBody,
+    fontSettings
   } = props.customizeConfiguration;
   const { scrollViewRef } = props;
 
@@ -56,7 +57,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               backgroundColor: chatBotMessageBoxBackground,
             }}
           >
-            <Text style={{ ...styles.text, color: chatBotMessageBoxTextColor }}>
+            <Text style={{ ...styles.text, color: chatBotMessageBoxTextColor,fontSize:fontSettings?.descriptionFontSize }}>
               {getCurrentDate()}
             </Text>
           </View>
