@@ -87,7 +87,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
       {WebView &&
         Array.isArray(generalProps?.activity?.entities) &&
         generalProps?.activity?.entities[0]?.geo && (
-          <View style={styles.generalMessageBoxWebviewContainer}>
+          <View style={[styles.generalMessageBoxWebviewContainer]}>
             <TouchableOpacity
               style={styles.generalMessageBoxInWebviewInContainer}
               onPress={() => {

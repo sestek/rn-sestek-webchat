@@ -82,7 +82,7 @@ export default StyleSheet.create({
 
   generalMessageBoxWebviewContainer: {
     flex: 1,
-    maxHeight: Dimensions.get('screen').height * 0.5,
+    // maxHeight: Dimensions.get('screen').height * 0.5,
     maxWidth: Dimensions.get('screen').width * 0.7,
   },
   generalMessageBoxInWebviewInContainer: {
