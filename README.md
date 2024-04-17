@@ -220,6 +220,7 @@ const startStorageSession = () => {
       type: 'component',
       value: require('./src/images/close.png'),
     },
+    headerAlignmentType: 'textToCenter',
     // Bottom
     bottomColor: 'white',
     bottomInputText: 'Bottom input text..',
@@ -373,6 +374,7 @@ You can customize your external components with the following values
   headerTextColor?: string;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
+  headerAlignmentType?: HeaderAlignmentType;
   bottomColor?: string;
   bottomInputText?: string;
   bottomInputBackgroundColor?: string;
@@ -417,6 +419,8 @@ interface BodyColorOrImageType {
   type: 'image' | 'color';
   value: any;
 }
+
+type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
 export interface IconType {
   type: 'uri' | 'component';

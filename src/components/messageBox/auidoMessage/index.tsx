@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text } from 'react-native';
 import AudioComponent from './audio';
 import { Recorder } from '../../../services';
 import PropsModules from 'src/types/propsModules';
 import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
+import { StyleContext } from '../../../context/StyleContext';
 
 interface AudioMessageProps {
   modules: PropsModules;
@@ -23,7 +24,7 @@ const AudioMessage = (props: AudioMessageProps) => {
     url = props?.activity?.attachments[0]?.content;
     position = 'left';
   }
-
+  const appStyle: any = useContext(StyleContext);
   return (
     <>
       <AudioComponent
@@ -39,7 +40,7 @@ const AudioMessage = (props: AudioMessageProps) => {
         }
         modules={props.modules}
         customizeConfiguration={props.customizeConfiguration}
-        position = {position}
+        position={position}
       />
       {position === 'right' && (
         <Text
@@ -47,6 +48,7 @@ const AudioMessage = (props: AudioMessageProps) => {
             marginVertical: props.activity?.text && 10,
             color: props?.userMessageBoxTextColor ?? 'white',
             paddingLeft: 10,
+            fontSize: appStyle?.fontSettings?.subtitleFontSize,
           }}
         >
           {props.activity?.text}

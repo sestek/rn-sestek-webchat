@@ -1,8 +1,9 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
 import { PlayIcon2, PauseIcon2 } from '../../../image';
+import { StyleContext } from '../../../context/StyleContext';
 interface PositionStyle {
   sliderMinimumTrackTintColor: any;
   sliderMaximumTrackTintColor: any;
@@ -27,6 +28,8 @@ const AudioComponent: FC<PropsAudio> = (props) => {
 
   const RNSlider = props.modules.RNSlider;
   const AuidoProp = props?.customizeConfiguration?.audioSliderSettings;
+
+  const appStyle: any = useContext(StyleContext);
 
   let defaultPositionStyle: PositionStyle = {
     sliderMinimumTrackTintColor: '#C3ACD0',
@@ -181,7 +184,12 @@ const AudioComponent: FC<PropsAudio> = (props) => {
           />
         </View>
       ) : (
-        <Text style={{ paddingRight: 5 }}>
+        <Text
+          style={{
+            paddingRight: 5,
+            fontSize: appStyle?.fontSettings?.descriptionFontSize,
+          }}
+        >
           {stateRecord.playTime + ' / ' + stateRecord.duration}
         </Text>
       )}

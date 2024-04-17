@@ -32,7 +32,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   var positionCls = [
     styles.messageBox,
     messageBoxPosition === 'right' && styles.messageBoxRight,
-    { marginBottom: props?.customizeConfiguration?.chatBodyMessageBoxGap ?? 20 },
+    {
+      marginBottom: props?.customizeConfiguration?.chatBodyMessageBoxGap ?? 20,
+    },
   ];
   var thatAbsoluteTime =
     messageType !== 'text' &&
@@ -47,7 +49,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     props.changeInputData('');
   };
 
-  const [maxHeight, setmaxHeight] = useState(0);
+  const [_, setmaxHeight] = useState(0);
   const totalFont = useWindowDimensions().fontScale;
   const screenWidth = Dimensions.get('screen').width * (1 / (totalFont * 10));
 
@@ -244,6 +246,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                         messageBoxPosition != 'right'
                           ? appStyle?.userMessageBoxTextColor
                           : appStyle?.chatBotMessageBoxTextColor,
+                      fontSize: appStyle?.fontSettings?.descriptionFontSize,
                     }}
                   >
                     {(props.activity?.timestamp || props.dateString) &&

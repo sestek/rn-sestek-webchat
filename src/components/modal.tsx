@@ -127,6 +127,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             closeConversation={closeConversation}
             closeModalSettings={customizeConfiguration?.closeModalSettings}
             getResponseData={defaultConfiguration?.getResponseData}
+            appStyle={appStyle}
           />
         )}
 

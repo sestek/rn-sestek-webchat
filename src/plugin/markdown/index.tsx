@@ -4,7 +4,6 @@ import { merge, isEqual, isArray } from 'lodash';
 import SimpleMarkdown from 'simple-markdown';
 import styles from './styles';
 import { FontSettings } from 'types/propsCustomizeConfiguration';
-import { fontSettings } from '../../constant/ChatModalConstant';
 interface CustomToken {
   type: string;
   content?: string;
@@ -30,7 +29,7 @@ interface MarkdownProps {
   style?: any;
   onLoad?: () => void;
   children: ReactNode;
-  fontSettings?: FontSettings;
+  fontSettings: FontSettings;
   textType?: string;
 }
 
@@ -57,7 +56,7 @@ class Markdown extends Component<MarkdownProps> {
       rules: props.rules,
     };
 
-    const { titleFontSize } = props?.fontSettings || fontSettings;
+    const { titleFontSize } = props?.fontSettings;
 
     let customMarkDownStyle = {
       ...styles,
@@ -65,22 +64,22 @@ class Markdown extends Component<MarkdownProps> {
         fontWeight: '200',
       },
       heading1: {
-        fontSize: titleFontSize + 12,
+        fontSize: titleFontSize! + 12,
       },
       heading2: {
-        fontSize: titleFontSize + 6,
+        fontSize: titleFontSize! + 6,
       },
       heading3: {
         fontSize: titleFontSize,
       },
       heading4: {
-        fontSize: titleFontSize - 2,
+        fontSize: titleFontSize! - 2,
       },
       heading5: {
-        fontSize: titleFontSize - 5,
+        fontSize: titleFontSize! - 5,
       },
       heading6: {
-        fontSize: titleFontSize - 9,
+        fontSize: titleFontSize! - 9,
       },
     };
     const mergedStyles = merge(

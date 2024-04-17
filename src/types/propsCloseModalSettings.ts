@@ -8,6 +8,7 @@ export interface PropsCloseModalSettings {
   closeConversation?: any;
   closeModalSettings?: any;
   getResponseData?: Function;
+  appStyle?: any;
 }
 
 export interface ButtonGroupsType {

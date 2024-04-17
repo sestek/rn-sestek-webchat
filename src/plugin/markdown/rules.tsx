@@ -16,7 +16,6 @@ import {
 import SimpleMarkdown from 'simple-markdown';
 import { map, includes, noop, some, size } from 'lodash';
 import { FontSettings } from 'types/propsCustomizeConfiguration';
-import { fontSettings as fontSettingsData } from 'constant/ChatModalConstant';
 interface Options {
   imageParam?: string;
 }
@@ -96,11 +95,10 @@ module.exports = function (
     u: any;
   },
   opts: Options = {},
-  fontSettings?: FontSettings,
+  fontSettings: FontSettings,
   textType?: string
 ) {
-  const { titleFontSize, subtitleFontSize, descriptionFontSize } =
-    fontSettings ?? fontSettingsData;
+  const { titleFontSize, subtitleFontSize, descriptionFontSize } = fontSettings;
   const LINK_INSIDE = '(?:\\[[^\\]]*\\]|[^\\]]|\\](?=[^\\[]*\\]))*';
   const LINK_HREF_AND_TITLE =
     '\\s*<?([^\\s]*?)>?(?:\\s+[\'"]([\\s\\S]*?)[\'"])?\\s*';

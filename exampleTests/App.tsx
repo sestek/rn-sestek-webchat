@@ -141,7 +141,7 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-         url={config?.URL_}
+        url={config?.URL_}
         //url="https://latest.web.cai.demo.sestek.com/webchat/chathub"
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
@@ -284,7 +284,7 @@ export default function App() {
           indicatorColor: '#863CEB',
           // FontSettings
           fontSettings: {
-            titleFontSize:18,
+            titleFontSize: 18,
             subtitleFontSize: 16,
             descriptionFontSize: 13,
           },

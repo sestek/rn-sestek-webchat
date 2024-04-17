@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import {fontSettings} from '../constant/ChatModalConstant'
+import { DefaultFontSettings } from '../constant/ChatModalConstant';
 
 interface contextType {
   appStyle: any;
@@ -60,7 +60,8 @@ const StyleContextProvider = (props: any) => {
         propsCustomizeConfiguration?.chatBotMessageBoxButtonBorderColor,
       chatBotMessageBoxButtonTextColor:
         propsCustomizeConfiguration?.chatBotMessageBoxButtonTextColor,
-      fontSettings :  propsCustomizeConfiguration?.fontSettings ?? fontSettings
+      fontSettings:
+        propsCustomizeConfiguration?.fontSettings ?? DefaultFontSettings,
     });
   };
 

@@ -64,7 +64,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
 
         {!checked.includes(item?.title) && (
           <Markdown
-            style={styles.generalMessageBoxText}
+            fontSettings={appStyle?.fontSettings}
             color={
               customizeProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -76,7 +76,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
         )}
         {!checked.includes(item?.subtitle) && (
           <Markdown
-            style={styles.generalMessageBoxText}
+            fontSettings={appStyle?.fontSettings}
             color={
               customizeProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor
@@ -88,7 +88,7 @@ const CarouselMessage: React.FC<MyComponentProps> = ({
         )}
         {!checked.includes(item?.text) && (
           <Markdown
-            style={styles.generalMessageBoxText}
+            fontSettings={appStyle?.fontSettings}
             color={
               customizeProps.position != 'right'
                 ? appStyle?.userMessageBoxTextColor

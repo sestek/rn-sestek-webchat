@@ -6,17 +6,28 @@ export interface InProps {
   closeModal: boolean;
   setCloseModal: any;
   closeConversation: Function;
+  appStyle: any;
 }
 
 const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
   (props, ref) => {
-    const { closeModal, setCloseModal, closeConversation, closeModalSettings } =
-      props;
+    const {
+      closeModal,
+      setCloseModal,
+      closeConversation,
+      closeModalSettings,
+      appStyle,
+    } = props;
     return (
       <Modal animationType="slide" transparent={true} visible={closeModal}>
         <View style={styles(closeModalSettings)?.centeredView}>
           <View style={styles(closeModalSettings)?.modalView}>
-            <Text style={styles(closeModalSettings)?.modalText}>
+            <Text
+              style={[
+                styles(closeModalSettings)?.modalText,
+                { fontSize: appStyle?.fontSettings?.subtitleFontSize },
+              ]}
+            >
               {closeModalSettings?.text ||
                 "Chat'ten çıkmak istediğinize emin misiniz ??"}
             </Text>
@@ -27,7 +38,12 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 }}
                 style={styles(closeModalSettings)?.noButton}
               >
-                <Text style={styles(closeModalSettings)?.noButtonText}>
+                <Text
+                  style={[
+                    styles(closeModalSettings)?.noButtonText,
+                    { fontSize: appStyle?.fontSettings?.subtitleFontSize },
+                  ]}
+                >
                   {closeModalSettings?.buttons?.noButton?.text || 'Hayır'}
                 </Text>
               </TouchableOpacity>
@@ -38,7 +54,12 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 }}
                 style={styles(closeModalSettings)?.yesButton}
               >
-                <Text style={styles(closeModalSettings)?.yesButtonText}>
+                <Text
+                  style={[
+                    styles(closeModalSettings)?.yesButtonText,
+                    { fontSize: appStyle?.fontSettings?.subtitleFontSize },
+                  ]}
+                >
                   {closeModalSettings?.buttons?.yesButton?.text || 'Evet'}
                 </Text>
               </TouchableOpacity>
