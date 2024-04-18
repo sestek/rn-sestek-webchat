@@ -23,7 +23,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
     generalProps?.position != 'right'
       ? appStyle?.userMessageBoxTextColor
       : appStyle?.chatBotMessageBoxTextColor;
-
+  const aspectRatioCorrection = 1.5; 
   return (
     <>
       {imageList.map((image, index) => (
@@ -32,11 +32,10 @@ const GeneralMessage: React.FC<Props> = (props) => {
           source={{ uri: image.url }}
           style={{
             resizeMode: 'contain',
-            width: image.width,
-            maxHeight: Dimensions.get('screen').height * 0.45,
-            height: image.height,
-            maxWidth: Dimensions.get('screen').width * 0.8,
-            marginBottom: 10,
+            width: (Dimensions.get('screen').width * 0.45 *image.width) / image.width *aspectRatioCorrection,
+            height: (Dimensions.get('screen').width * 0.45 * image.height) / image.width * aspectRatioCorrection,
+            marginHorizontal:8,
+            marginVertical:8
           }}
         />
       ))}

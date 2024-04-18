@@ -36,13 +36,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
       marginBottom: props?.customizeConfiguration?.chatBodyMessageBoxGap ?? 20,
     },
   ];
-  var thatAbsoluteTime =
-    messageType !== 'text' &&
-    messageType !== 'file' &&
-    !(
-      messageType === 'location' &&
-      (props.activity.text || props.activity.message)
-    );
 
   const onPressButton = (value?: string, title?: string) => {
     props.sendMessage({ message: value, displayMessage: title });
@@ -238,7 +231,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
                 {props.activity.type === 'typing' ? <TypingMessage /> : null}
 
-                <View style={[thatAbsoluteTime && styles.messageBoxTimeBlock]}>
+                <View style={styles.messageBoxTimeBlock}>
                   <Text
                     style={{
                       ...styles.messageBoxTimeBlockText,

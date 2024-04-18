@@ -41,19 +41,12 @@ export default StyleSheet.create({
     padding: 8,
     borderRadius: 15,
     maxWidth: Dimensions.get('screen').width * 0.8,
+    justifyContent: 'center',
+    alignItems: 'center', 
   },
 
   messageBoxTimeBlock: {
-    right: 0,
-    bottom: 0,
-    left: 0,
-    marginRight: -6,
-    marginLeft: -6,
-    paddingTop: 5,
-    paddingRight: 3,
-    paddingBottom: 0,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    width:'100%'
   },
   messageBoxTimeBlockText: {
     textAlign: 'right',
@@ -82,7 +75,6 @@ export default StyleSheet.create({
 
   generalMessageBoxWebviewContainer: {
     flex: 1,
-    // maxHeight: Dimensions.get('screen').height * 0.5,
     maxWidth: Dimensions.get('screen').width * 0.7,
   },
   generalMessageBoxInWebviewInContainer: {

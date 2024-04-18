@@ -188,12 +188,12 @@ module.exports = function (
           ] as ViewStyle[],
         });
         const blockQuoteTextStyles = [styles.blockQuoteText] as TextStyle[];
-
+        blockQuoteTextStyles[0].fontSize = descriptionFontSize;
         let blockQuote = React.createElement(
           Text,
           {
             key: Math.floor(Math.random() * 9000) + 1000,
-            style: { ...blockQuoteTextStyles, fontSize: descriptionFontSize },
+            style: blockQuoteTextStyles,
           },
           output(node.content, state)
         );
@@ -686,8 +686,9 @@ module.exports = function (
         }
 
         if (state.withinList) {
-          paragraphStyle = [paragraphStyle, styles.noMargin];
+          paragraphStyle = {...paragraphStyle, ...styles.noMargin};
         }
+   
         return React.createElement(
           Text,
           {
