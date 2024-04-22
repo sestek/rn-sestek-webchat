@@ -1,5 +1,5 @@
 import { Platform, StyleSheet } from 'react-native';
-import { GeneralManager } from '../services';
+import { GeneralManager } from '../../services';
 
 export const styles = StyleSheet.create({
   container: {

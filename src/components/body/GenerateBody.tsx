@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { ImageBackground } from 'react-native';
 import { StyleContext } from '../../context/StyleContext';
-import { styles } from '../modal-style';
+import { styles } from '../modal/style';
 import { GenerateBodyComponent } from '../../types/components/GenerateBodyComponent';
 
 const GenerateBody = (props: GenerateBodyComponent) => {

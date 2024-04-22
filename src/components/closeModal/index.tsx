@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { Text, View, Modal, TouchableOpacity } from 'react-native';
 import { PropsCloseModalSettings } from '../../types';
-import { styles } from './closeModal-style';
+import { styles } from './style';
 export interface InProps {
   closeModal: boolean;
   setCloseModal: any;

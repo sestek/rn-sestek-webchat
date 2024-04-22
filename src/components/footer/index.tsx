@@ -7,17 +7,17 @@ import {
   Platform,
 } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
-import { styles } from './footer-style';
+import { styles } from './style';
 import {
   RecordInIcon,
   RecordOutIcon,
   RecordDisable,
   SendIconWhite,
   Link,
-} from '../image';
-import { Recorder } from '../services';
-import { StyleContext } from '../context/StyleContext';
-import { useLoading } from '../context/LoadingContext';
+} from '../../image';
+import { Recorder } from '../../services';
+import { StyleContext } from '../../context/StyleContext';
+import { useLoading } from '../../context/LoadingContext';
 
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const RNFSModule = props.modules.RNFS;

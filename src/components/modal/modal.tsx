@@ -13,19 +13,19 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { useChat } from '../plugin/useChat';
-import type { PropsModalComponent } from '../types';
-import BodyComponent from './body';
-import FooterComponent from './footer';
-import HeaderComponent from './header';
-import { styles } from './modal-style';
-import CloseModal from './closeModal';
-import { StyleContext } from '../context/StyleContext';
-import { ModalCompRef } from '../types/components/ModalComponent';
-import GenerateBody from './body/GenerateBody';
-import LoadingModal from './loadingModal';
-import { useLoading } from '../context/LoadingContext';
-import useCheckBackground from '../hook/useCheckBackground';
+import { useChat } from '../../plugin/useChat';
+import type { PropsModalComponent } from '../../types';
+import BodyComponent from '../body';
+import FooterComponent from '../footer';
+import HeaderComponent from '../header';
+import { styles } from './style';
+import CloseModal from '../closeModal';
+import { StyleContext } from '../../context/StyleContext';
+import { ModalCompRef } from '../../types/components/ModalComponent';
+import GenerateBody from '../body/GenerateBody';
+import LoadingModal from '../loadingModal';
+import { useLoading } from '../../context/LoadingContext';
+import useCheckBackground from '../../hook/useCheckBackground';
 
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {

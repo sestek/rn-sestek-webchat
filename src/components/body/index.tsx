@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
-import { RobotIcon } from '../image';
-import { GeneralManager } from '../services';
-import { styles } from './body-style';
-import MessageBox from './messageBox';
+import { RobotIcon } from '../../image';
+import { GeneralManager } from '../../services';
+import { styles } from './style';
+import MessageBox from '../messageBox';
 
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
   const {

@@ -1,10 +1,10 @@
 import React, { useContext, type FC, useEffect } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import type { PropsHeaderComponent } from '../types';
-import { MinusIcon, MultiplyIcon } from '../image';
-import { StyleContext } from '../context/StyleContext';
-import { styles } from './header-styles';
-import useCheckBackground from '../hook/useCheckBackground';
+import type { PropsHeaderComponent } from '../../types';
+import { MinusIcon, MultiplyIcon } from '../../image';
+import { StyleContext } from '../../context/StyleContext';
+import { styles } from './style';
+import useCheckBackground from '../../hook/useCheckBackground';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
