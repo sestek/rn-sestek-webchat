@@ -185,6 +185,10 @@ const startStorageSession = () => {
 // start storage session and it should also be used in the case where modal hide does not work depending on navigation,
 // i.e. in the case of an existing sessionID. When this function is used, the session will continue where it left off.
 
+// In icon components, if you are going to provide an image, the type should be 'component'
+// and the value should be called as require('./src/images/test.png'). If you want to give a url instead of an image,
+// the type should be 'uri' and the value should be a string url, for example value : "https://test.png"
+
  <ChatModal
   url={`ConnectionChathubUrl`}
   modules={{
