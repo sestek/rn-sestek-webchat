@@ -15,7 +15,6 @@ export default interface PropsCustomizeConfiguration {
   bottomSendIcon?: IconType;
   bottomAttachmentIcon?: IconType;
   bottomInputSendButtonColor?: string;
-  userMessageBoxIcon?: IconType;
   userMessageBoxTextColor?: string;
   userMessageBoxHeaderName?: string;
   userMessageBoxHeaderNameColor?: string;
@@ -52,8 +51,8 @@ interface BodyColorOrImageType {
 type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
 export interface IconType {
-  type: 'uri' | 'component';
-  value: any;
+  type: 'url' | 'component';
+  value: string | React.ReactElement | React.ReactNode;
 }
 
 export interface FontSettings {
@@ -63,7 +62,7 @@ export interface FontSettings {
 }
 
 interface CarouselSettings {
-  nexButtonIcon?: IconType;
+  nextButtonIcon?: IconType;
   prevButtonIcon?: IconType;
   buttonGroup?: {
     borderColor?: string;
@@ -94,14 +93,14 @@ interface CloseModalSettings {
 }
 
 export interface AudioSliderSettings {
-  userSliderMinimumTrackTintColor: string;
-  userSliderMaximumTrackTintColor: string;
-  userSliderThumbTintColor: string;
-  userSliderPlayImage: IconType;
-  userSliderPauseImage: IconType;
-  botSliderMinimumTrackTintColor: string;
-  botSliderMaximumTrackTintColor: string;
-  botSliderThumbTintColor: string;
-  botSliderPlayImage: IconType;
-  botSliderPauseImage: IconType;
+  userSliderMinimumTrackTintColor?: string;
+  userSliderMaximumTrackTintColor?: string;
+  userSliderThumbTintColor?: string;
+  userSliderPlayImage?: IconType;
+  userSliderPauseImage?: IconType;
+  botSliderMinimumTrackTintColor?: string;
+  botSliderMaximumTrackTintColor?: string;
+  botSliderThumbTintColor?: string;
+  botSliderPlayImage?: IconType;
+  botSliderPauseImage?: IconType;
 }

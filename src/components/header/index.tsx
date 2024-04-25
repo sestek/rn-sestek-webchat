@@ -5,6 +5,7 @@ import { MinusIcon, MultiplyIcon } from '../../image';
 import { StyleContext } from '../../context/StyleContext';
 import { styles } from './style';
 import useCheckBackground from '../../hook/useCheckBackground';
+import RenderImage from '../renderImage';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
@@ -81,7 +82,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
       >
         <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
           {hideIcon ? (
-            <Image style={styles.imageIcon} source={hideIcon.value} />
+           <RenderImage type={hideIcon.type} value={hideIcon.value} style={styles.imageIcon}/>
           ) : (
             <Image style={styles.hideDefaultIcon} source={MinusIcon} />
           )}
@@ -98,7 +99,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           style={styles.center}
         >
           {closeIcon ? (
-            <Image style={styles.imageIcon} source={closeIcon.value} />
+           <RenderImage type={closeIcon.type} value={closeIcon.value} style={headerAlignmentType === 'textToRight'  ? styles.imageIcon : styles.closeTextToCenterIcon}/>
           ) : (
             <Image style={styles.closeDefaultIcon} source={MultiplyIcon} />
           )}

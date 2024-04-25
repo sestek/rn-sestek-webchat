@@ -25,7 +25,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
             <Text
               style={[
                 styles(closeModalSettings)?.modalText,
-                { fontSize: appStyle?.fontSettings?.subtitleFontSize },
+                { fontSize: appStyle?.fontSettings?.descriptionFontSize },
               ]}
             >
               {closeModalSettings?.text ||
@@ -41,7 +41,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 <Text
                   style={[
                     styles(closeModalSettings)?.noButtonText,
-                    { fontSize: appStyle?.fontSettings?.subtitleFontSize },
+                    { fontSize: appStyle?.fontSettings?.descriptionFontSize },
                   ]}
                 >
                   {closeModalSettings?.buttons?.noButton?.text || 'Hayır'}
@@ -57,7 +57,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 <Text
                   style={[
                     styles(closeModalSettings)?.yesButtonText,
-                    { fontSize: appStyle?.fontSettings?.subtitleFontSize },
+                    { fontSize: appStyle?.fontSettings?.descriptionFontSize },
                   ]}
                 >
                   {closeModalSettings?.buttons?.yesButton?.text || 'Evet'}

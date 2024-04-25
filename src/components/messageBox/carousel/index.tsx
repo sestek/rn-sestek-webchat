@@ -3,6 +3,8 @@ import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import { StyleContext } from '../../../context/StyleContext';
 import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
 import Markdown from '../../../plugin/markdown';
+import RenderImage from '../../renderImage';
+import { Back, Next } from '../../../image';
 
 const Index = ({
   data,
@@ -65,17 +67,17 @@ const Index = ({
           alignItems: 'center',
         }}
       >
-        <Image
-          source={
-            carouselStyle?.prevButtonIcon?.type === 'component'
-              ? carouselStyle?.prevButtonIcon?.value ??
-                require('../../../image/back.png')
-              : carouselStyle?.prevButtonIcon?.value
-              ? { uri: carouselStyle?.prevButtonIcon?.value }
-              : require('../../../image/back.png')
-          }
-          style={{ height: 14, width: 14, marginRight: 3 }}
-        />
+        {carouselStyle?.prevButtonIcon ? (
+          <RenderImage
+            type={carouselStyle?.prevButtonIcon.type}
+            value={carouselStyle.prevButtonIcon.value}
+          />
+        ) : (
+          <Image
+            source={Back}
+            style={{ height: 14, width: 14 }}
+          />
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleScrollRight}
@@ -92,17 +94,17 @@ const Index = ({
           alignItems: 'center',
         }}
       >
-        <Image
-          source={
-            carouselStyle?.nexButtonIcon?.type === 'component'
-              ? carouselStyle?.nexButtonIcon?.value ??
-                require('../../../image/next.png')
-              : carouselStyle?.nexButtonIcon?.value
-              ? { uri: carouselStyle?.nexButtonIcon?.value }
-              : require('../../../image/next.png')
-          }
-          style={{ height: 14, width: 14, marginLeft: 3 }}
-        />
+        {carouselStyle?.nextButtonIcon ? (
+          <RenderImage
+            type={carouselStyle?.nextButtonIcon.type}
+            value={carouselStyle.nextButtonIcon.value}
+          />
+        ) : (
+          <Image
+            source={Next}
+            style={{ height: 14, width: 14, marginLeft: 3 }}
+          />
+        )}
       </TouchableOpacity>
       <ScrollView
         ref={scrollViewRef}
@@ -127,7 +129,7 @@ const Index = ({
                 backgroundColor: '#F5F5F5',
                 borderRadius: 10,
                 width: CARD_WIDTH,
-                paddingHorizontal: 12
+                paddingHorizontal: 12,
               }}
             >
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -151,16 +153,16 @@ const Index = ({
                   : item.title}
               </Markdown>
               <Markdown
-              style={{opacity: 0.5}}
+                style={{ opacity: 0.5 }}
                 fontSettings={appStyle?.fontSettings}
                 color={appStyle?.chatBotMessageBoxTextColor}
                 textType="text"
               >
-               {item?.text && item.text.length > 70
+                {item?.text && item.text.length > 70
                   ? item.subtitle.substring(0, 65) + '...'
                   : item.subtitle}
               </Markdown>
-          
+
               {item?.buttons &&
                 item.buttons.map((btn: any, idx: number) => {
                   return (
@@ -190,7 +192,7 @@ const Index = ({
                           color:
                             carouselStyle?.buttonGroup?.textColor ??
                             appStyle.chatBotMessageBoxButtonTextColor,
-                            fontSize:appStyle?.fontSettings.descriptionFontSize
+                          fontSize: appStyle?.fontSettings.descriptionFontSize,
                         }}
                       >
                         {btn?.title}

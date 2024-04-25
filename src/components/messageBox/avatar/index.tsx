@@ -1,42 +1,26 @@
-import React, { FC, useState } from 'react';
-import { Image, View } from 'react-native';
+import React, { FC } from 'react';
+import { View } from 'react-native';
 import type { PropsAvatar } from '../../../types/';
 import styles from '../style';
+import { RobotIcon } from '../../../image';
+import RenderImage from '../../renderImage';
 
 const Avatar: FC<PropsAvatar> = (props) => {
-  const [isUriValid, setIsUriValid] = useState(true);
-
-  const handleImageError = () => {
-    setIsUriValid(false);
-  };
-
-  const imageSource = isUriValid
-    ? typeof props.src === 'object'
-      ? { uri: props.src.uri }
-      : props.src
-    : require('../../../image/error.png');
-
-    return (
+  return (
     <View style={styles.messageBoxAvatarTitleContainer}>
-      <Image
-        style={[
-          styles.messageBoxAvatarDefaultSize,
-          { width: props.width, height: props.height },
-        ]}
-        source={imageSource}
-        onError={handleImageError}
+      <RenderImage
+        type={props.chatBotMessageIcon.type}
+        value={props.chatBotMessageIcon.value}
+        style={{ width: props.width, height: props.height }}
       />
-      {props.sideElement}
     </View>
   );
 };
 
 Avatar.defaultProps = {
-  width: 20,
-  height: 20,
-  src: '',
-  alt: '',
-  sideElement: null,
+  width: 28,
+  height: 28,
+  chatBotMessageIcon: { type: 'uri', value: RobotIcon },
 };
 
 export default Avatar;

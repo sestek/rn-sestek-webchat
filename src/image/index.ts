@@ -7,12 +7,13 @@ const SendIconWhite = require('./sendIcon.png');
 const VoiceIcon = require('./voice.png');
 const RecordInIcon = require('./record_in.png');
 const RecordOutIcon = require('./record_out.png');
-const PlayIcon = require('./play.png');
-const PauseIcon = require('./pause.png');
-const PlayIcon2 = require('./play2.png');
-const PauseIcon2 = require('./pause2.png');
+const PlayIcon = require('./play2.png');
+const PauseIcon = require('./pause2.png');
 const RecordDisable = require('./record_disable.png');
 const Link = require('./link.png')
+const Next = require('./next.png')
+const Back = require('./back.png')
+const Error = require('./error.png')
 
 export {
   ChatIcon,
@@ -25,9 +26,10 @@ export {
   RecordOutIcon,
   PlayIcon,
   PauseIcon,
-  PlayIcon2,
-  PauseIcon2,
   RecordDisable,
   SendIconWhite,
-  Link
+  Link,
+  Next,
+  Back,
+  Error
 };

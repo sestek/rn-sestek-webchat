@@ -19,20 +19,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageIcon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginRight: 15,
   },
   hideDefaultIcon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginRight: 15,
   },
   closeDefaultIcon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginRight: 15,
   },
+  closeTextToCenterIcon:{
+    width: 18,
+    height: 18,
+  }
 });
 
 export { styles };

@@ -23,120 +23,94 @@ const GeneralMessage: React.FC<Props> = (props) => {
     generalProps?.position != 'right'
       ? appStyle?.userMessageBoxTextColor
       : appStyle?.chatBotMessageBoxTextColor;
-  const aspectRatioCorrection = 1.5; 
+  const aspectRatioCorrection = 1.5;
+
+  const messageType = generalProps?.type;
+  const messageActivity = generalProps?.activity;
+  const messageAttachments = messageActivity?.attachments;
+  const messageAttachmentsContent = messageAttachments?.[0]?.content;
+  const messageActivityEntities = messageActivity?.entities?.[0];
+
+  const renderMarkdown = (text: string, textType: string) => (
+    <Markdown
+      color={messageColor}
+      fontSettings={appStyle?.fontSettings}
+      textType={textType}
+    >
+      {text}
+    </Markdown>
+  );
   return (
     <>
-      {imageList.map((image, index) => (
-        <Image
-          key={index}
-          source={{ uri: image.url }}
-          style={{
-            resizeMode: 'contain',
-            width: (Dimensions.get('screen').width * 0.45 *image.width) / image.width *aspectRatioCorrection,
-            height: (Dimensions.get('screen').width * 0.45 * image.height) / image.width * aspectRatioCorrection,
-            marginHorizontal:8,
-            marginVertical:8
-          }}
-        />
-      ))}
-      {generalProps.type === 'message' &&
-        generalProps.activity?.attachments &&
-        generalProps.activity?.attachments[0]?.content?.title && (
-          <Markdown
-            color={messageColor}
-            fontSettings={appStyle?.fontSettings}
-            textType="title"
-          >
-            {generalProps.activity?.attachments[0]?.content?.title}
-          </Markdown>
-        )}
-      {generalProps.type === 'message' &&
-        generalProps.activity?.attachments &&
-        generalProps.activity?.attachments[0]?.content?.subtitle && (
-          <Markdown
-            color={messageColor}
-            fontSettings={appStyle?.fontSettings}
-            textType="subtitle"
-          >
-            {generalProps.activity?.attachments[0]?.content?.subtitle}
-          </Markdown>
-        )}
-      {(generalProps.type === 'text' || generalProps.type === 'message') &&
-        (generalProps.activity.text || generalProps.activity.message) && (
-          <Markdown
-            color={messageColor}
-            fontSettings={appStyle?.fontSettings}
-            textType="text"
-          >
-            {generalProps.activity.text || generalProps.activity.message}
-          </Markdown>
-        )}
+    {imageList.map((image, index) => (
+      <Image
+        key={index}
+        source={{ uri: image.url }}
+        style={{
+          resizeMode: 'contain',
+          width:
+            (Dimensions.get('screen').width * 0.45 * image.width) /
+            image.width *
+            aspectRatioCorrection,
+          height:
+            (Dimensions.get('screen').width * 0.45 * image.height) /
+            image.width *
+            aspectRatioCorrection,
+          marginHorizontal: 8,
+          marginVertical: 8,
+        }}
+      />
+    ))}
 
-      {generalProps.activity?.type === 'message' &&
-        generalProps.activity?.attachments &&
-        generalProps.activity?.attachments[0]?.content?.text && (
-          <Markdown
-            color={messageColor}
-            fontSettings={appStyle?.fontSettings}
-            textType="text"
+    {messageType === 'message' &&
+      messageAttachmentsContent?.title &&
+      renderMarkdown(messageAttachmentsContent?.title, 'title')}
+
+    {messageType === 'message' &&
+      messageAttachmentsContent?.subtitle &&
+      renderMarkdown(messageAttachmentsContent?.subtitle, 'subtitle')}
+
+    {(messageType === 'text' || messageType === 'message') &&
+      (messageActivity?.text || messageActivity?.message) &&
+      renderMarkdown(messageActivity?.text || messageActivity?.message, 'text')}
+
+    {messageType === 'message' &&
+      messageAttachmentsContent?.text &&
+      renderMarkdown(messageAttachmentsContent?.text, 'text')}
+
+    {WebView &&
+      Array.isArray(messageActivity?.entities) &&
+      messageActivityEntities?.geo && (
+        <View style={styles.generalMessageBoxWebviewContainer}>
+          <TouchableOpacity
+            style={styles.generalMessageBoxInWebviewInContainer}
+            onPress={() => {
+              Linking.openURL(
+                `https://maps.google.com/maps?q=${messageActivityEntities.geo.latitude},${messageActivityEntities.geo.longitude}&t=&z=15&ie=UTF8&iwloc`
+              );
+            }}
           >
-            {generalProps.activity?.attachments[0]?.content?.text}
-          </Markdown>
-        )}
-      {WebView &&
-        Array.isArray(generalProps?.activity?.entities) &&
-        generalProps?.activity?.entities[0]?.geo && (
-          <View style={[styles.generalMessageBoxWebviewContainer]}>
-            <TouchableOpacity
-              style={styles.generalMessageBoxInWebviewInContainer}
-              onPress={() => {
-                Linking.openURL(
-                  `https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc`
-                );
+            <WebView
+              ref={webViewRef}
+              scrollEnabled={false}
+              onNavigationStateChange={(event: any) => {
+                const uri = 'https://www.google.com/maps/dir';
+                if (webViewRef?.current?.stopLoading && event.url?.includes(uri)) {
+                  webViewRef.current.stopLoading();
+                }
               }}
-            >
-              <WebView
-                ref={webViewRef}
-                scrollEnabled={false}
-                onNavigationStateChange={(event: any) => {
-                  const uri = 'https://www.google.com/maps/dir';
-                  if (
-                    webViewRef?.current?.stopLoading &&
-                    event.url?.includes(uri)
-                  ) {
-                    webViewRef?.current?.stopLoading();
-                  }
-                }}
-                source={{
-                  html: `<iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=${generalProps.activity.entities[0]?.geo.latitude},${generalProps.activity.entities[0]?.geo.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>`,
-                }}
-              />
-            </TouchableOpacity>
+              source={{
+                html: `<iframe width="100%" height="100%" id="gmap_canvas" src="https://maps.google.com/maps?q=${messageActivityEntities.geo.latitude},${messageActivityEntities.geo.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>`,
+              }}
+            />
+          </TouchableOpacity>
 
-            <Markdown
-              color={messageColor}
-              fontSettings={appStyle?.fontSettings}
-              textType="title"
-            >
-              {generalProps.activity.entities[0]?.geo?.name}
-            </Markdown>
-            <Markdown
-              color={messageColor}
-              fontSettings={appStyle?.fontSettings}
-              textType="subtitle"
-            >
-              {generalProps.activity.entities[0]?.address}
-            </Markdown>
-            <Markdown
-              color={messageColor}
-              fontSettings={appStyle?.fontSettings}
-              textType="text"
-            >
-              {generalProps.activity.entities[0]?.hasMap}
-            </Markdown>
-          </View>
-        )}
-    </>
+          {renderMarkdown(messageActivityEntities?.geo?.name, 'title')}
+          {renderMarkdown(messageActivityEntities?.address, 'subtitle')}
+          {renderMarkdown(messageActivityEntities?.hasMap, 'text')}
+        </View>
+      )}
+  </>
   );
 };
 

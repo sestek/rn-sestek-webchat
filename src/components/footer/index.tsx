@@ -18,6 +18,7 @@ import {
 import { Recorder } from '../../services';
 import { StyleContext } from '../../context/StyleContext';
 import { useLoading } from '../../context/LoadingContext';
+import RenderImage from '../renderImage';
 
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const RNFSModule = props.modules.RNFS;
@@ -186,10 +187,15 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             },
           ]}
         >
-          <Image
-            style={styles.AttachmentIcon}
-            source={bottomAttachmentIcon?.value ?? Link}
-          />
+          {bottomAttachmentIcon ? (
+            <RenderImage
+              type={bottomAttachmentIcon.type}
+              value={bottomAttachmentIcon.value}
+              style={styles.AttachmentIcon}
+            />
+          ) : (
+            <Image style={styles.AttachmentIcon} source={Link} />
+          )}
         </TouchableOpacity>
       )}
       {modules?.AudioRecorderPlayer && modules?.RNFS && (
@@ -204,16 +210,35 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             },
           ]}
         >
-          <Image
-            style={styles.MicButtonIcon}
-            source={
-              recordStart
-                ? bottomVoiceStopIcon?.value ?? RecordInIcon
-                : disableRecord
-                ? bottomVoiceDisabledIcon?.value ?? RecordDisable
-                : bottomVoiceIcon?.value ?? RecordOutIcon
-            }
-          />
+          {recordStart ? (
+            bottomVoiceStopIcon ? (
+              <RenderImage
+                type={bottomVoiceStopIcon.type}
+                value={bottomVoiceStopIcon.value}
+                style={styles.MicButtonIcon}
+              />
+            ) : (
+              <Image style={styles.MicButtonIcon} source={RecordInIcon} />
+            )
+          ) : disableRecord ? (
+            bottomVoiceDisabledIcon ? (
+              <RenderImage
+                type={bottomVoiceDisabledIcon.type}
+                value={bottomVoiceDisabledIcon.value}
+                style={styles.MicButtonIcon}
+              />
+            ) : (
+              <Image style={styles.MicButtonIcon} source={RecordDisable} />
+            )
+          ) : bottomVoiceIcon ? (
+            <RenderImage
+              type={bottomVoiceIcon.type}
+              value={bottomVoiceIcon.value}
+              style={styles.MicButtonIcon}
+            />
+          ) : (
+            <Image style={styles.MicButtonIcon} source={RecordOutIcon} />
+          )}
         </TouchableOpacity>
       )}
       <TouchableOpacity
@@ -223,10 +248,15 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           { backgroundColor: appStyle?.bottomInputSendButtonColor },
         ]}
       >
-        <Image
-          style={[styles.SendButtonIcon]}
-          source={bottomSendIcon?.value ?? SendIconWhite}
-        />
+        {bottomSendIcon ? (
+          <RenderImage
+            type={bottomSendIcon.type}
+            value={bottomSendIcon.value}
+            style={styles.SendButtonIcon}
+          />
+        ) : (
+          <Image style={styles.SendButtonIcon} source={SendIconWhite} />
+        )}
       </TouchableOpacity>
     </View>
   );

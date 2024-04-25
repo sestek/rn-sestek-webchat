@@ -2,8 +2,9 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
-import { PlayIcon2, PauseIcon2 } from '../../../image';
+import { PlayIcon, PauseIcon } from '../../../image';
 import { StyleContext } from '../../../context/StyleContext';
+import RenderImage from '../../renderImage';
 interface PositionStyle {
   sliderMinimumTrackTintColor: any;
   sliderMaximumTrackTintColor: any;
@@ -35,39 +36,43 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     sliderMinimumTrackTintColor: '#C3ACD0',
     sliderMaximumTrackTintColor: 'white',
     sliderThumbTintColor: '#C3ACD0',
-    sliderPlayImage: { type: 'component', value: PlayIcon2 },
-    sliderPauseImage: { type: 'component', value: PauseIcon2 },
+    sliderPlayImage: { type: 'url', value: PlayIcon },
+    sliderPauseImage: { type: 'url', value: PauseIcon },
   };
 
   if (AuidoProp && props.position === 'left') {
     defaultPositionStyle = {
-      sliderMinimumTrackTintColor: AuidoProp.botSliderMinimumTrackTintColor,
-      sliderMaximumTrackTintColor: AuidoProp.botSliderMaximumTrackTintColor,
-      sliderThumbTintColor: AuidoProp.botSliderThumbTintColor,
-      sliderPlayImage: AuidoProp.botSliderPlayImage,
-      sliderPauseImage: AuidoProp.botSliderPauseImage,
+      sliderMinimumTrackTintColor: AuidoProp.botSliderMinimumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderMaximumTrackTintColor: AuidoProp.botSliderMaximumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderThumbTintColor: AuidoProp.botSliderThumbTintColor || defaultPositionStyle.sliderThumbTintColor,
+      sliderPlayImage:
+        AuidoProp.botSliderPlayImage || defaultPositionStyle.sliderPlayImage,
+      sliderPauseImage:
+        AuidoProp.botSliderPauseImage || defaultPositionStyle.sliderPauseImage,
     };
   }
   if (AuidoProp && props.position === 'right') {
     defaultPositionStyle = {
-      sliderMinimumTrackTintColor: AuidoProp.userSliderMinimumTrackTintColor,
-      sliderMaximumTrackTintColor: AuidoProp.userSliderMaximumTrackTintColor,
-      sliderThumbTintColor: AuidoProp.userSliderThumbTintColor,
-      sliderPlayImage: AuidoProp.userSliderPlayImage,
-      sliderPauseImage: AuidoProp.userSliderPauseImage,
+      sliderMinimumTrackTintColor: AuidoProp.userSliderMinimumTrackTintColor || defaultPositionStyle.sliderMinimumTrackTintColor,
+      sliderMaximumTrackTintColor: AuidoProp.userSliderMaximumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderThumbTintColor: AuidoProp.userSliderThumbTintColor || defaultPositionStyle.sliderThumbTintColor,
+      sliderPlayImage:
+        AuidoProp.userSliderPlayImage || defaultPositionStyle.sliderPlayImage,
+      sliderPauseImage:
+        AuidoProp.userSliderPauseImage || defaultPositionStyle.sliderPauseImage,
     };
   }
   const renderSliderImage = () => {
     const { sliderPlayImage, sliderPauseImage } = defaultPositionStyle;
     const { value, type } = start ? sliderPauseImage : sliderPlayImage;
 
-    if (type === 'component') {
-      return <Image source={value} style={{ width: 20, height: 20 }} />;
-    } else {
-      return (
-        <Image source={{ uri: value }} style={{ width: 20, height: 20 }} />
-      );
-    }
+    return (
+      <RenderImage
+        type={type}
+        value={value}
+        style={{ width: 25, height: 25 }}
+      />
+    );
   };
   useEffect(() => {
     getDuration();
@@ -134,13 +139,13 @@ const AudioComponent: FC<PropsAudio> = (props) => {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
-        minWidth: 150,
+        minWidth: 170,
         paddingRight: 10,
       }}
     >
       <View
         style={{
-          flex: 2,
+          flex: 3,
           justifyContent: 'center',
           alignItems: 'center',
         }}
@@ -154,7 +159,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
       {RNSlider ? (
         <View
           style={{
-            flex: 10,
+            flex: 9,
             paddingLeft: 10,
           }}
         >

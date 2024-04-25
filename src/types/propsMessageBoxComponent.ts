@@ -29,7 +29,6 @@ export default interface PropsMessageBoxComponent {
   status: null;
   dateString?: string;
   notch?: boolean;
-  avatar: any;
   renderAddCmp: any;
   userMessageBoxTextColor: string;
 }

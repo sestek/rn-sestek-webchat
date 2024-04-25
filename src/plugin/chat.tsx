@@ -14,6 +14,7 @@ import { StyleContextProvider } from '../context/StyleContext';
 import { ChatModalProps } from '../types/plugin/ChatModalProps';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
+import RenderImage from '../../src/components/renderImage';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -137,17 +138,24 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
             ]}
             onPress={() => startConversation()}
           >
-            <Image
-              style={{
-                width: chatStartButtonBackgroundSize || 50,
-                height: chatStartButtonBackgroundSize || 50,
-              }}
-              source={GeneralManager.returnIconData(
-                chatStartButton?.type,
-                chatStartButton?.value,
-                ChatIcon
-              )}
-            />
+            {chatStartButton ? (
+              <RenderImage
+                type={chatStartButton.type}
+                value={chatStartButton.value}
+                style={{
+                  width: chatStartButtonBackgroundSize || 50,
+                  height: chatStartButtonBackgroundSize || 50,
+                }}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: chatStartButtonBackgroundSize || 50,
+                  height: chatStartButtonBackgroundSize || 50,
+                }}
+                source={ChatIcon}
+              />
+            )}
           </TouchableOpacity>
         </View>
       )}
