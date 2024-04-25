@@ -87,6 +87,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   useEffect(() => {
     if (Array.isArray(attachmentsData)) {
       if (attachmentsData.length === 1) {
+        
         attachmentsData[0]?.content?.images?.map((image: any) => {
           Image.getSize(
             image.url,
@@ -155,7 +156,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
         });
       }
     }
-  }, []);
+  }, [attachmentsData]);
 
   const getTimeGenerate = (props: any) => {
     const date = new Date(props?.timestamp);
@@ -173,18 +174,18 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
               flexDirection: messageBoxPosition === 'right' ? 'row' : undefined,
             }}
           >
-            {messageBoxPosition === 'right' && props.avatar && (
+            {messageBoxPosition === 'right' && (
               <View style={styles.messageBoxAvatarContainer}>
                 <Avatar
                   width={
-                    props.customizeConfiguration
-                      .chatBotMessageBoxAvatarIconSize ?? 28
+                    props.customizeConfiguration.chatBotMessageBoxAvatarIconSize
                   }
                   height={
-                    props.customizeConfiguration
-                      .chatBotMessageBoxAvatarIconSize ?? 28
+                    props.customizeConfiguration.chatBotMessageBoxAvatarIconSize
                   }
-                  src={props.avatar}
+                  chatBotMessageIcon={
+                    props.customizeConfiguration.chatBotMessageIcon
+                  }
                 />
               </View>
             )}
@@ -275,7 +276,6 @@ MessageBox.defaultProps = {
   forwarded: false,
   dateString: '',
   notch: true,
-  avatar: null,
   renderAddCmp: null,
 };
 

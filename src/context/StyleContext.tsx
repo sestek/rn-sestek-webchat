@@ -41,9 +41,7 @@ const StyleContextProvider = (props: any) => {
         propsCustomizeConfiguration?.chatBotMessageBoxBackground,
       userMessageBoxTextColor:
         propsCustomizeConfiguration?.userMessageBoxTextColor,
-      userMessageBoxIcon: {
-        ...propsCustomizeConfiguration?.userMessageBoxIcon,
-      },
+   
       userMessageBoxBackground:
         propsCustomizeConfiguration?.userMessageBoxBackground,
       chatStartButtonBackground:
@@ -92,10 +90,6 @@ const StyleContextProvider = (props: any) => {
       },
       chatBotMessageBoxBackground: json?.agent?.bgColor,
       userMessageBoxTextColor: json?.client?.textColor,
-      userMessageBoxIcon: {
-        type: 'uri',
-        value: userAvatatUri,
-      },
       userMessageBoxBackground: json?.client?.bgColor,
       chatStartButtonBackground: json?.bubbleColor,
       bottomInputText: json?.placeholder,

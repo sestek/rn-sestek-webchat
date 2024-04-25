@@ -18,6 +18,7 @@ import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
 import config from './src/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function App() {
   const modalRef = useRef<ChatModalProps>(null);
@@ -157,8 +158,8 @@ export default function App() {
           sendConversationStart: true,
           channel: 'mobil',
           clientId: 'mobile-testing',
-          tenant: "default",
-          projectName: "TestHL",
+          tenant: 'default',
+          projectName: 'TestHL',
 
           // enableNdUi: false,
           getResponseData: setResponse,
@@ -170,11 +171,11 @@ export default function App() {
           headerText: 'Knovvu',
           headerTextColor: 'white',
           headerHideIcon: {
-            type: 'component',
+            type: 'url',
             value: require('./src/images/hide.png'),
           },
           headerCloseIcon: {
-            type: 'component',
+            type: 'url',
             value: require('./src/images/close.png'),
           },
           headerAlignmentType: 'textToCenter',
@@ -184,41 +185,39 @@ export default function App() {
           bottomInputText: 'Bottom input text..',
           bottomInputBorderColor: '#d5d5d5',
           bottomInputSendButtonColor: '#7743DB',
-          // bottomAttachmentIcon: {
-          //   type: 'component',
-          //   value: require('./example.png'),
-          // },
+          //  bottomAttachmentIcon: {
+          //    type: 'component',
+          //    value: <Icon name="rocket" size={40} color="#900" />,
+          //  },
           // bottomSendIcon: {
           //   type: 'component',
-          //   value: require('./example.png'),
+          //   value:  <Icon name="rocket" size={40} color="#900" />,
           // },
           // bottomVoiceIcon: {
           //   type: 'component',
-          //   value: require('./example.png'),
+          //   value: <Icon name="rocket" size={20} color="black" />,
           // },
           // bottomVoiceStopIcon: {
           //   type: 'component',
-          //   value: require('./example.png'),
+          //   value:  <Icon name="rocket" size={20} color="pink" />,
           // },
           // bottomVoiceDisabledIcon: {
           //   type: 'component',
-          //   value: require('./example.png'),
+          //   value:  <Icon name="rocket" size={20} color="blue" />,
           // },
           // User MessageBox
           userMessageBoxBackground: '#863CEB',
           userMessageBoxTextColor: 'white',
-          userMessageBoxIcon: {
-            type: 'uri',
-            value: '',
-          },
+
           userMessageBoxHeaderName: '',
           userMessageBoxHeaderNameColor: 'white',
           // ChatBot MessageBox
           chatBotMessageBoxBackground: '#EFEFEF',
           chatBotMessageBoxTextColor: 'black',
           chatBotMessageIcon: {
-            type: 'component',
-            value: require('./src/images/knovvu_logo.png'),
+            type: 'url',
+            value:
+              'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
           },
           chatBotMessageBoxHeaderName: 'Knovvu',
           chatBotMessageBoxHeaderNameColor: 'black',
@@ -228,14 +227,14 @@ export default function App() {
           chatBotMessageBoxAvatarIconSize: 28,
           // Carousel
           chatBotCarouselSettings: {
-            // nexButtonIcon: {
+            // nextButtonIcon: {
             //   type: 'component',
-            //   value: require('./example.png'),
+            //   value: <Icon name="rocket" size={30} color="#900" />,
             // },
-            // prevButtonIcon: {
-            //   type: 'component',
-            //   value: require('./example.png'),
-            // },
+            //  prevButtonIcon: {
+            //    type: 'component',
+            //    value: <Icon name="rocket" size={30} color="#900" />,
+            //  },
             buttonGroup: {
               borderColor: '#E2E2E4',
               backgroundColor: '#ffffff',
@@ -247,7 +246,7 @@ export default function App() {
           chatBodyMessageBoxGap: 20,
           // Chat Start Button
           chatStartButton: {
-            type: 'component',
+            type: 'url',
             value: require('./src/images/knovvu_logo.png'),
           },
           chatStartButtonBackground: 'white',
@@ -258,26 +257,26 @@ export default function App() {
             userSliderMinimumTrackTintColor: '#C3ACD0',
             userSliderMaximumTrackTintColor: 'white',
             userSliderThumbTintColor: '#C3ACD0',
-            userSliderPlayImage: {
-              type: 'component',
-              value: require('../src/image/play-audio.png'),
-            },
-            userSliderPauseImage: {
-              type: 'component',
-              value: require('../src/image/pause-audio.png'),
-            },
+            // userSliderPlayImage: {
+            //   type: 'component',
+            //   value:  <Icon name="rocket" size={40} color="#900" />,
+            // },
+            // userSliderPauseImage: {
+            //   type: 'url',
+            //   value: require('../src/image/pause-audio.png'),
+            // },
             //bot
             botSliderMinimumTrackTintColor: 'red',
             botSliderMaximumTrackTintColor: 'blue',
             botSliderThumbTintColor: 'black',
-            botSliderPlayImage: {
-              type: 'component',
-              value: require('../src/image/play-audio.png'),
-            },
-            botSliderPauseImage: {
-              type: 'component',
-              value: require('../src/image/pause-audio.png'),
-            },
+            // botSliderPlayImage: {
+            //   type: 'component',
+            //   value: <Icon name="rocket" size={40} color="#900" />,
+            // },
+            // botSliderPauseImage: {
+            //   type: 'url',
+            //   value: require('../src/image/pause-audio.png'),
+            // },
           },
           // Before Func
           permissionAudioCheck: permissionAudioCheck,

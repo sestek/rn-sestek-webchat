@@ -214,11 +214,11 @@ const startStorageSession = () => {
     headerTextColor: 'white',
     headerHideIcon: {
       type: 'component',
-      value: require('./src/images/hide.png'),
+      value:  <Icon name="example" size={20} color="#900" />,
     },
     headerCloseIcon: {
-      type: 'component',
-      value: require('./src/images/close.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     headerAlignmentType: 'textToCenter',
     // Bottom
@@ -227,40 +227,37 @@ const startStorageSession = () => {
     bottomInputBorderColor: '#d5d5d5',
     bottomInputSendButtonColor: '#7743DB',
     bottomAttachmentIcon: {
-      type: 'component',
-      value: require('./example.png'),
+      type: 'url',
+      value: 'https://example.com/exampleImage.png',
     },
     bottomSendIcon: {
-      type: 'component',
-      value: require('./example.png'),
+      type: 'componenet',
+      value: <Icon name="example" size={20} color="#900" />,
     },
     bottomVoiceIcon: {
-      type: 'component',
-      value: require('./example.png'),
+      type: 'url',
+      value: require('https://example.com/exampleImage.png'),
     },
     bottomVoiceStopIcon: {
-      type: 'component',
+      type: 'url',
       value: require('./example.png'),
     },
     bottomVoiceDisabledIcon: {
-      type: 'component',
+      type: 'url',
       value: require('./example.png'),
     },
     // User MessageBox
     userMessageBoxBackground: '#863CEB',
     userMessageBoxTextColor: 'white',
-    userMessageBoxIcon: {
-      type: 'uri',
-      value: '',
-    },
+
     userMessageBoxHeaderName: '',
     userMessageBoxHeaderNameColor: 'white',
     // ChatBot MessageBox
     chatBotMessageBoxBackground: '#EFEFEF',
     chatBotMessageBoxTextColor: 'black',
     chatBotMessageIcon: {
-      type: 'component',
-      value: require('./src/images/knovvu_logo.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     chatBotMessageBoxHeaderName: 'Knovvu',
     chatBotMessageBoxHeaderNameColor: 'black',
@@ -273,20 +270,20 @@ const startStorageSession = () => {
     chatBodyMessageBoxGap: 20,
     // Chat Start Button
     chatStartButton: {
-      type: 'component',
-      value: require('./src/images/knovvu_logo.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     chatStartButtonBackground: 'white',
     chatStartButtonBackgroundSize: 70,
     chatStartButtonHide: false,
     //Carousel
     chatBotCarouselSettings: {
-      nexButtonIcon: {
-        type: 'component',
+      nextButtonIcon: {
+        type: 'url',
         value: require('./example.png'),
       },
       prevButtonIcon: {
-        type: 'component',
+        type: 'url',
         value: require('./example.png'),
       },
       buttonGroup: {
@@ -301,24 +298,24 @@ const startStorageSession = () => {
     userSliderMaximumTrackTintColor: 'white',
     userSliderThumbTintColor: '#C3ACD0',
     userSliderPlayImage:{
-      type: 'component',
-      value: require('../src/image/play-audio.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     userSliderPauseImage: {
-      type: 'component',
-      value: require('../src/image/pause-audio.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     //bot
     botSliderMinimumTrackTintColor: "red",
     botSliderMaximumTrackTintColor:"blue",
     botSliderThumbTintColor: "black",
     botSliderPlayImage: {
-      type: 'component',
-      value: require('../src/image/play-audio.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     botSliderPauseImage: {
-      type: 'component',
-      value: require('../src/image/pause-audio.png'),
+      type: 'url',
+      value: require('./example.png'),
     },
     // Before Func
     permissionAudioCheck: permissionAudioCheck,
@@ -385,7 +382,6 @@ You can customize your external components with the following values
   bottomSendIcon?: IconType;
   bottomAttachmentIcon?: IconType;
   bottomInputSendButtonColor?: string;
-  userMessageBoxIcon?: IconType;
   userMessageBoxTextColor?: string;
   userMessageBoxHeaderName?: string;
   userMessageBoxHeaderNameColor?: string;
@@ -424,7 +420,7 @@ type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
 export interface IconType {
   type: 'uri' | 'component';
-  value: any;
+  value: string | React.ReactElement | React.ReactNode;;
 }
 export interface FontSettings {
   titleFontSize?:number;

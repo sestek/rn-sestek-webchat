@@ -1,15 +1,12 @@
 import React, { FC } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
-import { RobotIcon } from '../../image';
-import { GeneralManager } from '../../services';
+
 import { styles } from './style';
 import MessageBox from '../messageBox';
 
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
   const {
-    userMessageBoxIcon,
-    chatBotMessageIcon,
     userMessageBoxHeaderName,
     chatBotMessageBoxHeaderName,
     chatBotMessageBoxHeaderNameColor,
@@ -57,7 +54,13 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               backgroundColor: chatBotMessageBoxBackground,
             }}
           >
-            <Text style={{ ...styles.text, color: chatBotMessageBoxTextColor,fontSize:fontSettings?.descriptionFontSize }}>
+            <Text
+              style={{
+                ...styles.text,
+                color: chatBotMessageBoxTextColor,
+                fontSize: fontSettings?.descriptionFontSize,
+              }}
+            >
               {getCurrentDate()}
             </Text>
           </View>
@@ -77,19 +80,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               status={null}
               title={getUserName(x?.channel)}
               titleColor={getTextColor(x?.channel)}
-              avatar={
-                x.channel
-                  ? GeneralManager.returnIconData(
-                      userMessageBoxIcon?.type,
-                      userMessageBoxIcon?.value,
-                      RobotIcon
-                    )
-                  : GeneralManager.returnIconData(
-                      chatBotMessageIcon?.type,
-                      chatBotMessageIcon?.value,
-                      RobotIcon
-                    )
-              }
               renderAddCmp={undefined}
             />
           ))}
