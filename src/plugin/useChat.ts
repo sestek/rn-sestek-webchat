@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
 import useCheckBackground from '../hook/useCheckBackground';
-
+import { useLanguage } from '../context/LanguageContext';
+useLanguage;
 const useChat = ({
   defaultConfiguration,
   sessionId,
@@ -13,6 +14,8 @@ const useChat = ({
 
   const [messageList, setMessageList] = useState<any>([]);
   const [historyCount, sethistoryCount] = useState(0);
+
+  const { changeLanguage } = useLanguage();
 
   const { background } = useCheckBackground();
 
@@ -36,6 +39,9 @@ const useChat = ({
     });
   };
   const setResponseFunc = (customAction: any, customActionData: any) => {
+    if (typeof customActionData === 'object' && customActionData?.Language) {
+      changeLanguage(customActionData?.Language.toLowerCase());
+    }
     if (getResponseData) {
       getResponseData({ customAction, customActionData });
     }
@@ -243,10 +249,11 @@ const useChat = ({
     });
     formData.push({
       name: 'customActionData',
-      data: JSON.stringify({
-        ...defaultConfiguration.customAction,
-        ResponseType: 'AudioBase64',
-      }) || `{ResponseType: 'AudioBase64'}`,
+      data:
+        JSON.stringify({
+          ...defaultConfiguration.customAction,
+          ResponseType: 'AudioBase64',
+        }) || `{ResponseType: 'AudioBase64'}`,
     });
     formData.push({
       name: 'channel',

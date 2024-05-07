@@ -23,7 +23,6 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   textSubContainer: {
-    backgroundColor: '#ff0000',
     padding: 5,
     borderRadius: 10,
     marginTop: 10,

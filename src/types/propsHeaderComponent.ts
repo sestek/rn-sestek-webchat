@@ -6,7 +6,6 @@ export default interface PropsHeaderComponent {
   clickClosedConversationModalFunc: Function;
   defaultConfiguration: PropsDefaultConfiguration;
   customizeConfiguration: PropsCustomizeConfiguration;
-  headerText?: string;
   closeIcon?: any;
   hideIcon?: any;
   closeModalStatus?: boolean;

@@ -269,8 +269,6 @@ MessageBox.defaultProps = {
   position: 'left',
   type: 'message',
   activity: null,
-  title: 'SYSTEM',
-  titleColor: 'black',
   date: new Date(),
   data: {},
   forwarded: false,

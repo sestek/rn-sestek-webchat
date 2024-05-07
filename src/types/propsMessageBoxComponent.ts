@@ -16,8 +16,6 @@ export default interface PropsMessageBoxComponent {
   activity: any;
   changeInputData: (text: string) => void;
   sendMessage: any;
-  title?: string;
-  titleColor?: string;
   onTitleClick?: () => void;
   onForwardClick?: () => void;
   date?: Date;

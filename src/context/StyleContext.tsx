@@ -21,7 +21,6 @@ const StyleContextProvider = (props: any) => {
     projectName: string
   ) => {
     setAppStyle({
-      headerText: propsCustomizeConfiguration?.headerText,
       headerTextColor: propsCustomizeConfiguration?.headerTextColor,
       bottomColor: propsCustomizeConfiguration?.bottomColor,
       bottomInputBackgroundColor:
@@ -46,7 +45,6 @@ const StyleContextProvider = (props: any) => {
         propsCustomizeConfiguration?.userMessageBoxBackground,
       chatStartButtonBackground:
         propsCustomizeConfiguration?.chatStartButtonBackground,
-      bottomInputText: propsCustomizeConfiguration?.bottomInputText,
       closeModalSettings: {
         ...propsCustomizeConfiguration?.closeModalSettings,
       },
@@ -76,7 +74,7 @@ const StyleContextProvider = (props: any) => {
     const json = await response.json();
 
     const chatAvatatUri = json?.agent?.avatar?.split('"')[3];
-    const userAvatatUri = json?.client?.avatar?.split('"')[3];
+    // const userAvatatUri = json?.client?.avatar?.split('"')[3];
 
     setAppStyle({
       headerText: json?.title,

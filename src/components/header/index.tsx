@@ -6,6 +6,7 @@ import { StyleContext } from '../../context/StyleContext';
 import { styles } from './style';
 import useCheckBackground from '../../hook/useCheckBackground';
 import RenderImage from '../renderImage';
+import { useLanguage } from '../../context/LanguageContext';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
@@ -13,13 +14,14 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     hideIcon,
     clickClosedConversationModalFunc,
     hideModal,
-    headerText,
     closeModalStatus,
     closeConversation,
     defaultConfiguration,
   } = props;
   const { appStyle } = useContext(StyleContext);
   const { background } = useCheckBackground();
+  const { getTexts } = useLanguage();
+  const texts = getTexts();
 
   useEffect(() => {
     if (defaultConfiguration.getResponseData) {
@@ -38,7 +40,6 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     }
   }, [background]);
   const { headerAlignmentType } = props.customizeConfiguration;
-
   const HeaderText = () => {
     return (
       <View
@@ -51,7 +52,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
         ]}
       >
         <Text style={[styles.headerText, { color: appStyle?.headerTextColor }]}>
-          {headerText ?? HeaderComponent.defaultProps?.headerText!}
+          {texts.headerText}
         </Text>
       </View>
     );
@@ -82,7 +83,11 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
       >
         <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
           {hideIcon ? (
-           <RenderImage type={hideIcon.type} value={hideIcon.value} style={styles.imageIcon}/>
+            <RenderImage
+              type={hideIcon.type}
+              value={hideIcon.value}
+              style={styles.imageIcon}
+            />
           ) : (
             <Image style={styles.hideDefaultIcon} source={MinusIcon} />
           )}
@@ -99,7 +104,15 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           style={styles.center}
         >
           {closeIcon ? (
-           <RenderImage type={closeIcon.type} value={closeIcon.value} style={headerAlignmentType === 'textToRight'  ? styles.imageIcon : styles.closeTextToCenterIcon}/>
+            <RenderImage
+              type={closeIcon.type}
+              value={closeIcon.value}
+              style={
+                headerAlignmentType === 'textToRight'
+                  ? styles.imageIcon
+                  : styles.closeTextToCenterIcon
+              }
+            />
           ) : (
             <Image style={styles.closeDefaultIcon} source={MultiplyIcon} />
           )}
@@ -109,8 +122,5 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   );
 };
 
-HeaderComponent.defaultProps = {
-  headerText: 'SESBOT',
-};
 
 export default HeaderComponent;

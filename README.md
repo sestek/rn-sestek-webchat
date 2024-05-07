@@ -255,8 +255,6 @@ const startStorageSession = () => {
     userMessageBoxBackground: '#863CEB',
     userMessageBoxTextColor: 'white',
 
-    userMessageBoxHeaderName: '',
-    userMessageBoxHeaderNameColor: 'white',
     // ChatBot MessageBox
     chatBotMessageBoxBackground: '#EFEFEF',
     chatBotMessageBoxTextColor: 'black',
@@ -264,8 +262,6 @@ const startStorageSession = () => {
       type: 'url',
       value: require('./example.png'),
     },
-    chatBotMessageBoxHeaderName: 'Knovvu',
-    chatBotMessageBoxHeaderNameColor: 'black',
     chatBotMessageBoxButtonBackground: 'white',
     chatBotMessageBoxButtonTextColor: 'black',
     chatBotMessageBoxButtonBorderColor: '#863CEB',
@@ -328,7 +324,7 @@ const startStorageSession = () => {
     indicatorColor : "#863CEB",
     //FontSettings
     fontSettings: {
-      titleFontSize:18, 
+      titleFontSize:18,
       subtitleFontSize: 16,
       descriptionFontSize: 13,
     },
@@ -353,8 +349,32 @@ const startStorageSession = () => {
         },
       },
     },
+    language: {
+      tr: {
+        headerText: 'Knovvu',
+        bottomInputText: 'Lütfen bir mesaj yazınız..',
+        closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
+        closeModalYesButtonText: 'Evet',
+        closeModalNoButtonText: 'Hayır',
+      },
+      en: {
+        headerText: 'Knovvu',
+        bottomInputText: 'Please write a message..',
+        closeModalText: 'Are you sure you want to exit chat?',
+        closeModalYesButtonText: 'Yes',
+        closeModalNoButtonText: 'No',
+      },
+    },
   }}
 />
+
+
+```
+NOTE: With the language object in customiseConfiguration, you can update all texts in Chat modal from here. The first value given is set as the default language setting. If no value is given to the language object, the default values of the chat modal will be valid. Please do not forget to enter data in this field for your application. 
+
+```
+
+
 ```
 
 For other additional information, we have created a document that you can use in the table below.
@@ -388,12 +408,8 @@ You can customize your external components with the following values
   bottomAttachmentIcon?: IconType;
   bottomInputSendButtonColor?: string;
   userMessageBoxTextColor?: string;
-  userMessageBoxHeaderName?: string;
-  userMessageBoxHeaderNameColor?: string;
   chatBotMessageIcon?: IconType;
   chatBotMessageBoxTextColor?: string;
-  chatBotMessageBoxHeaderName?: string;
-  chatBotMessageBoxHeaderNameColor?: string;
   chatBotMessageBoxBackground?: string;
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
@@ -414,6 +430,15 @@ You can customize your external components with the following values
   indicatorColor?: string;
   fontSettings?: FontSettings;
   permissionAudioCheck?: () => Promise<void>;
+  language?: {
+    [key: string]: {
+      headerText: string;
+      bottomInputText:string;
+      closeModalText:string;
+      closeModalYesButtonText:string;
+      closeModalNoButtonText:string
+    };
+  };
 }
 
 interface BodyColorOrImageType {

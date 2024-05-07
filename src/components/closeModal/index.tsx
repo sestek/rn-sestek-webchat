@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import { Text, View, Modal, TouchableOpacity } from 'react-native';
 import { PropsCloseModalSettings } from '../../types';
 import { styles } from './style';
+import { useLanguage } from '../../context/LanguageContext';
 export interface InProps {
   closeModal: boolean;
   setCloseModal: any;
@@ -18,6 +19,10 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
       closeModalSettings,
       appStyle,
     } = props;
+
+    const { getTexts } = useLanguage();
+    const texts = getTexts();
+  
     return (
       <Modal animationType="slide" transparent={true} visible={closeModal}>
         <View style={styles(closeModalSettings)?.centeredView}>
@@ -28,8 +33,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 { fontSize: appStyle?.fontSettings?.descriptionFontSize },
               ]}
             >
-              {closeModalSettings?.text ||
-                "Chat'ten çıkmak istediğinize emin misiniz ??"}
+             {texts.closeModalText}
             </Text>
             <View style={styles(closeModalSettings).buttonContainer}>
               <TouchableOpacity
@@ -44,7 +48,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                     { fontSize: appStyle?.fontSettings?.descriptionFontSize },
                   ]}
                 >
-                  {closeModalSettings?.buttons?.noButton?.text || 'Hayır'}
+                  {texts.closeModalNoButtonText}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -60,7 +64,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                     { fontSize: appStyle?.fontSettings?.descriptionFontSize },
                   ]}
                 >
-                  {closeModalSettings?.buttons?.yesButton?.text || 'Evet'}
+                 {texts.closeModalYesButtonText}
                 </Text>
               </TouchableOpacity>
             </View>

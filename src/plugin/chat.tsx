@@ -15,6 +15,7 @@ import { ChatModalProps } from '../types/plugin/ChatModalProps';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
 import RenderImage from '../../src/components/renderImage';
+import { LanguageProvider } from '../context/LanguageContext';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -160,35 +161,37 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
         </View>
       )}
       {start && (
-        <LoadingProvider>
-          <StyleContextProvider>
-            {visible && (
-              <StatusBar
-                animated={true}
-                backgroundColor="#7743DB"
-                barStyle="default"
-                showHideTransition="fade"
-                hidden={false}
+        <LanguageProvider  customizeConfiguration={customizeConfiguration}>
+          <LoadingProvider>
+            <StyleContextProvider>
+              {visible && (
+                <StatusBar
+                  animated={true}
+                  backgroundColor="#7743DB"
+                  barStyle="default"
+                  showHideTransition="fade"
+                  hidden={false}
+                />
+              )}
+              <ModalComponent
+                ref={modalRef}
+                url={url || ChatModal.defaultProps?.url!}
+                modules={modules}
+                customizeConfiguration={customizeConfiguration}
+                defaultConfiguration={defaultConfiguration}
+                visible={visible}
+                closeConversation={endConversation}
+                hideModal={triggerVisible}
+                sessionId={sessionId}
+                client={client}
+                closedModalManagment={{ closeModal, setCloseModal }}
+                clickClosedConversationModalFunc={
+                  clickClosedConversationModalFunc
+                }
               />
-            )}
-            <ModalComponent
-              ref={modalRef}
-              url={url || ChatModal.defaultProps?.url!}
-              modules={modules}
-              customizeConfiguration={customizeConfiguration}
-              defaultConfiguration={defaultConfiguration}
-              visible={visible}
-              closeConversation={endConversation}
-              hideModal={triggerVisible}
-              sessionId={sessionId}
-              client={client}
-              closedModalManagment={{ closeModal, setCloseModal }}
-              clickClosedConversationModalFunc={
-                clickClosedConversationModalFunc
-              }
-            />
-          </StyleContextProvider>
-        </LoadingProvider>
+            </StyleContextProvider>
+          </LoadingProvider>
+        </LanguageProvider>
       )}
     </React.Fragment>
   );

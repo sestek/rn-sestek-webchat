@@ -167,7 +167,6 @@ export default function App() {
         customizeConfiguration={{
           // Header
           headerColor: '#7743DB',
-          headerText: 'Knovvu',
           headerTextColor: 'white',
           headerHideIcon: {
             type: 'url',
@@ -181,7 +180,6 @@ export default function App() {
           // Bottom
           bottomColor: 'white',
           bottomInputBackgroundColor: 'white',
-          bottomInputText: 'Bottom input text..',
           bottomInputBorderColor: '#d5d5d5',
           bottomInputSendButtonColor: '#7743DB',
           //  bottomAttachmentIcon: {
@@ -208,8 +206,6 @@ export default function App() {
           userMessageBoxBackground: '#863CEB',
           userMessageBoxTextColor: 'white',
 
-          userMessageBoxHeaderName: '',
-          userMessageBoxHeaderNameColor: 'white',
           // ChatBot MessageBox
           chatBotMessageBoxBackground: '#EFEFEF',
           chatBotMessageBoxTextColor: 'black',
@@ -218,8 +214,6 @@ export default function App() {
             value:
               'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
           },
-          chatBotMessageBoxHeaderName: 'Knovvu',
-          chatBotMessageBoxHeaderNameColor: 'black',
           chatBotMessageBoxButtonBackground: 'white',
           chatBotMessageBoxButtonTextColor: '#863CEB',
           chatBotMessageBoxButtonBorderColor: '#EFEFEF',
@@ -289,23 +283,37 @@ export default function App() {
           // Close Modal
           closeModalSettings: {
             use: true,
-            text: "Chat'ten çıkmak istediğinize emin misiniz ?",
             textColor: 'black',
             background: 'white',
             buttons: {
               yesButton: {
-                text: 'Evet',
                 textColor: 'white',
                 background: '#863CEB',
                 borderColor: 'transparent',
               },
               noButton: {
-                text: 'Hayır',
                 textColor: 'black',
                 background: 'transparent',
                 borderColor: '#863CEB',
               },
             },
+          },
+          language: {
+            tr: {
+              headerText: 'Knovvu',
+              bottomInputText: 'Lütfen bir mesaj yazınız',
+              closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
+              closeModalYesButtonText: 'Evet',
+              closeModalNoButtonText: 'Hayır',
+            },
+            en: {
+              headerText: 'Knovvu',
+              bottomInputText: 'Please write a message',
+              closeModalText: 'Are you sure you want to exit chat?',
+              closeModalYesButtonText: 'Yes',
+              closeModalNoButtonText: 'No',
+            },
+          
           },
         }}
       />

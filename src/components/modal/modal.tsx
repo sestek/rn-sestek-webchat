@@ -155,7 +155,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                 customizeConfiguration?.closeModalSettings?.use ? true : false
               }
               closeConversation={closeConversation}
-              headerText={appStyle?.headerText || undefined}
               hideIcon={customizeConfiguration?.headerHideIcon}
               closeIcon={customizeConfiguration?.headerCloseIcon}
             />
@@ -197,7 +196,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
               customizeConfiguration={customizeConfiguration}
               sendMessage={sendMessage}
               sendAudio={sendAudio}
-              placeholderText={appStyle?.bottomInputText}
               sendAttachment={sendAttachment}
               scrollViewRef={scrollViewRef}
             />

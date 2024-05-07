@@ -16,12 +16,8 @@ export default interface PropsCustomizeConfiguration {
   bottomAttachmentIcon?: IconType;
   bottomInputSendButtonColor?: string;
   userMessageBoxTextColor?: string;
-  userMessageBoxHeaderName?: string;
-  userMessageBoxHeaderNameColor?: string;
   chatBotMessageIcon?: IconType;
   chatBotMessageBoxTextColor?: string;
-  chatBotMessageBoxHeaderName?: string;
-  chatBotMessageBoxHeaderNameColor?: string;
   chatBotMessageBoxBackground?: string;
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
@@ -41,6 +37,15 @@ export default interface PropsCustomizeConfiguration {
   indicatorColor?: string;
   fontSettings?: FontSettings;
   permissionAudioCheck?: () => Promise<void>;
+  language?: {
+    [key: string]: {
+      headerText: string;
+      bottomInputText:string;
+      closeModalText:string;
+      closeModalYesButtonText:string;
+      closeModalNoButtonText:string
+    };
+  };
 }
 
 interface BodyColorOrImageType {
@@ -73,18 +78,15 @@ interface CarouselSettings {
 
 interface CloseModalSettings {
   use: boolean;
-  text: string;
   textColor: string;
   background: string;
   buttons: {
     yesButton: {
-      text: string;
       textColor: string;
       background: string;
       borderColor: string;
     };
     noButton: {
-      text: string;
       textColor: string;
       background: string;
       borderColor: string;

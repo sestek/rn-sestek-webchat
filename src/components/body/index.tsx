@@ -4,13 +4,9 @@ import type { PropsBodyComponent } from 'src/types';
 
 import { styles } from './style';
 import MessageBox from '../messageBox';
-
+import { useLanguage } from '../../context/LanguageContext';
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
   const {
-    userMessageBoxHeaderName,
-    chatBotMessageBoxHeaderName,
-    chatBotMessageBoxHeaderNameColor,
-    userMessageBoxHeaderNameColor,
     userMessageBoxTextColor,
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
@@ -19,23 +15,14 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
   } = props.customizeConfiguration;
   const { scrollViewRef } = props;
 
-  const getUserName = (channel: any) => {
-    return channel
-      ? userMessageBoxHeaderName || 'User'
-      : chatBotMessageBoxHeaderName || 'Chatbot';
+  const { language } = useLanguage();
+
+
+
+  const getCurrentDate2 = (locale: string) => {
+    return new Date().toLocaleDateString(locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
   };
 
-  const getTextColor = (channel: any) => {
-    return channel
-      ? userMessageBoxHeaderNameColor || 'black'
-      : chatBotMessageBoxHeaderNameColor || 'black';
-  };
-  const getCurrentDate = () => {
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-    return date + ' / ' + month + ' / ' + year;
-  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -61,7 +48,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                 fontSize: fontSettings?.descriptionFontSize,
               }}
             >
-              {getCurrentDate()}
+              {getCurrentDate2(language)}
             </Text>
           </View>
         </View>
@@ -78,8 +65,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               type={x?.type || 'text'}
               activity={x}
               status={null}
-              title={getUserName(x?.channel)}
-              titleColor={getTextColor(x?.channel)}
               renderAddCmp={undefined}
             />
           ))}

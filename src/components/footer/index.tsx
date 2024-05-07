@@ -19,8 +19,10 @@ import { Recorder } from '../../services';
 import { StyleContext } from '../../context/StyleContext';
 import { useLoading } from '../../context/LoadingContext';
 import RenderImage from '../renderImage';
-
+import { useLanguage } from '../../context/LanguageContext';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
+  const { getTexts } = useLanguage();
+  const texts = getTexts();
   const RNFSModule = props.modules.RNFS;
   const RNFileSelector = props.modules.RNFileSelector;
   const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
@@ -34,7 +36,6 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     sendMessage,
     changeInputData,
     customizeConfiguration,
-    placeholderText,
     scrollViewRef,
   } = props;
 
@@ -169,9 +170,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           onChangeText={(text: string) =>
             changeInputData && changeInputData(text)
           }
-          placeholder={
-            (placeholderText && placeholderText) || 'Please write a message'
-          }
+          placeholder={texts.bottomInputText}
           placeholderTextColor="grey"
           keyboardType="default"
         />
