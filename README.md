@@ -370,7 +370,7 @@ const startStorageSession = () => {
 
 
 ```
-NOTE: With the language object in customiseConfiguration, you can update all texts in Chat modal from here. The first value given is set as the default language setting. If no value is given to the language object, the default values of the chat modal will be valid. Please do not forget to enter data in this field for your application. 
+NOTE: With the language object in customizeConfiguration, you can update all texts in Chat modal from here. The first value given is set as the default language setting. If no value is given to the language object, the default values of the chat modal will be valid. Please do not forget to enter data in this field for your application. 
 
 ```
 
