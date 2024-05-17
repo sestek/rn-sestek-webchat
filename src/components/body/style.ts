@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
   textSubContainer: {
     padding: 5,
-    borderRadius: 10,
+    // borderRadius:10,
     marginTop: 10,
     marginBottom: 10,
   },

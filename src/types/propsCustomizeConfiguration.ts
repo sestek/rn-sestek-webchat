@@ -46,6 +46,13 @@ export default interface PropsCustomizeConfiguration {
       closeModalNoButtonText:string
     };
   };
+  dateSettings?:{
+    use?:boolean;
+    backgroundColor?:string;
+    textColor?:string;
+    borderRadius?:number;
+  },
+  autoPlayAudio?: boolean
 }
 
 interface BodyColorOrImageType {

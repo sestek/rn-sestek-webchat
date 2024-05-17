@@ -12,6 +12,7 @@ interface AudioMessageProps {
   activity: any;
   userMessageBoxTextColor: string;
   inlineText?: boolean;
+  messageId?: any
 }
 
 const AudioMessage = (props: AudioMessageProps) => {
@@ -25,6 +26,7 @@ const AudioMessage = (props: AudioMessageProps) => {
     position = 'left';
   }
   const appStyle: any = useContext(StyleContext);
+
   return (
     <>
       <AudioComponent
@@ -35,12 +37,14 @@ const AudioMessage = (props: AudioMessageProps) => {
                 props.modules.AudioRecorderPlayer,
                 props.modules.RNFS,
                 props.modules.Record
-              ).saveLocalFileAudio(url)
+              ).saveLocalFileAudio(url, props.messageId)
             : url
         }
         modules={props.modules}
         customizeConfiguration={props.customizeConfiguration}
         position={position}
+        key={props.messageId}
+
       />
       {position === 'right' && (
         <Text

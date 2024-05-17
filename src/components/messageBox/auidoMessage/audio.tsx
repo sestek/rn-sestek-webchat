@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text,TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
 import { PlayIcon, PauseIcon } from '../../../image';
@@ -42,9 +42,15 @@ const AudioComponent: FC<PropsAudio> = (props) => {
 
   if (AuidoProp && props.position === 'left') {
     defaultPositionStyle = {
-      sliderMinimumTrackTintColor: AuidoProp.botSliderMinimumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderMaximumTrackTintColor: AuidoProp.botSliderMaximumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderThumbTintColor: AuidoProp.botSliderThumbTintColor || defaultPositionStyle.sliderThumbTintColor,
+      sliderMinimumTrackTintColor:
+        AuidoProp.botSliderMinimumTrackTintColor ||
+        defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderMaximumTrackTintColor:
+        AuidoProp.botSliderMaximumTrackTintColor ||
+        defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderThumbTintColor:
+        AuidoProp.botSliderThumbTintColor ||
+        defaultPositionStyle.sliderThumbTintColor,
       sliderPlayImage:
         AuidoProp.botSliderPlayImage || defaultPositionStyle.sliderPlayImage,
       sliderPauseImage:
@@ -53,9 +59,15 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   }
   if (AuidoProp && props.position === 'right') {
     defaultPositionStyle = {
-      sliderMinimumTrackTintColor: AuidoProp.userSliderMinimumTrackTintColor || defaultPositionStyle.sliderMinimumTrackTintColor,
-      sliderMaximumTrackTintColor: AuidoProp.userSliderMaximumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderThumbTintColor: AuidoProp.userSliderThumbTintColor || defaultPositionStyle.sliderThumbTintColor,
+      sliderMinimumTrackTintColor:
+        AuidoProp.userSliderMinimumTrackTintColor ||
+        defaultPositionStyle.sliderMinimumTrackTintColor,
+      sliderMaximumTrackTintColor:
+        AuidoProp.userSliderMaximumTrackTintColor ||
+        defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderThumbTintColor:
+        AuidoProp.userSliderThumbTintColor ||
+        defaultPositionStyle.sliderThumbTintColor,
       sliderPlayImage:
         AuidoProp.userSliderPlayImage || defaultPositionStyle.sliderPlayImage,
       sliderPauseImage:
@@ -64,7 +76,10 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   }
   const renderSliderImage = () => {
     const { sliderPlayImage, sliderPauseImage } = defaultPositionStyle;
-    const { value, type } = start ? sliderPauseImage : sliderPlayImage;
+    const { value, type } =
+      stateRecord.playTime !== '00:00:00' && start ===true
+        ? sliderPauseImage
+        : sliderPlayImage;
 
     return (
       <RenderImage
@@ -74,9 +89,19 @@ const AudioComponent: FC<PropsAudio> = (props) => {
       />
     );
   };
+
   useEffect(() => {
     getDuration();
   }, []);
+
+  useEffect(() => {
+    if (props.position === 'left' && props.url && props?.customizeConfiguration?.autoPlayAudio) {
+      recorder.audioRecorderPlayer.removePlayBackListener();
+
+      recorder.audioRecorderPlayer.stopPlayer();
+      onPlayPlayer();
+    }
+  }, [props.url]);
 
   const getDuration = async () => {
     await recorder.audioRecorderPlayer.startPlayer(props.url);

@@ -11,18 +11,21 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
     chatBody,
-    fontSettings
+    fontSettings,
+    dateSettings,
   } = props.customizeConfiguration;
   const { scrollViewRef } = props;
 
+
   const { language } = useLanguage();
 
-
-
   const getCurrentDate2 = (locale: string) => {
-    return new Date().toLocaleDateString(locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
+    return new Date().toLocaleDateString(locale, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -38,18 +41,22 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           <View
             style={{
               ...styles.textSubContainer,
-              backgroundColor: chatBotMessageBoxBackground,
+              borderRadius:dateSettings?.borderRadius ?? 20,
+              backgroundColor:
+                dateSettings?.backgroundColor ?? chatBotMessageBoxBackground,
             }}
           >
-            <Text
-              style={{
-                ...styles.text,
-                color: chatBotMessageBoxTextColor,
-                fontSize: fontSettings?.descriptionFontSize,
-              }}
-            >
-              {getCurrentDate2(language)}
-            </Text>
+            {dateSettings?.use ?? (
+              <Text
+                style={{
+                  ...styles.text,
+                  color: dateSettings?.textColor ?? chatBotMessageBoxTextColor,
+                  fontSize: fontSettings?.descriptionFontSize,
+                }}
+              >
+                {getCurrentDate2(language)}
+              </Text>
+            )}
           </View>
         </View>
         {props.messageList
@@ -71,6 +78,14 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
       </ScrollView>
     </SafeAreaView>
   );
+};
+
+BodyComponent.defaultProps = {
+  customizeConfiguration: {
+    dateSettings: {
+      use: true,
+    },
+  },
 };
 
 export default BodyComponent;

@@ -41,7 +41,7 @@ export const LanguageProvider: React.FC<{ customizeConfiguration?: CustomizeConf
     setLanguage(newLanguage);
   };
 
-  const getTexts = () => languages[language];
+  const getTexts = () => languages[language] ?? 'en';
 
   return (
     <LanguageContext.Provider value={{ language, changeLanguage, getTexts }}>

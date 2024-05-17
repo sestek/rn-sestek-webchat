@@ -313,8 +313,14 @@ export default function App() {
               closeModalYesButtonText: 'Yes',
               closeModalNoButtonText: 'No',
             },
-          
           },
+          dateSettings: {
+            // use:false,
+            backgroundColor: 'pink',
+            textColor: 'black',
+            // borderRadius:
+          },
+          autoPlayAudio:false
         }}
       />
     </View>

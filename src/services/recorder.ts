@@ -45,9 +45,9 @@ class Recorder {
     };
   };
 
-  saveLocalFileAudio = (data: string) => {
+  saveLocalFileAudio = (data: string , messageId:string) => {
     const dirs = this.rnfs.fs.dirs.DocumentDir + '/sestek_bot_audio';
-    const path = `${dirs}/${GeneralManager.createUUID()}.wav`;
+    const path = `${dirs}/${messageId}.wav`;
     this.rnfs.fs.createFile(path, data, 'base64').then(() => {});
     return path;
   };

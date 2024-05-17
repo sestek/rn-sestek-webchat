@@ -6,4 +6,5 @@ export default interface PropsAudio {
   modules: PropsModules;
   customizeConfiguration: PropsCustomizeConfiguration;
   position?:string
+  key?: string
 }

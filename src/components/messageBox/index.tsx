@@ -227,6 +227,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                     activity={props.activity}
                     userMessageBoxTextColor={props.userMessageBoxTextColor}
                     inlineText={true}
+                    messageId={props?.activity?.messageId}
                   />
                 )}
 

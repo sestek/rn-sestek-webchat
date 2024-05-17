@@ -22,6 +22,11 @@ const useChat = ({
   const parseUrl = url ? url.split('/chathub')[0] : '';
 
   const addMessageList = (message: any) => {
+    const generateMessageId = () => {
+      return Math.floor(1000000000 + Math.random() * 9000000000).toString(); // 10 basamaklı sayı üret
+    };
+  
+    const messageId = generateMessageId();
     setMessageList((messages: any) => {
       if (background) {
         getHistoryBackground();
@@ -31,11 +36,11 @@ const useChat = ({
         const lastElement = messages[messagesLength - 1];
         if (lastElement?.type === 'typing') {
           messages.pop();
-          return [...messages, message];
+          return [...messages, { ...message, messageId }];
         }
-        return [...messages, message];
+        return [...messages, { ...message, messageId }];
       }
-      return [message];
+      return [{ ...message, messageId }];;
     });
   };
   const setResponseFunc = (customAction: any, customActionData: any) => {
@@ -86,6 +91,7 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((_: any, message: any) => {
+      // console.log(message)
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
@@ -303,6 +309,7 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
+
     });
     setMessageList((messages: any) => [
       ...messages,
@@ -373,6 +380,31 @@ const useChat = ({
     client.endConversation(JSON.stringify(dataToSend));
   };
 
+  const parseAttachment = (data: any, i: number) => {
+    const parsedJsonContent = JSON.parse(data[i].jsonContent);
+
+    const updatedAttachments = parsedJsonContent.attachments.map(
+      (attachment: any) => {
+        const parsedContent = JSON.parse(attachment.content);
+        return {
+          ...attachment,
+          content: parsedContent,
+        };
+      }
+    );
+    const updatedJsonContent = {
+      ...parsedJsonContent,
+      attachments: updatedAttachments,
+      timestamp: new Date(data[i].dialogTime),
+      channel:
+        data[i].messageType === 'VirtualAgent'
+          ? null
+          : defaultConfiguration.channel,
+      conversationId: sessionId,
+    };
+    return updatedJsonContent;
+  };
+
   const getHistory = () => {
     if (parseUrl) {
       fetch(parseUrl + '/history/' + sessionId, {
@@ -383,29 +415,13 @@ const useChat = ({
           if (data && data.length > 0) {
             if (data.length > historyCount) {
               for (let i = historyCount; i < data.length; i++) {
-                addMessageList({
-                  timestamp: new Date(data[i].dialogTime),
-                  message: data[i]?.text,
-                  channel:
-                    data[i].messageType === 'VirtualAgent'
-                      ? null
-                      : defaultConfiguration.channel,
-                  conversationId: sessionId,
-                  type: 'message',
-                });
+                const message = parseAttachment(data, i);
+                addMessageList(message);
               }
             } else if (historyCount > data.length) {
               for (let i = 0; i < data.length; i++) {
-                addMessageList({
-                  timestamp: new Date(data[i].dialogTime),
-                  message: data[i]?.text,
-                  channel:
-                    data[i].messageType === 'VirtualAgent'
-                      ? null
-                      : defaultConfiguration.channel,
-                  conversationId: sessionId,
-                  type: 'message',
-                });
+                const message = parseAttachment(data, i);
+                addMessageList(message);
               }
             }
           }
