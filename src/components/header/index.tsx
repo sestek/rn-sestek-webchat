@@ -7,6 +7,7 @@ import { styles } from './style';
 import useCheckBackground from '../../hook/useCheckBackground';
 import RenderImage from '../renderImage';
 import { useLanguage } from '../../context/LanguageContext';
+import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
@@ -18,7 +19,10 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     closeConversation,
     defaultConfiguration,
   } = props;
-  const { appStyle } = useContext(StyleContext);
+  const context = useContext(CustomizeConfigurationContext);
+  const { customizeConfiguration } = context;
+  const { headerAlignmentType, headerTextColor } = customizeConfiguration;
+
   const { background } = useCheckBackground();
   const { getTexts } = useLanguage();
   const texts = getTexts();
@@ -39,7 +43,6 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
       }
     }
   }, [background]);
-  const { headerAlignmentType } = props.customizeConfiguration;
   const HeaderText = () => {
     return (
       <View
@@ -51,7 +54,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           },
         ]}
       >
-        <Text style={[styles.headerText, { color: appStyle?.headerTextColor }]}>
+        <Text style={[styles.headerText, { color: headerTextColor }]}>
           {texts.headerText}
         </Text>
       </View>
@@ -121,6 +124,5 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     </View>
   );
 };
-
 
 export default HeaderComponent;

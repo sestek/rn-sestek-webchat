@@ -16,13 +16,15 @@ import {
   Link,
 } from '../../image';
 import { Recorder } from '../../services';
-import { StyleContext } from '../../context/StyleContext';
 import { useLoading } from '../../context/LoadingContext';
 import RenderImage from '../renderImage';
 import { useLanguage } from '../../context/LanguageContext';
+import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const { getTexts } = useLanguage();
   const texts = getTexts();
+  const context = useContext(CustomizeConfigurationContext);
+  const { customizeConfiguration } = context;
   const RNFSModule = props.modules.RNFS;
   const RNFileSelector = props.modules.RNFileSelector;
   const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
@@ -35,7 +37,6 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     inputData,
     sendMessage,
     changeInputData,
-    customizeConfiguration,
     scrollViewRef,
   } = props;
 
@@ -46,6 +47,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     bottomAttachmentIcon,
     bottomSendIcon,
     permissionAudioCheck,
+    bottomInputBorderColor,
+    bottomInputBackgroundColor,
+    bottomInputSendButtonColor
   } = customizeConfiguration;
 
   const Record =
@@ -61,7 +65,6 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const [recordStart, setRecordStart] = useState<boolean>(false);
   const [disableRecord, setDisableRecord] = useState<boolean>(false);
 
-  const { appStyle } = useContext(StyleContext);
 
   const triggerRecord = async () => {
     if (disableRecord) {
@@ -154,11 +157,11 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           style={[
             styles.textInput,
             {
-              borderColor: appStyle?.bottomInputBorderColor,
+              borderColor: bottomInputBorderColor,
               borderTopRightRadius: recorder ? 0 : 10,
               borderBottomRightRadius: recorder ? 0 : 10,
               borderRightWidth: recorder ? 0 : 1,
-              backgroundColor: appStyle?.bottomInputBackgroundColor,
+              backgroundColor: bottomInputBackgroundColor,
             },
           ]}
           onFocus={() => {
@@ -181,8 +184,8 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           style={[
             styles.AttachmentButton,
             {
-              borderColor: appStyle?.bottomInputBorderColor,
-              backgroundColor: appStyle?.bottomInputBackgroundColor,
+              borderColor: bottomInputBorderColor,
+              backgroundColor: bottomInputBackgroundColor,
             },
           ]}
         >
@@ -204,8 +207,8 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             styles.audioButton,
             {
               borderRightWidth: 1,
-              borderColor: appStyle?.bottomInputBorderColor,
-              backgroundColor: appStyle?.bottomInputBackgroundColor,
+              borderColor: bottomInputBorderColor,
+              backgroundColor: bottomInputBackgroundColor,
             },
           ]}
         >
@@ -244,7 +247,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
         onPress={clickSendButton}
         style={[
           styles.sendButton,
-          { backgroundColor: appStyle?.bottomInputSendButtonColor },
+          { backgroundColor: bottomInputSendButtonColor },
         ]}
       >
         {bottomSendIcon ? (

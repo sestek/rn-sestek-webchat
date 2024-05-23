@@ -16,6 +16,7 @@ import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
 import RenderImage from '../../src/components/renderImage';
 import { LanguageProvider } from '../context/LanguageContext';
+import { CustomizeConfigurationProvider } from '../context/CustomizeContext';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -163,6 +164,7 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
       {start && (
         <LanguageProvider  customizeConfiguration={customizeConfiguration}>
           <LoadingProvider>
+            <CustomizeConfigurationProvider url={url} initialConfig={customizeConfiguration} integrationId={defaultConfiguration?.integrationId}>
             <StyleContextProvider>
               {visible && (
                 <StatusBar
@@ -190,6 +192,7 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
                 }
               />
             </StyleContextProvider>
+            </CustomizeConfigurationProvider>
           </LoadingProvider>
         </LanguageProvider>
       )}

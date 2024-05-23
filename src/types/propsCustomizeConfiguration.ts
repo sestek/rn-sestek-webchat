@@ -63,7 +63,7 @@ interface BodyColorOrImageType {
 type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
 export interface IconType {
-  type: 'url' | 'component';
+  type: 'url' | 'component' | undefined;
   value: string | React.ReactElement | React.ReactNode;
 }
 

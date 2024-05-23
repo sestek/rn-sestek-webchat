@@ -3,7 +3,7 @@ import { Image } from 'react-native';
 import { Error } from '../../image';
 
 interface ExternalDataProps {
-  type: 'url' | 'component';
+  type: 'url' | 'component' | undefined;
   value: number | string | React.ReactElement | React.ReactNode;
   style?: object;
 }

@@ -3,8 +3,8 @@ import { View, Text,TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
 import { PlayIcon, PauseIcon } from '../../../image';
-import { StyleContext } from '../../../context/StyleContext';
 import RenderImage from '../../renderImage';
+import { CustomizeConfigurationContext } from '../../../context/CustomizeContext';
 interface PositionStyle {
   sliderMinimumTrackTintColor: any;
   sliderMaximumTrackTintColor: any;
@@ -13,6 +13,8 @@ interface PositionStyle {
   sliderPauseImage: any;
 }
 const AudioComponent: FC<PropsAudio> = (props) => {
+  const context = useContext(CustomizeConfigurationContext);
+  const { customizeConfiguration } = context;
   const [stateRecord, setStateRecord] = useState<any>({
     playTime: '00:00:00',
     duration: '00:00:00',
@@ -28,9 +30,8 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   const triggerStart = () => setStart((old) => !old);
 
   const RNSlider = props.modules.RNSlider;
-  const AuidoProp = props?.customizeConfiguration?.audioSliderSettings;
+  const AuidoProp = customizeConfiguration?.audioSliderSettings;
 
-  const appStyle: any = useContext(StyleContext);
 
   let defaultPositionStyle: PositionStyle = {
     sliderMinimumTrackTintColor: '#C3ACD0',
@@ -95,7 +96,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.position === 'left' && props.url && props?.customizeConfiguration?.autoPlayAudio) {
+    if (props.position === 'left' && props.url && customizeConfiguration?.autoPlayAudio) {
       recorder.audioRecorderPlayer.removePlayBackListener();
 
       recorder.audioRecorderPlayer.stopPlayer();
@@ -217,7 +218,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
         <Text
           style={{
             paddingRight: 5,
-            fontSize: appStyle?.fontSettings?.descriptionFontSize,
+            fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize,
           }}
         >
           {stateRecord.playTime + ' / ' + stateRecord.duration}

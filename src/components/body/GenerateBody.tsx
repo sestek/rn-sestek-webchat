@@ -1,17 +1,18 @@
 import React, { useContext } from 'react';
 import { ImageBackground } from 'react-native';
-import { StyleContext } from '../../context/StyleContext';
 import { styles } from '../modal/style';
 import { GenerateBodyComponent } from '../../types/components/GenerateBodyComponent';
+import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
 
 const GenerateBody = (props: GenerateBodyComponent) => {
-  const { appStyle } = useContext(StyleContext);
+  const context = useContext(CustomizeConfigurationContext);
+  const {customizeConfiguration} =context
   const { BodyComponent } = props;
   return (
     <>
-      {appStyle?.chatBody?.type == 'image' ? (
+      {customizeConfiguration?.chatBody?.type == 'image' ? (
         <ImageBackground
-          source={{ uri: appStyle?.chatBody?.value }}
+          source={{ uri: customizeConfiguration?.chatBody?.value }}
           style={styles.imageBackground}
           resizeMode="stretch"
         >

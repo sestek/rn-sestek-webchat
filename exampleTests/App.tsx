@@ -159,7 +159,6 @@ export default function App() {
           clientId: 'mobile-testing',
           tenant: config.TNAME_,
           projectName: config.PNAME_,
-
           // enableNdUi: false,
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),
@@ -320,7 +319,7 @@ export default function App() {
             textColor: 'black',
             // borderRadius:
           },
-          autoPlayAudio:false
+          autoPlayAudio: false,
         }}
       />
     </View>
