@@ -1,6 +1,6 @@
-import React,{useContext} from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { CustomizeConfigurationContext } from '../../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
 interface ButtonProps {
   value: string;
@@ -16,8 +16,7 @@ const OutsideButton: React.FC<Props> = ({
   attachmentsData,
   onPressButton,
 }) => {
-  const context = useContext(CustomizeConfigurationContext);
-  const { customizeConfiguration } = context;
+  const { customizeConfiguration } = useCustomizeConfiguration();
   return (
     <View
       style={{

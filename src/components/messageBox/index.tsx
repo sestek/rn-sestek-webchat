@@ -15,7 +15,7 @@ import OutsideButton from './outsideButtonMessageBox';
 import Avatar from './avatar';
 import styles from './style';
 import CarouselPage from './carousel';
-import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const messageType = props.type ? props.type : '';
@@ -27,8 +27,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const [imageList, setImageList] = useState<any>([]);
   const [cardList, setCardList] = useState<any>([]);
 
-  const context = useContext(CustomizeConfigurationContext);
-  const { customizeConfiguration } = context;
+  const { customizeConfiguration } = useCustomizeConfiguration();
 
   var positionCls = [
     styles.messageBox,
@@ -176,17 +175,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           >
             {messageBoxPosition === 'right' && (
               <View style={styles.messageBoxAvatarContainer}>
-                <Avatar
-                  width={
-                    customizeConfiguration?.chatBotMessageBoxAvatarIconSize
-                  }
-                  height={
-                    customizeConfiguration?.chatBotMessageBoxAvatarIconSize
-                  }
-                  chatBotMessageIcon={
-                    customizeConfiguration?.chatBotMessageIcon
-                  }
-                />
+                <Avatar />
               </View>
             )}
             <View style={[positionCls]}>
@@ -209,10 +198,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 ]}
               >
                 {!carouselType && (
-                  <GeneralMessage
-                    imageList={imageList}
-                    generalProps={props}
-                  />
+                  <GeneralMessage imageList={imageList} generalProps={props} />
                 )}
                 {(messageType === 'audio' ||
                   audioMesType === 'audio/base64') && (

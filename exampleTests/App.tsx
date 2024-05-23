@@ -142,7 +142,7 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={config?.URL_}
+         url={config?.URL_}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -167,14 +167,14 @@ export default function App() {
           // Header
           headerColor: '#7743DB',
           headerTextColor: 'white',
-          headerHideIcon: {
-            type: 'url',
-            value: require('./src/images/hide.png'),
-          },
-          headerCloseIcon: {
-            type: 'url',
-            value: require('./src/images/close.png'),
-          },
+          // headerHideIcon: {
+          //   type: 'url',
+          //   value: require('./src/images/hide.png'),
+          // },
+          // headerCloseIcon: {
+          //   type: 'url',
+          //   value: require('./src/images/close.png'),
+          // },
           headerAlignmentType: 'textToCenter',
           // Bottom
           bottomColor: 'white',
@@ -208,11 +208,11 @@ export default function App() {
           // ChatBot MessageBox
           chatBotMessageBoxBackground: '#EFEFEF',
           chatBotMessageBoxTextColor: 'black',
-          chatBotMessageIcon: {
-            type: 'url',
-            value:
-              'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
-          },
+          // chatBotMessageIcon: {
+          //   type: 'url',
+          //   value:
+          //     'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
+          // },
           chatBotMessageBoxButtonBackground: 'white',
           chatBotMessageBoxButtonTextColor: '#863CEB',
           chatBotMessageBoxButtonBorderColor: '#EFEFEF',
@@ -245,10 +245,10 @@ export default function App() {
           chatStartButtonBackgroundSize: 70,
           chatStartButtonHide: false,
           // Slider
-          audioSliderSettings: {
-            userSliderMinimumTrackTintColor: '#C3ACD0',
-            userSliderMaximumTrackTintColor: 'white',
-            userSliderThumbTintColor: '#C3ACD0',
+          // audioSliderSettings: {
+            // userSliderMinimumTrackTintColor: '#C3ACD0',
+            // userSliderMaximumTrackTintColor: 'white',
+            // userSliderThumbTintColor: '#C3ACD0',
             // userSliderPlayImage: {
             //   type: 'component',
             //   value:  <Icon name="rocket" size={40} color="#900" />,
@@ -258,9 +258,9 @@ export default function App() {
             //   value: require('../src/image/pause-audio.png'),
             // },
             //bot
-            botSliderMinimumTrackTintColor: 'red',
-            botSliderMaximumTrackTintColor: 'blue',
-            botSliderThumbTintColor: 'black',
+            // botSliderMinimumTrackTintColor: 'red',
+            // botSliderMaximumTrackTintColor: 'blue',
+            // botSliderThumbTintColor: 'black',
             // botSliderPlayImage: {
             //   type: 'component',
             //   value: <Icon name="rocket" size={40} color="#900" />,
@@ -269,7 +269,7 @@ export default function App() {
             //   type: 'url',
             //   value: require('../src/image/pause-audio.png'),
             // },
-          },
+          // },
           // Before Func
           permissionAudioCheck: permissionAudioCheck,
           indicatorColor: '#863CEB',
@@ -313,12 +313,12 @@ export default function App() {
               closeModalNoButtonText: 'No',
             },
           },
-          dateSettings: {
-            // use:false,
-            backgroundColor: 'pink',
-            textColor: 'black',
-            // borderRadius:
-          },
+          // dateSettings: {
+          //   // use:false,
+          //   backgroundColor: 'pink',
+          //   textColor: 'black',
+          //   // borderRadius:
+          // },
           autoPlayAudio: false,
         }}
       />

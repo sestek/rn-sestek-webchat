@@ -25,7 +25,7 @@ import GenerateBody from '../body/GenerateBody';
 import LoadingModal from '../loadingModal';
 import { useLoading } from '../../context/LoadingContext';
 import useCheckBackground from '../../hook/useCheckBackground';
-import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
     const {
@@ -41,8 +41,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       clickClosedConversationModalFunc,
     } = props;
 
-    const context = useContext(CustomizeConfigurationContext);
-    const { customizeConfiguration } = context;
+    const { customizeConfiguration } = useCustomizeConfiguration();
 
     const [inputData, setInputData] = useState<string>('');
     const changeInputData = (text: string) => setInputData(text);

@@ -1,9 +1,8 @@
-import React, { forwardRef,useContext } from 'react';
+import React, { forwardRef } from 'react';
 import { Text, View, Modal, TouchableOpacity } from 'react-native';
 import { PropsCloseModalSettings } from '../../types';
 import { styles } from './style';
-import { useLanguage } from '../../context/LanguageContext';
-import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 export interface InProps {
   closeModal: boolean;
   setCloseModal: any;
@@ -18,9 +17,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
       closeConversation,
       closeModalSettings,
     } = props;
-    const context = useContext(CustomizeConfigurationContext);
-    const { customizeConfiguration } = context;
-    const { getTexts } = useLanguage();
+    const { customizeConfiguration ,getTexts} = useCustomizeConfiguration();
     const texts = getTexts();
   
     return (

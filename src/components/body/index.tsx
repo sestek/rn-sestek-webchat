@@ -1,14 +1,12 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 
 import { styles } from './style';
 import MessageBox from '../messageBox';
-import { useLanguage } from '../../context/LanguageContext';
-import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
-  const context = useContext(CustomizeConfigurationContext);
-  const { customizeConfiguration } = context;
+  const { customizeConfiguration, language } = useCustomizeConfiguration();
   const {
     userMessageBoxTextColor,
     chatBotMessageBoxBackground,
@@ -19,7 +17,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
   } = customizeConfiguration;
   const { scrollViewRef } = props;
 
-  const { language } = useLanguage();
 
   const getCurrentDate2 = (locale: string) => {
     return new Date().toLocaleDateString(locale, {

@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   Dimensions,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Markdown from '../../../plugin/markdown/index';
 import styles from '../style';
-import { CustomizeConfigurationContext } from '../../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
 interface Props {
   imageList: any[];
@@ -18,8 +18,7 @@ const GeneralMessage: React.FC<Props> = (props) => {
   const { imageList, generalProps } = props;
   const webViewRef = useRef<any>();
   const WebView = generalProps.modules.RNWebView;
-  const context = useContext(CustomizeConfigurationContext);
-  const { customizeConfiguration } = context;
+  const { customizeConfiguration } = useCustomizeConfiguration();
   
   const messageColor =
     generalProps?.position != 'right'

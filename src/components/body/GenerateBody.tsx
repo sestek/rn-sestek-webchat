@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { ImageBackground } from 'react-native';
 import { styles } from '../modal/style';
 import { GenerateBodyComponent } from '../../types/components/GenerateBodyComponent';
-import { CustomizeConfigurationContext } from '../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 
 const GenerateBody = (props: GenerateBodyComponent) => {
-  const context = useContext(CustomizeConfigurationContext);
-  const {customizeConfiguration} =context
+  const {customizeConfiguration} =useCustomizeConfiguration()
   const { BodyComponent } = props;
   return (
     <>

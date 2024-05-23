@@ -1,25 +1,17 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
-import { StyleContext } from '../../../context/StyleContext';
 import Markdown from '../../../plugin/markdown';
 import RenderImage from '../../renderImage';
 import { Back, Next } from '../../../image';
-import { CustomizeConfigurationContext } from '../../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
-const Index = ({
-  data,
-  onPressButton,
-}: {
-  data: any;
-  onPressButton: any;
-}) => {
+const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const CARD_WIDTH = 220;
   const MARGINLEFT = 10;
   const SNAP_INTERVAL = CARD_WIDTH + (MARGINLEFT - 4.8) * 2;
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const context  = useContext(CustomizeConfigurationContext)
-  const {customizeConfiguration} = context
+  const { customizeConfiguration } = useCustomizeConfiguration();
 
   const onScroll = (event: any) => {
     const newIndex = Math.round(
@@ -66,17 +58,11 @@ const Index = ({
           alignItems: 'center',
         }}
       >
-        {carouselStyle?.prevButtonIcon ? (
-          <RenderImage
-            type={carouselStyle?.prevButtonIcon.type}
-            value={carouselStyle.prevButtonIcon.value}
-          />
-        ) : (
-          <Image
-            source={Back}
-            style={{ height: 14, width: 14 }}
-          />
-        )}
+        <RenderImage
+          type={carouselStyle?.prevButtonIcon?.type}
+          value={carouselStyle?.prevButtonIcon?.value}
+          style={{ height: 14, width: 14 }}
+        />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleScrollRight}
@@ -93,17 +79,11 @@ const Index = ({
           alignItems: 'center',
         }}
       >
-        {carouselStyle?.nextButtonIcon ? (
-          <RenderImage
-            type={carouselStyle?.nextButtonIcon.type}
-            value={carouselStyle.nextButtonIcon.value}
-          />
-        ) : (
-          <Image
-            source={Next}
-            style={{ height: 14, width: 14, marginLeft: 3 }}
-          />
-        )}
+        <RenderImage
+          type={carouselStyle?.nextButtonIcon?.type}
+          value={carouselStyle?.nextButtonIcon?.value}
+          style={{ height: 14, width: 14, marginLeft: 3 }}
+        />
       </TouchableOpacity>
       <ScrollView
         ref={scrollViewRef}
@@ -191,7 +171,9 @@ const Index = ({
                           color:
                             carouselStyle?.buttonGroup?.textColor ??
                             customizeConfiguration?.chatBotMessageBoxButtonTextColor,
-                          fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize,
+                          fontSize:
+                            customizeConfiguration?.fontSettings
+                              ?.descriptionFontSize,
                         }}
                       >
                         {btn?.title}

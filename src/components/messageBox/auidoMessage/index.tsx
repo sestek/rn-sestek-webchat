@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import AudioComponent from './audio';
 import { Recorder } from '../../../services';
 import PropsModules from 'src/types/propsModules';
-import { CustomizeConfigurationContext } from '../../../context/CustomizeContext';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
 interface AudioMessageProps {
   modules: PropsModules;
@@ -23,8 +23,7 @@ const AudioMessage = (props: AudioMessageProps) => {
     url = props?.activity?.attachments[0]?.content;
     position = 'left';
   }
-  const context = useContext(CustomizeConfigurationContext);
-  const { customizeConfiguration } = context;
+  const { customizeConfiguration } = useCustomizeConfiguration();
 
   return (
     <>

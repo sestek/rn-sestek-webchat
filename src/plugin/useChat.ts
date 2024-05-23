@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
 import useCheckBackground from '../hook/useCheckBackground';
-import { useLanguage } from '../context/LanguageContext';
-useLanguage;
+import { useCustomizeConfiguration } from '../context/CustomizeContext';
 const useChat = ({
   defaultConfiguration,
   sessionId,
@@ -15,7 +14,7 @@ const useChat = ({
   const [messageList, setMessageList] = useState<any>([]);
   const [historyCount, sethistoryCount] = useState(0);
 
-  const { changeLanguage } = useLanguage();
+  const { changeLanguage } = useCustomizeConfiguration();
 
   const { background } = useCheckBackground();
 
