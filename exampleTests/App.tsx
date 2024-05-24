@@ -218,21 +218,21 @@ export default function App() {
           chatBotMessageBoxButtonBorderColor: '#EFEFEF',
           chatBotMessageBoxAvatarIconSize: 28,
           // Carousel
-          chatBotCarouselSettings: {
-            // nextButtonIcon: {
-            //   type: 'component',
-            //   value: <Icon name="rocket" size={30} color="#900" />,
-            // },
-            //  prevButtonIcon: {
-            //    type: 'component',
-            //    value: <Icon name="rocket" size={30} color="#900" />,
-            //  },
-            buttonGroup: {
-              borderColor: '#E2E2E4',
-              backgroundColor: '#ffffff',
-              textColor: '#863CEB',
-            },
-          },
+          // chatBotCarouselSettings: {
+          //   // nextButtonIcon: {
+          //   //   type: 'component',
+          //   //   value: <Icon name="rocket" size={30} color="#900" />,
+          //   // },
+          //   //  prevButtonIcon: {
+          //   //    type: 'component',
+          //   //    value: <Icon name="rocket" size={30} color="#900" />,
+          //   //  },
+          //   buttonGroup: {
+          //     borderColor: '#E2E2E4',
+          //     backgroundColor: '#ffffff',
+          //     textColor: '#863CEB',
+          //   },
+          // },
           // Chat Body
           chatBody: {type: 'color', value: 'white'},
           chatBodyMessageBoxGap: 20,

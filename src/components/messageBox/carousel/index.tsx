@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import Markdown from '../../../plugin/markdown';
 import RenderImage from '../../renderImage';
-import { Back, Next } from '../../../image';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
 const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {

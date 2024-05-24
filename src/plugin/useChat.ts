@@ -21,11 +21,6 @@ const useChat = ({
   const parseUrl = url ? url.split('/chathub')[0] : '';
 
   const addMessageList = (message: any) => {
-    const generateMessageId = () => {
-      return Math.floor(1000000000 + Math.random() * 9000000000).toString(); // 10 basamaklı sayı üret
-    };
-  
-    const messageId = generateMessageId();
     setMessageList((messages: any) => {
       if (background) {
         getHistoryBackground();
@@ -33,15 +28,24 @@ const useChat = ({
       if (messages?.length > 0) {
         const messagesLength = messages.length;
         const lastElement = messages[messagesLength - 1];
+
+        const messageExists = messages.some(
+          (msg: any) => msg.id === message.id
+        );
+        if (messageExists) {
+          return messages;
+        }
+
         if (lastElement?.type === 'typing') {
           messages.pop();
-          return [...messages, { ...message, messageId }];
+          return [...messages, message];
         }
-        return [...messages, { ...message, messageId }];
+        return [...messages, message];
       }
-      return [{ ...message, messageId }];;
+      return [message];
     });
   };
+
   const setResponseFunc = (customAction: any, customActionData: any) => {
     if (typeof customActionData === 'object' && customActionData?.Language) {
       changeLanguage(customActionData?.Language.toLowerCase());
@@ -90,7 +94,6 @@ const useChat = ({
 
   const attachClientOnMessage = () => {
     client.onmessage((_: any, message: any) => {
-      // console.log(message)
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
@@ -308,7 +311,6 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
-
     });
     setMessageList((messages: any) => [
       ...messages,

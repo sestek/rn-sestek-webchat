@@ -2,7 +2,6 @@ import React, {
   forwardRef,
   useState,
   useImperativeHandle,
-  useContext,
   useEffect,
   useRef,
 } from 'react';
@@ -26,6 +25,7 @@ import LoadingModal from '../loadingModal';
 import { useLoading } from '../../context/LoadingContext';
 import useCheckBackground from '../../hook/useCheckBackground';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { useModules } from '../../context/ModulesContext';
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
     const {
@@ -33,7 +33,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       defaultConfiguration,
       sessionId,
       client,
-      modules,
       closeConversation,
       closedModalManagment,
       hideModal,
@@ -42,6 +41,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
     } = props;
 
     const { customizeConfiguration } = useCustomizeConfiguration();
+    const { modules } = useModules();
 
     const [inputData, setInputData] = useState<string>('');
     const changeInputData = (text: string) => setInputData(text);
@@ -69,7 +69,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       messageList: messageList,
       sendEnd: sendEnd,
     }));
-
 
     const { background } = useCheckBackground();
     useEffect(() => {
@@ -137,7 +136,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             style={{
               flex: 1,
               backgroundColor:
-              customizeConfiguration?.chatBody?.type == 'color'
+                customizeConfiguration?.chatBody?.type == 'color'
                   ? customizeConfiguration?.chatBody?.value
                   : '#fff',
             }}
@@ -145,7 +144,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             <GenerateBody
               BodyComponent={
                 <BodyComponent
-                  modules={modules}
                   messageList={messageList}
                   changeInputData={changeInputData}
                   sendMessage={sendMessage}
@@ -163,7 +161,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             ]}
           >
             <FooterComponent
-              modules={modules}
               inputData={inputData}
               changeInputData={changeInputData}
               sendMessage={sendMessage}

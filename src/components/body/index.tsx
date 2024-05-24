@@ -17,7 +17,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
   } = customizeConfiguration;
   const { scrollViewRef } = props;
 
-
   const getCurrentDate2 = (locale: string) => {
     return new Date().toLocaleDateString(locale, {
       year: 'numeric',
@@ -64,7 +63,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           .map((x: any, key: number) => (
             <MessageBox
               {...props}
-              modules={props.modules}
               userMessageBoxTextColor={userMessageBoxTextColor ?? ''}
               key={key}
               position={x.channel ? 'left' : 'right'}
@@ -78,7 +76,5 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     </SafeAreaView>
   );
 };
-
-
 
 export default BodyComponent;

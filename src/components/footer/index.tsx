@@ -1,35 +1,24 @@
-import React, { FC, useState, useContext } from 'react';
-import {
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Platform,
-} from 'react-native';
+import React, { FC, useState } from 'react';
+import { TextInput, TouchableOpacity, View, Platform } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
-import {
-  RecordInIcon,
-  RecordOutIcon,
-  RecordDisable,
-  SendIconWhite,
-  Link,
-} from '../../image';
 import { Recorder } from '../../services';
 import { useLoading } from '../../context/LoadingContext';
 import RenderImage from '../renderImage';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { useModules } from '../../context/ModulesContext';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
 
-  const RNFSModule = props.modules.RNFS;
-  const RNFileSelector = props.modules.RNFileSelector;
+  const {modules } = useModules();
+
+  const RNFSModule = modules?.RNFS;
+  const RNFileSelector = modules?.RNFileSelector;
   const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
   const { setLoading } = useLoading();
   const {
-    modules,
     sendAudio,
     sendAttachment,
     inputData,

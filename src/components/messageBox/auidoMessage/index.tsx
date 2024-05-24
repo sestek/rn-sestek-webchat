@@ -1,20 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Text } from 'react-native';
 import AudioComponent from './audio';
 import { Recorder } from '../../../services';
-import PropsModules from 'src/types/propsModules';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
+import { useModules } from '../../../context/ModulesContext';
 
 interface AudioMessageProps {
-  modules: PropsModules;
   activity: any;
   userMessageBoxTextColor: string;
   inlineText?: boolean;
-  messageId?: any
 }
 
 const AudioMessage = (props: AudioMessageProps) => {
-  if (!props.modules.AudioRecorderPlayer || !props.modules.RNFS) {
+  const { modules } = useModules();
+
+  if (!modules?.AudioRecorderPlayer || !modules?.RNFS) {
     return null;
   }
   let url = props.activity?.message;
@@ -32,16 +32,13 @@ const AudioMessage = (props: AudioMessageProps) => {
           url && url.length > 1000
             ? 'file://' +
               new Recorder(
-                props.modules.AudioRecorderPlayer,
-                props.modules.RNFS,
-                props.modules.Record
-              ).saveLocalFileAudio(url, props.messageId)
+                modules?.AudioRecorderPlayer,
+                modules?.RNFS,
+                modules?.Record
+              ).saveLocalFileAudio(url, props?.activity?.id)
             : url
         }
-        modules={props.modules}
         position={position}
-        key={props.messageId}
-
       />
       {position === 'right' && (
         <Text

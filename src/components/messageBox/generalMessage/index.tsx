@@ -9,6 +9,7 @@ import {
 import Markdown from '../../../plugin/markdown/index';
 import styles from '../style';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
+import { useModules } from '../../../context/ModulesContext';
 
 interface Props {
   imageList: any[];
@@ -17,9 +18,9 @@ interface Props {
 const GeneralMessage: React.FC<Props> = (props) => {
   const { imageList, generalProps } = props;
   const webViewRef = useRef<any>();
-  const WebView = generalProps.modules.RNWebView;
   const { customizeConfiguration } = useCustomizeConfiguration();
-  
+  const {modules} = useModules();
+  const WebView = modules?.RNWebView;
   const messageColor =
     generalProps?.position != 'right'
       ? customizeConfiguration?.userMessageBoxTextColor

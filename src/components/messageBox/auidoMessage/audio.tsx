@@ -1,34 +1,31 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
-import { PlayIcon, PauseIcon } from '../../../image';
 import RenderImage from '../../renderImage';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
+import { useModules } from '../../../context/ModulesContext';
 interface PositionStyle {
   sliderMinimumTrackTintColor: any;
   sliderMaximumTrackTintColor: any;
   sliderThumbTintColor: any;
-  sliderPlayImage: { type: string | undefined; value: any };
-  sliderPauseImage: { type: string | undefined; value: any };
+  sliderPlayImage: { type: 'url' | 'component' | undefined; value: any };
+  sliderPauseImage: { type: 'url' | 'component' | undefined; value: any };
 }
 const AudioComponent: FC<PropsAudio> = (props) => {
   const { customizeConfiguration } = useCustomizeConfiguration();
+  const { modules } = useModules();
   const [stateRecord, setStateRecord] = useState<any>({
     playTime: '00:00:00',
     duration: '00:00:00',
   });
   const [recorder] = useState<Recorder>(
-    new Recorder(
-      props.modules.AudioRecorderPlayer,
-      props.modules.RNFS,
-      props.modules.Record
-    )
+    new Recorder(modules.AudioRecorderPlayer, modules.RNFS, modules.Record)
   );
   const [start, setStart] = useState<boolean>(false);
   const triggerStart = () => setStart((old) => !old);
 
-  const RNSlider = props?.modules?.RNSlider;
+  const RNSlider = modules?.RNSlider;
   const AuidoProp = customizeConfiguration?.audioSliderSettings;
 
   const defaultPlayImage = {

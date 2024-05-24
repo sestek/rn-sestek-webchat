@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
   View,
@@ -203,11 +203,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 {(messageType === 'audio' ||
                   audioMesType === 'audio/base64') && (
                   <AudioMessage
-                    modules={props.modules}
                     activity={props.activity}
                     userMessageBoxTextColor={props.userMessageBoxTextColor}
                     inlineText={true}
-                    messageId={props?.activity?.messageId}
                   />
                 )}
 

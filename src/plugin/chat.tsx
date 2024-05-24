@@ -15,6 +15,7 @@ import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
 import RenderImage from '../../src/components/renderImage';
 import { CustomizeConfigurationProvider } from '../context/CustomizeContext';
+import { ModulesProvider } from '../context/ModulesContext';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -160,8 +161,13 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
         </View>
       )}
       {start && (
-          <LoadingProvider>
-            <CustomizeConfigurationProvider url={url} initialConfig={customizeConfiguration} integrationId={defaultConfiguration?.integrationId}>
+        <LoadingProvider>
+          <ModulesProvider modules={modules}>
+            <CustomizeConfigurationProvider
+              url={url}
+              initialConfig={customizeConfiguration}
+              integrationId={defaultConfiguration?.integrationId}
+            >
               {visible && (
                 <StatusBar
                   animated={true}
@@ -174,8 +180,6 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
               <ModalComponent
                 ref={modalRef}
                 url={url || ChatModal.defaultProps?.url!}
-                modules={modules}
-                customizeConfiguration={customizeConfiguration}
                 defaultConfiguration={defaultConfiguration}
                 visible={visible}
                 closeConversation={endConversation}
@@ -188,7 +192,8 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
                 }
               />
             </CustomizeConfigurationProvider>
-          </LoadingProvider>
+          </ModulesProvider>
+        </LoadingProvider>
       )}
     </React.Fragment>
   );

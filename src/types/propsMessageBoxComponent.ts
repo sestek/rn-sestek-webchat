@@ -10,7 +10,6 @@ export default interface PropsMessageBoxComponent {
     | 'message'
     | 'audio'
     | 'typing';
-  modules: PropsModules;
   activity: any;
   changeInputData: (text: string) => void;
   sendMessage: any;
