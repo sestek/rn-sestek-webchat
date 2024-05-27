@@ -41,7 +41,7 @@ export default function App() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
-    console.log('value', value);
+     console.log('value', value);
   };
 
   useEffect(() => {
@@ -313,12 +313,12 @@ export default function App() {
               closeModalNoButtonText: 'No',
             },
           },
-          // dateSettings: {
-          //   // use:false,
-          //   backgroundColor: 'pink',
-          //   textColor: 'black',
-          //   // borderRadius:
-          // },
+          //  dateSettings: {
+          //     use:false,
+          //    backgroundColor: 'pink',
+          //    textColor: 'black',
+          //     borderRadius:20
+          //  },
           autoPlayAudio: false,
         }}
       />

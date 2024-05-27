@@ -165,6 +165,7 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     use:true,
     backgroundColor: '#EFEFEF',
     textColor: 'black',
+    borderRadius:20
   },
   autoPlayAudio: false,
 };

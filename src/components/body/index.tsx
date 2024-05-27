@@ -17,7 +17,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
   } = customizeConfiguration;
   const { scrollViewRef } = props;
 
-  const getCurrentDate2 = (locale: string) => {
+  const getCurrentDate = (locale: string) => {
     return new Date().toLocaleDateString(locale, {
       year: 'numeric',
       month: '2-digit',
@@ -36,15 +36,15 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
         <View
           style={[styles.textContainer, { backgroundColor: chatBody?.value }]}
         >
-          <View
-            style={{
-              ...styles.textSubContainer,
-              borderRadius: dateSettings?.borderRadius ?? 20,
-              backgroundColor:
-                dateSettings?.backgroundColor ?? chatBotMessageBoxBackground,
-            }}
-          >
-            {dateSettings?.use ?? (
+          {customizeConfiguration?.dateSettings?.use && (
+            <View
+              style={{
+                ...styles.textSubContainer,
+                borderRadius: dateSettings?.borderRadius ?? 20,
+                backgroundColor:
+                  dateSettings?.backgroundColor ?? chatBotMessageBoxBackground,
+              }}
+            >
               <Text
                 style={{
                   ...styles.text,
@@ -52,10 +52,10 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                   fontSize: fontSettings?.descriptionFontSize,
                 }}
               >
-                {getCurrentDate2(language)}
+                {getCurrentDate(language)}
               </Text>
-            )}
-          </View>
+            </View>
+          )}
         </View>
         {props.messageList
           .slice(1)

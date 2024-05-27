@@ -32,7 +32,7 @@ const useChat = ({
         const messageExists = messages.some(
           (msg: any) => msg.id === message.id
         );
-        if (messageExists) {
+        if (messageExists && message.id !== undefined) {
           return messages;
         }
 
