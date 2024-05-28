@@ -1,12 +1,11 @@
-import React, { useContext, type FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import type { PropsHeaderComponent } from '../../types';
 import { MinusIcon, MultiplyIcon } from '../../image';
-import { StyleContext } from '../../context/StyleContext';
 import { styles } from './style';
 import useCheckBackground from '../../hook/useCheckBackground';
 import RenderImage from '../renderImage';
-import { useLanguage } from '../../context/LanguageContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
@@ -18,10 +17,13 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     closeConversation,
     defaultConfiguration,
   } = props;
-  const { appStyle } = useContext(StyleContext);
-  const { background } = useCheckBackground();
-  const { getTexts } = useLanguage();
+
+  const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
+
+  const { headerAlignmentType, headerTextColor } = customizeConfiguration;
+
+  const { background } = useCheckBackground();
 
   useEffect(() => {
     if (defaultConfiguration.getResponseData) {
@@ -39,7 +41,6 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
       }
     }
   }, [background]);
-  const { headerAlignmentType } = props.customizeConfiguration;
   const HeaderText = () => {
     return (
       <View
@@ -51,7 +52,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           },
         ]}
       >
-        <Text style={[styles.headerText, { color: appStyle?.headerTextColor }]}>
+        <Text style={[styles.headerText, { color: headerTextColor }]}>
           {texts.headerText}
         </Text>
       </View>
@@ -82,15 +83,11 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
         ]}
       >
         <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
-          {hideIcon ? (
-            <RenderImage
-              type={hideIcon.type}
-              value={hideIcon.value}
-              style={styles.imageIcon}
-            />
-          ) : (
-            <Image style={styles.hideDefaultIcon} source={MinusIcon} />
-          )}
+          <RenderImage
+            type={hideIcon?.type}
+            value={hideIcon?.value}
+            style={styles?.imageIcon}
+          />
         </TouchableOpacity>
         {headerAlignmentType === 'textToCenter' && <HeaderText />}
         <TouchableOpacity
@@ -103,24 +100,20 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           }}
           style={styles.center}
         >
-          {closeIcon ? (
             <RenderImage
-              type={closeIcon.type}
-              value={closeIcon.value}
+              type={closeIcon?.type}
+              value={closeIcon?.value}
               style={
                 headerAlignmentType === 'textToRight'
                   ? styles.imageIcon
                   : styles.closeTextToCenterIcon
               }
             />
-          ) : (
-            <Image style={styles.closeDefaultIcon} source={MultiplyIcon} />
-          )}
+          
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
 
 export default HeaderComponent;

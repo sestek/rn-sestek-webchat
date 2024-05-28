@@ -1,70 +1,75 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { FC, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
-import { PlayIcon, PauseIcon } from '../../../image';
-import { StyleContext } from '../../../context/StyleContext';
 import RenderImage from '../../renderImage';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
+import { useModules } from '../../../context/ModulesContext';
 interface PositionStyle {
   sliderMinimumTrackTintColor: any;
   sliderMaximumTrackTintColor: any;
   sliderThumbTintColor: any;
-  sliderPlayImage: any;
-  sliderPauseImage: any;
+  sliderPlayImage: { type: 'url' | 'component' | undefined; value: any };
+  sliderPauseImage: { type: 'url' | 'component' | undefined; value: any };
 }
 const AudioComponent: FC<PropsAudio> = (props) => {
+  const { customizeConfiguration } = useCustomizeConfiguration();
+  const { modules } = useModules();
   const [stateRecord, setStateRecord] = useState<any>({
     playTime: '00:00:00',
     duration: '00:00:00',
   });
   const [recorder] = useState<Recorder>(
-    new Recorder(
-      props.modules.AudioRecorderPlayer,
-      props.modules.RNFS,
-      props.modules.Record
-    )
+    new Recorder(modules.AudioRecorderPlayer, modules.RNFS, modules.Record)
   );
   const [start, setStart] = useState<boolean>(false);
   const triggerStart = () => setStart((old) => !old);
 
-  const RNSlider = props.modules.RNSlider;
-  const AuidoProp = props?.customizeConfiguration?.audioSliderSettings;
+  const RNSlider = modules?.RNSlider;
+  const AuidoProp = customizeConfiguration?.audioSliderSettings;
 
-  const appStyle: any = useContext(StyleContext);
-
-  let defaultPositionStyle: PositionStyle = {
-    sliderMinimumTrackTintColor: '#C3ACD0',
-    sliderMaximumTrackTintColor: 'white',
-    sliderThumbTintColor: '#C3ACD0',
-    sliderPlayImage: { type: 'url', value: PlayIcon },
-    sliderPauseImage: { type: 'url', value: PauseIcon },
+  const defaultPlayImage = {
+    type: AuidoProp?.botSliderPlayImage?.type,
+    value: AuidoProp?.botSliderPlayImage?.value,
   };
-
-  if (AuidoProp && props.position === 'left') {
+  const defaultPauseImage = {
+    type: AuidoProp?.botSliderPauseImage?.type,
+    value: AuidoProp?.botSliderPauseImage?.value,
+  };
+  let defaultPositionStyle: PositionStyle = {
+    sliderMinimumTrackTintColor: AuidoProp?.botSliderMinimumTrackTintColor,
+    sliderMaximumTrackTintColor: AuidoProp?.botSliderMaximumTrackTintColor,
+    sliderThumbTintColor: AuidoProp?.botSliderThumbTintColor,
+    sliderPlayImage: defaultPlayImage,
+    sliderPauseImage: defaultPauseImage,
+  };
+  if (AuidoProp && props?.position === 'right') {
     defaultPositionStyle = {
-      sliderMinimumTrackTintColor: AuidoProp.botSliderMinimumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderMaximumTrackTintColor: AuidoProp.botSliderMaximumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderThumbTintColor: AuidoProp.botSliderThumbTintColor || defaultPositionStyle.sliderThumbTintColor,
-      sliderPlayImage:
-        AuidoProp.botSliderPlayImage || defaultPositionStyle.sliderPlayImage,
-      sliderPauseImage:
-        AuidoProp.botSliderPauseImage || defaultPositionStyle.sliderPauseImage,
-    };
-  }
-  if (AuidoProp && props.position === 'right') {
-    defaultPositionStyle = {
-      sliderMinimumTrackTintColor: AuidoProp.userSliderMinimumTrackTintColor || defaultPositionStyle.sliderMinimumTrackTintColor,
-      sliderMaximumTrackTintColor: AuidoProp.userSliderMaximumTrackTintColor || defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderThumbTintColor: AuidoProp.userSliderThumbTintColor || defaultPositionStyle.sliderThumbTintColor,
-      sliderPlayImage:
-        AuidoProp.userSliderPlayImage || defaultPositionStyle.sliderPlayImage,
-      sliderPauseImage:
-        AuidoProp.userSliderPauseImage || defaultPositionStyle.sliderPauseImage,
+      sliderMinimumTrackTintColor:
+        AuidoProp?.userSliderMinimumTrackTintColor ||
+        defaultPositionStyle.sliderMinimumTrackTintColor,
+      sliderMaximumTrackTintColor:
+        AuidoProp?.userSliderMaximumTrackTintColor ||
+        defaultPositionStyle.sliderMaximumTrackTintColor,
+      sliderThumbTintColor:
+        AuidoProp?.userSliderThumbTintColor ||
+        defaultPositionStyle.sliderThumbTintColor,
+      sliderPlayImage: {
+        type: AuidoProp.userSliderPlayImage?.type || defaultPlayImage.type,
+        value: AuidoProp.userSliderPlayImage?.value || defaultPlayImage.value,
+      },
+      sliderPauseImage: {
+        type: AuidoProp.userSliderPauseImage?.type || defaultPauseImage.type,
+        value: AuidoProp.userSliderPauseImage?.value || defaultPauseImage.value,
+      },
     };
   }
   const renderSliderImage = () => {
     const { sliderPlayImage, sliderPauseImage } = defaultPositionStyle;
-    const { value, type } = start ? sliderPauseImage : sliderPlayImage;
+    const { value, type } =
+      stateRecord.playTime !== '00:00:00' && start === true
+        ? sliderPauseImage
+        : sliderPlayImage;
 
     return (
       <RenderImage
@@ -74,9 +79,23 @@ const AudioComponent: FC<PropsAudio> = (props) => {
       />
     );
   };
+
   useEffect(() => {
     getDuration();
   }, []);
+
+  useEffect(() => {
+    if (
+      props.position === 'left' &&
+      props.url &&
+      customizeConfiguration?.autoPlayAudio
+    ) {
+      recorder.audioRecorderPlayer.removePlayBackListener();
+
+      recorder.audioRecorderPlayer.stopPlayer();
+      onPlayPlayer();
+    }
+  }, [props.url]);
 
   const getDuration = async () => {
     await recorder.audioRecorderPlayer.startPlayer(props.url);
@@ -132,7 +151,6 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     await recorder.audioRecorderPlayer.pausePlayer();
     triggerStart();
   };
-
   return (
     <View
       style={{
@@ -192,7 +210,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
         <Text
           style={{
             paddingRight: 5,
-            fontSize: appStyle?.fontSettings?.descriptionFontSize,
+            fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize,
           }}
         >
           {stateRecord.playTime + ' / ' + stateRecord.duration}
@@ -200,10 +218,6 @@ const AudioComponent: FC<PropsAudio> = (props) => {
       )}
     </View>
   );
-};
-
-AudioComponent.defaultProps = {
-  url: '',
 };
 
 export default React.memo(AudioComponent);

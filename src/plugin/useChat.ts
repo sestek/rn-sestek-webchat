@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
 import useCheckBackground from '../hook/useCheckBackground';
-import { useLanguage } from '../context/LanguageContext';
-useLanguage;
+import { useCustomizeConfiguration } from '../context/CustomizeContext';
 const useChat = ({
   defaultConfiguration,
   sessionId,
@@ -15,7 +14,7 @@ const useChat = ({
   const [messageList, setMessageList] = useState<any>([]);
   const [historyCount, sethistoryCount] = useState(0);
 
-  const { changeLanguage } = useLanguage();
+  const { changeLanguage } = useCustomizeConfiguration();
 
   const { background } = useCheckBackground();
 
@@ -29,6 +28,14 @@ const useChat = ({
       if (messages?.length > 0) {
         const messagesLength = messages.length;
         const lastElement = messages[messagesLength - 1];
+
+        const messageExists = messages.some(
+          (msg: any) => msg.id === message.id
+        );
+        if (messageExists && message.id !== undefined) {
+          return messages;
+        }
+
         if (lastElement?.type === 'typing') {
           messages.pop();
           return [...messages, message];
@@ -38,6 +45,7 @@ const useChat = ({
       return [message];
     });
   };
+
   const setResponseFunc = (customAction: any, customActionData: any) => {
     if (typeof customActionData === 'object' && customActionData?.Language) {
       changeLanguage(customActionData?.Language.toLowerCase());
@@ -373,6 +381,31 @@ const useChat = ({
     client.endConversation(JSON.stringify(dataToSend));
   };
 
+  const parseAttachment = (data: any, i: number) => {
+    const parsedJsonContent = JSON.parse(data[i].jsonContent);
+
+    const updatedAttachments = parsedJsonContent.attachments.map(
+      (attachment: any) => {
+        const parsedContent = JSON.parse(attachment.content);
+        return {
+          ...attachment,
+          content: parsedContent,
+        };
+      }
+    );
+    const updatedJsonContent = {
+      ...parsedJsonContent,
+      attachments: updatedAttachments,
+      timestamp: new Date(data[i].dialogTime),
+      channel:
+        data[i].messageType === 'VirtualAgent'
+          ? null
+          : defaultConfiguration.channel,
+      conversationId: sessionId,
+    };
+    return updatedJsonContent;
+  };
+
   const getHistory = () => {
     if (parseUrl) {
       fetch(parseUrl + '/history/' + sessionId, {
@@ -383,29 +416,13 @@ const useChat = ({
           if (data && data.length > 0) {
             if (data.length > historyCount) {
               for (let i = historyCount; i < data.length; i++) {
-                addMessageList({
-                  timestamp: new Date(data[i].dialogTime),
-                  message: data[i]?.text,
-                  channel:
-                    data[i].messageType === 'VirtualAgent'
-                      ? null
-                      : defaultConfiguration.channel,
-                  conversationId: sessionId,
-                  type: 'message',
-                });
+                const message = parseAttachment(data, i);
+                addMessageList(message);
               }
             } else if (historyCount > data.length) {
               for (let i = 0; i < data.length; i++) {
-                addMessageList({
-                  timestamp: new Date(data[i].dialogTime),
-                  message: data[i]?.text,
-                  channel:
-                    data[i].messageType === 'VirtualAgent'
-                      ? null
-                      : defaultConfiguration.channel,
-                  conversationId: sessionId,
-                  type: 'message',
-                });
+                const message = parseAttachment(data, i);
+                addMessageList(message);
               }
             }
           }

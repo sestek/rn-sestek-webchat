@@ -1,8 +1,6 @@
-import type PropsCustomizeConfiguration from './propsCustomizeConfiguration';
 import type PropsModules from './propsModules';
 
 export default interface PropsMessageBoxComponent {
-  customizeConfiguration: PropsCustomizeConfiguration;
   position: 'left' | 'right';
   type:
     | 'text'
@@ -12,7 +10,6 @@ export default interface PropsMessageBoxComponent {
     | 'message'
     | 'audio'
     | 'typing';
-  modules: PropsModules;
   activity: any;
   changeInputData: (text: string) => void;
   sendMessage: any;

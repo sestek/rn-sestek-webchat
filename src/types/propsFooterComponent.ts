@@ -1,6 +1,4 @@
 import { ScrollView } from 'react-native';
-import type PropsCustomizeConfiguration from './propsCustomizeConfiguration';
-import type PropsModules from './propsModules';
 
 export default interface PropsFooterComponent {
   inputData: string;
@@ -8,7 +6,5 @@ export default interface PropsFooterComponent {
   sendMessage: any;
   sendAudio: any;
   sendAttachment?: any;
-  modules: PropsModules;
-  customizeConfiguration: PropsCustomizeConfiguration;
   scrollViewRef: React.RefObject<ScrollView>;
 }

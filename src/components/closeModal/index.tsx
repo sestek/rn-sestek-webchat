@@ -2,12 +2,11 @@ import React, { forwardRef } from 'react';
 import { Text, View, Modal, TouchableOpacity } from 'react-native';
 import { PropsCloseModalSettings } from '../../types';
 import { styles } from './style';
-import { useLanguage } from '../../context/LanguageContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 export interface InProps {
   closeModal: boolean;
   setCloseModal: any;
   closeConversation: Function;
-  appStyle: any;
 }
 
 const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
@@ -17,10 +16,8 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
       setCloseModal,
       closeConversation,
       closeModalSettings,
-      appStyle,
     } = props;
-
-    const { getTexts } = useLanguage();
+    const { customizeConfiguration ,getTexts} = useCustomizeConfiguration();
     const texts = getTexts();
   
     return (
@@ -30,7 +27,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
             <Text
               style={[
                 styles(closeModalSettings)?.modalText,
-                { fontSize: appStyle?.fontSettings?.descriptionFontSize },
+                { fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize },
               ]}
             >
              {texts.closeModalText}
@@ -45,7 +42,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 <Text
                   style={[
                     styles(closeModalSettings)?.noButtonText,
-                    { fontSize: appStyle?.fontSettings?.descriptionFontSize },
+                    { fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize },
                   ]}
                 >
                   {texts.closeModalNoButtonText}
@@ -61,7 +58,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 <Text
                   style={[
                     styles(closeModalSettings)?.yesButtonText,
-                    { fontSize: appStyle?.fontSettings?.descriptionFontSize },
+                    { fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize },
                   ]}
                 >
                  {texts.closeModalYesButtonText}

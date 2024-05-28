@@ -29,7 +29,7 @@ interface MarkdownProps {
   style?: any;
   onLoad?: () => void;
   children: ReactNode;
-  fontSettings: FontSettings;
+  fontSettings: FontSettings | undefined;
   textType?: string;
 }
 
@@ -56,7 +56,7 @@ class Markdown extends Component<MarkdownProps> {
       rules: props.rules,
     };
 
-    const { titleFontSize } = props?.fontSettings;
+    const titleFontSize = props?.fontSettings?.titleFontSize;
 
     let customMarkDownStyle = {
       ...styles,

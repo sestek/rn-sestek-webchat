@@ -1,21 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Text } from 'react-native';
 import AudioComponent from './audio';
 import { Recorder } from '../../../services';
-import PropsModules from 'src/types/propsModules';
-import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
-import { StyleContext } from '../../../context/StyleContext';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
+import { useModules } from '../../../context/ModulesContext';
 
 interface AudioMessageProps {
-  modules: PropsModules;
-  customizeConfiguration: PropsCustomizeConfiguration;
   activity: any;
   userMessageBoxTextColor: string;
   inlineText?: boolean;
 }
 
 const AudioMessage = (props: AudioMessageProps) => {
-  if (!props.modules.AudioRecorderPlayer || !props.modules.RNFS) {
+  const { modules } = useModules();
+
+  if (!modules?.AudioRecorderPlayer || !modules?.RNFS) {
     return null;
   }
   let url = props.activity?.message;
@@ -24,7 +23,8 @@ const AudioMessage = (props: AudioMessageProps) => {
     url = props?.activity?.attachments[0]?.content;
     position = 'left';
   }
-  const appStyle: any = useContext(StyleContext);
+  const { customizeConfiguration } = useCustomizeConfiguration();
+
   return (
     <>
       <AudioComponent
@@ -32,14 +32,12 @@ const AudioMessage = (props: AudioMessageProps) => {
           url && url.length > 1000
             ? 'file://' +
               new Recorder(
-                props.modules.AudioRecorderPlayer,
-                props.modules.RNFS,
-                props.modules.Record
-              ).saveLocalFileAudio(url)
+                modules?.AudioRecorderPlayer,
+                modules?.RNFS,
+                modules?.Record
+              ).saveLocalFileAudio(url, props?.activity?.id)
             : url
         }
-        modules={props.modules}
-        customizeConfiguration={props.customizeConfiguration}
         position={position}
       />
       {position === 'right' && (
@@ -48,7 +46,7 @@ const AudioMessage = (props: AudioMessageProps) => {
             marginVertical: props.activity?.text && 10,
             color: props?.userMessageBoxTextColor ?? 'white',
             paddingLeft: 10,
-            fontSize: appStyle?.fontSettings?.subtitleFontSize,
+            fontSize: customizeConfiguration?.fontSettings?.subtitleFontSize,
           }}
         >
           {props.activity?.text}

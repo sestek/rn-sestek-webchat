@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import {
   View,
@@ -8,15 +8,14 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import type PropsMessageBoxComponent from 'src/types/propsMessageBoxComponent.js';
-// import CarouselPage from './carousel';
 import TypingMessage from './typingMessage';
 import AudioMessage from './auidoMessage';
 import GeneralMessage from './generalMessage';
 import OutsideButton from './outsideButtonMessageBox';
 import Avatar from './avatar';
-import { StyleContext } from '../../context/StyleContext';
 import styles from './style';
 import CarouselPage from './carousel';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const messageType = props.type ? props.type : '';
@@ -28,12 +27,13 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const [imageList, setImageList] = useState<any>([]);
   const [cardList, setCardList] = useState<any>([]);
 
-  const { appStyle } = useContext(StyleContext);
+  const { customizeConfiguration } = useCustomizeConfiguration();
+
   var positionCls = [
     styles.messageBox,
     messageBoxPosition === 'right' && styles.messageBoxRight,
     {
-      marginBottom: props?.customizeConfiguration?.chatBodyMessageBoxGap ?? 20,
+      marginBottom: customizeConfiguration?.chatBodyMessageBoxGap ?? 20,
     },
   ];
 
@@ -87,7 +87,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   useEffect(() => {
     if (Array.isArray(attachmentsData)) {
       if (attachmentsData.length === 1) {
-        
         attachmentsData[0]?.content?.images?.map((image: any) => {
           Image.getSize(
             image.url,
@@ -176,26 +175,12 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           >
             {messageBoxPosition === 'right' && (
               <View style={styles.messageBoxAvatarContainer}>
-                <Avatar
-                  width={
-                    props.customizeConfiguration.chatBotMessageBoxAvatarIconSize
-                  }
-                  height={
-                    props.customizeConfiguration.chatBotMessageBoxAvatarIconSize
-                  }
-                  chatBotMessageIcon={
-                    props.customizeConfiguration.chatBotMessageIcon
-                  }
-                />
+                <Avatar />
               </View>
             )}
             <View style={[positionCls]}>
               {carouselType && cardList.length > 1 && (
-                <CarouselPage
-                  data={cardList}
-                  onPressButton={onPressButton}
-                  customizeConfiguration={props.customizeConfiguration}
-                />
+                <CarouselPage data={cardList} onPressButton={onPressButton} />
               )}
               <View
                 style={[
@@ -203,8 +188,8 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   {
                     backgroundColor:
                       messageBoxPosition != 'right'
-                        ? appStyle?.userMessageBoxBackground
-                        : appStyle?.chatBotMessageBoxBackground,
+                        ? customizeConfiguration?.userMessageBoxBackground
+                        : customizeConfiguration?.chatBotMessageBoxBackground,
                     width: carouselType
                       ? Dimensions.get('screen').width * 0.8
                       : 'auto',
@@ -213,17 +198,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 ]}
               >
                 {!carouselType && (
-                  <GeneralMessage
-                    imageList={imageList}
-                    appStyle={appStyle}
-                    generalProps={props}
-                  />
+                  <GeneralMessage imageList={imageList} generalProps={props} />
                 )}
                 {(messageType === 'audio' ||
                   audioMesType === 'audio/base64') && (
                   <AudioMessage
-                    modules={props.modules}
-                    customizeConfiguration={props.customizeConfiguration}
                     activity={props.activity}
                     userMessageBoxTextColor={props.userMessageBoxTextColor}
                     inlineText={true}
@@ -238,9 +217,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                       ...styles.messageBoxTimeBlockText,
                       color:
                         messageBoxPosition != 'right'
-                          ? appStyle?.userMessageBoxTextColor
-                          : appStyle?.chatBotMessageBoxTextColor,
-                      fontSize: appStyle?.fontSettings?.descriptionFontSize,
+                          ? customizeConfiguration?.userMessageBoxTextColor
+                          : customizeConfiguration?.chatBotMessageBoxTextColor,
+                      fontSize:
+                        customizeConfiguration?.fontSettings
+                          ?.descriptionFontSize,
                     }}
                   >
                     {(props.activity?.timestamp || props.dateString) &&
@@ -254,7 +235,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   <OutsideButton
                     attachmentsData={attachmentsData}
                     onPressButton={onPressButton}
-                    appStyle={appStyle}
                   />
                 )}
             </View>

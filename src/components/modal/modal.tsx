@@ -2,7 +2,6 @@ import React, {
   forwardRef,
   useState,
   useImperativeHandle,
-  useContext,
   useEffect,
   useRef,
 } from 'react';
@@ -20,13 +19,13 @@ import FooterComponent from '../footer';
 import HeaderComponent from '../header';
 import { styles } from './style';
 import CloseModal from '../closeModal';
-import { StyleContext } from '../../context/StyleContext';
 import { ModalCompRef } from '../../types/components/ModalComponent';
 import GenerateBody from '../body/GenerateBody';
 import LoadingModal from '../loadingModal';
 import { useLoading } from '../../context/LoadingContext';
 import useCheckBackground from '../../hook/useCheckBackground';
-
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { useModules } from '../../context/ModulesContext';
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
     const {
@@ -34,14 +33,15 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       defaultConfiguration,
       sessionId,
       client,
-      modules,
-      customizeConfiguration,
       closeConversation,
       closedModalManagment,
       hideModal,
       visible,
       clickClosedConversationModalFunc,
     } = props;
+
+    const { customizeConfiguration } = useCustomizeConfiguration();
+    const { modules } = useModules();
 
     const [inputData, setInputData] = useState<string>('');
     const changeInputData = (text: string) => setInputData(text);
@@ -70,31 +70,6 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       sendEnd: sendEnd,
     }));
 
-    const { appStyle, handleStyle } = useContext(StyleContext);
-
-    useEffect(() => {
-      (async () => {
-        // if (defaultConfiguration.integrationId) {
-        //   await getCssIntegration(
-        //     defaultConfiguration.integrationId,
-        //     customizeConfiguration
-        //   );
-        // } else {
-        //   handleStyle(
-        //     customizeConfiguration,
-        //     defaultConfiguration.tenant,
-        //     defaultConfiguration.projectName
-        //   );
-        // }
-
-        handleStyle(
-          customizeConfiguration,
-          defaultConfiguration?.tenant,
-          defaultConfiguration?.projectName
-        );
-      })();
-    }, []);
-
     const { background } = useCheckBackground();
     useEffect(() => {
       if (background) {
@@ -109,25 +84,24 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       <Modal
         animationType={'slide'}
         transparent={true}
-        visible={visible && Object.keys(appStyle).length > 0}
+        visible={visible && Object.keys(customizeConfiguration).length > 0}
         onRequestClose={() => {
           hideModal && hideModal();
         }}
       >
         {loading && (
           <LoadingModal
-            indicatorColor={customizeConfiguration.indicatorColor ?? ''}
+            indicatorColor={customizeConfiguration?.indicatorColor ?? ''}
           />
         )}
 
-        {appStyle.closeModalSettings?.use && (
+        {customizeConfiguration?.closeModalSettings?.use && (
           <CloseModal
             closeModal={closedModalManagment?.closeModal}
             setCloseModal={closedModalManagment?.setCloseModal}
             closeConversation={closeConversation}
             closeModalSettings={customizeConfiguration?.closeModalSettings}
             getResponseData={defaultConfiguration?.getResponseData}
-            appStyle={appStyle}
           />
         )}
 
@@ -139,13 +113,12 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
           <View
             style={[
               styles.header,
-              appStyle?.headerColor
-                ? { backgroundColor: appStyle?.headerColor }
+              customizeConfiguration?.headerColor
+                ? { backgroundColor: customizeConfiguration?.headerColor }
                 : {},
             ]}
           >
             <HeaderComponent
-              customizeConfiguration={customizeConfiguration}
               hideModal={hideModal}
               clickClosedConversationModalFunc={
                 clickClosedConversationModalFunc
@@ -163,16 +136,14 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             style={{
               flex: 1,
               backgroundColor:
-                appStyle?.chatBody?.type == 'color'
-                  ? appStyle?.chatBody?.value
+                customizeConfiguration?.chatBody?.type == 'color'
+                  ? customizeConfiguration?.chatBody?.value
                   : '#fff',
             }}
           >
             <GenerateBody
               BodyComponent={
                 <BodyComponent
-                  modules={modules}
-                  customizeConfiguration={customizeConfiguration}
                   messageList={messageList}
                   changeInputData={changeInputData}
                   sendMessage={sendMessage}
@@ -184,16 +155,14 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
           <View
             style={[
               styles.footer,
-              appStyle?.bottomColor
-                ? { backgroundColor: appStyle?.bottomColor }
+              customizeConfiguration?.bottomColor
+                ? { backgroundColor: customizeConfiguration?.bottomColor }
                 : {},
             ]}
           >
             <FooterComponent
-              modules={modules}
               inputData={inputData}
               changeInputData={changeInputData}
-              customizeConfiguration={customizeConfiguration}
               sendMessage={sendMessage}
               sendAudio={sendAudio}
               sendAttachment={sendAttachment}

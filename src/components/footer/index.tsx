@@ -1,41 +1,29 @@
-import React, { FC, useState, useContext } from 'react';
-import {
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Platform,
-} from 'react-native';
+import React, { FC, useState } from 'react';
+import { TextInput, TouchableOpacity, View, Platform } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
-import {
-  RecordInIcon,
-  RecordOutIcon,
-  RecordDisable,
-  SendIconWhite,
-  Link,
-} from '../../image';
 import { Recorder } from '../../services';
-import { StyleContext } from '../../context/StyleContext';
 import { useLoading } from '../../context/LoadingContext';
 import RenderImage from '../renderImage';
-import { useLanguage } from '../../context/LanguageContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { useModules } from '../../context/ModulesContext';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
-  const { getTexts } = useLanguage();
+  const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
-  const RNFSModule = props.modules.RNFS;
-  const RNFileSelector = props.modules.RNFileSelector;
+
+  const {modules } = useModules();
+
+  const RNFSModule = modules?.RNFS;
+  const RNFileSelector = modules?.RNFileSelector;
   const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 
   const { setLoading } = useLoading();
   const {
-    modules,
     sendAudio,
     sendAttachment,
     inputData,
     sendMessage,
     changeInputData,
-    customizeConfiguration,
     scrollViewRef,
   } = props;
 
@@ -46,6 +34,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     bottomAttachmentIcon,
     bottomSendIcon,
     permissionAudioCheck,
+    bottomInputBorderColor,
+    bottomInputBackgroundColor,
+    bottomInputSendButtonColor,
   } = customizeConfiguration;
 
   const Record =
@@ -60,8 +51,6 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const [recorder] = useState<Recorder | undefined>(Record);
   const [recordStart, setRecordStart] = useState<boolean>(false);
   const [disableRecord, setDisableRecord] = useState<boolean>(false);
-
-  const { appStyle } = useContext(StyleContext);
 
   const triggerRecord = async () => {
     if (disableRecord) {
@@ -154,11 +143,11 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           style={[
             styles.textInput,
             {
-              borderColor: appStyle?.bottomInputBorderColor,
+              borderColor: bottomInputBorderColor,
               borderTopRightRadius: recorder ? 0 : 10,
               borderBottomRightRadius: recorder ? 0 : 10,
               borderRightWidth: recorder ? 0 : 1,
-              backgroundColor: appStyle?.bottomInputBackgroundColor,
+              backgroundColor: bottomInputBackgroundColor,
             },
           ]}
           onFocus={() => {
@@ -181,20 +170,16 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           style={[
             styles.AttachmentButton,
             {
-              borderColor: appStyle?.bottomInputBorderColor,
-              backgroundColor: appStyle?.bottomInputBackgroundColor,
+              borderColor: bottomInputBorderColor,
+              backgroundColor: bottomInputBackgroundColor,
             },
           ]}
         >
-          {bottomAttachmentIcon ? (
-            <RenderImage
-              type={bottomAttachmentIcon.type}
-              value={bottomAttachmentIcon.value}
-              style={styles.AttachmentIcon}
-            />
-          ) : (
-            <Image style={styles.AttachmentIcon} source={Link} />
-          )}
+          <RenderImage
+            type={bottomAttachmentIcon?.type}
+            value={bottomAttachmentIcon?.value}
+            style={styles.AttachmentIcon}
+          />
         </TouchableOpacity>
       )}
       {modules?.AudioRecorderPlayer && modules?.RNFS && (
@@ -204,39 +189,29 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             styles.audioButton,
             {
               borderRightWidth: 1,
-              borderColor: appStyle?.bottomInputBorderColor,
-              backgroundColor: appStyle?.bottomInputBackgroundColor,
+              borderColor: bottomInputBorderColor,
+              backgroundColor: bottomInputBackgroundColor,
             },
           ]}
         >
           {recordStart ? (
-            bottomVoiceStopIcon ? (
-              <RenderImage
-                type={bottomVoiceStopIcon.type}
-                value={bottomVoiceStopIcon.value}
-                style={styles.MicButtonIcon}
-              />
-            ) : (
-              <Image style={styles.MicButtonIcon} source={RecordInIcon} />
-            )
-          ) : disableRecord ? (
-            bottomVoiceDisabledIcon ? (
-              <RenderImage
-                type={bottomVoiceDisabledIcon.type}
-                value={bottomVoiceDisabledIcon.value}
-                style={styles.MicButtonIcon}
-              />
-            ) : (
-              <Image style={styles.MicButtonIcon} source={RecordDisable} />
-            )
-          ) : bottomVoiceIcon ? (
             <RenderImage
-              type={bottomVoiceIcon.type}
-              value={bottomVoiceIcon.value}
+              type={bottomVoiceStopIcon?.type}
+              value={bottomVoiceStopIcon?.value}
+              style={styles.MicButtonIcon}
+            />
+          ) : disableRecord ? (
+            <RenderImage
+              type={bottomVoiceDisabledIcon?.type}
+              value={bottomVoiceDisabledIcon?.value}
               style={styles.MicButtonIcon}
             />
           ) : (
-            <Image style={styles.MicButtonIcon} source={RecordOutIcon} />
+            <RenderImage
+              type={bottomVoiceIcon?.type}
+              value={bottomVoiceIcon?.value}
+              style={styles.MicButtonIcon}
+            />
           )}
         </TouchableOpacity>
       )}
@@ -244,18 +219,14 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
         onPress={clickSendButton}
         style={[
           styles.sendButton,
-          { backgroundColor: appStyle?.bottomInputSendButtonColor },
+          { backgroundColor: bottomInputSendButtonColor },
         ]}
       >
-        {bottomSendIcon ? (
-          <RenderImage
-            type={bottomSendIcon.type}
-            value={bottomSendIcon.value}
-            style={styles.SendButtonIcon}
-          />
-        ) : (
-          <Image style={styles.SendButtonIcon} source={SendIconWhite} />
-        )}
+        <RenderImage
+          type={bottomSendIcon?.type}
+          value={bottomSendIcon?.value}
+          style={styles.SendButtonIcon}
+        />
       </TouchableOpacity>
     </View>
   );

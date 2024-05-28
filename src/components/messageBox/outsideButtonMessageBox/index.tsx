@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
 interface ButtonProps {
   value: string;
@@ -9,14 +10,13 @@ interface ButtonProps {
 interface Props {
   attachmentsData: any;
   onPressButton: (value: string, title: string) => void;
-  appStyle: any;
 }
 
 const OutsideButton: React.FC<Props> = ({
   attachmentsData,
   onPressButton,
-  appStyle,
 }) => {
+  const { customizeConfiguration } = useCustomizeConfiguration();
   return (
     <View
       style={{
@@ -36,11 +36,11 @@ const OutsideButton: React.FC<Props> = ({
               paddingHorizontal: 10,
               alignSelf: 'flex-start',
               borderRadius: 8,
-              borderColor: appStyle.chatBotMessageBoxButtonBorderColor,
+              borderColor: customizeConfiguration?.chatBotMessageBoxButtonBorderColor,
               borderWidth: 1.5,
             }}
           >
-            <Text style={{ color: appStyle.chatBotMessageBoxButtonTextColor, fontSize:appStyle?.fontSettings.descriptionFontSize }}>
+            <Text style={{ color: customizeConfiguration?.chatBotMessageBoxButtonTextColor, fontSize:customizeConfiguration?.fontSettings?.descriptionFontSize }}>
               {button?.title}
             </Text>
           </TouchableOpacity>

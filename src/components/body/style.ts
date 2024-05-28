@@ -21,11 +21,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
+    paddingTop:10
   },
   textSubContainer: {
     padding: 5,
-    borderRadius: 10,
-    marginTop: 10,
     marginBottom: 10,
   },
   text: {

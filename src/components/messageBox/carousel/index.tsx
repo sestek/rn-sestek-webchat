@@ -1,25 +1,16 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
-import { StyleContext } from '../../../context/StyleContext';
-import PropsCustomizeConfiguration from 'src/types/propsCustomizeConfiguration';
 import Markdown from '../../../plugin/markdown';
 import RenderImage from '../../renderImage';
-import { Back, Next } from '../../../image';
+import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
-const Index = ({
-  data,
-  onPressButton,
-  customizeConfiguration,
-}: {
-  data: any;
-  onPressButton: any;
-  customizeConfiguration: PropsCustomizeConfiguration;
-}) => {
+const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const CARD_WIDTH = 220;
   const MARGINLEFT = 10;
   const SNAP_INTERVAL = CARD_WIDTH + (MARGINLEFT - 4.8) * 2;
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { customizeConfiguration } = useCustomizeConfiguration();
 
   const onScroll = (event: any) => {
     const newIndex = Math.round(
@@ -47,7 +38,6 @@ const Index = ({
       setCurrentIndex(currentIndex + 1);
     }
   };
-  const { appStyle } = useContext(StyleContext);
 
   const carouselStyle = customizeConfiguration?.chatBotCarouselSettings;
   return (
@@ -67,17 +57,11 @@ const Index = ({
           alignItems: 'center',
         }}
       >
-        {carouselStyle?.prevButtonIcon ? (
-          <RenderImage
-            type={carouselStyle?.prevButtonIcon.type}
-            value={carouselStyle.prevButtonIcon.value}
-          />
-        ) : (
-          <Image
-            source={Back}
-            style={{ height: 14, width: 14 }}
-          />
-        )}
+        <RenderImage
+          type={carouselStyle?.prevButtonIcon?.type}
+          value={carouselStyle?.prevButtonIcon?.value}
+          style={{ height: 14, width: 14 }}
+        />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleScrollRight}
@@ -94,17 +78,11 @@ const Index = ({
           alignItems: 'center',
         }}
       >
-        {carouselStyle?.nextButtonIcon ? (
-          <RenderImage
-            type={carouselStyle?.nextButtonIcon.type}
-            value={carouselStyle.nextButtonIcon.value}
-          />
-        ) : (
-          <Image
-            source={Next}
-            style={{ height: 14, width: 14, marginLeft: 3 }}
-          />
-        )}
+        <RenderImage
+          type={carouselStyle?.nextButtonIcon?.type}
+          value={carouselStyle?.nextButtonIcon?.value}
+          style={{ height: 14, width: 14, marginLeft: 3 }}
+        />
       </TouchableOpacity>
       <ScrollView
         ref={scrollViewRef}
@@ -144,8 +122,8 @@ const Index = ({
                 />
               </View>
               <Markdown
-                fontSettings={appStyle?.fontSettings}
-                color={appStyle?.chatBotMessageBoxTextColor}
+                fontSettings={customizeConfiguration?.fontSettings}
+                color={customizeConfiguration?.chatBotMessageBoxTextColor}
                 textType="title"
               >
                 {item?.title && item.title.length > 46
@@ -154,8 +132,8 @@ const Index = ({
               </Markdown>
               <Markdown
                 style={{ opacity: 0.5 }}
-                fontSettings={appStyle?.fontSettings}
-                color={appStyle?.chatBotMessageBoxTextColor}
+                fontSettings={customizeConfiguration?.fontSettings}
+                color={customizeConfiguration?.chatBotMessageBoxTextColor}
                 textType="text"
               >
                 {item?.text && item.text.length > 70
@@ -191,8 +169,10 @@ const Index = ({
                         style={{
                           color:
                             carouselStyle?.buttonGroup?.textColor ??
-                            appStyle.chatBotMessageBoxButtonTextColor,
-                          fontSize: appStyle?.fontSettings.descriptionFontSize,
+                            customizeConfiguration?.chatBotMessageBoxButtonTextColor,
+                          fontSize:
+                            customizeConfiguration?.fontSettings
+                              ?.descriptionFontSize,
                         }}
                       >
                         {btn?.title}

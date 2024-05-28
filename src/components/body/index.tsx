@@ -4,25 +4,26 @@ import type { PropsBodyComponent } from 'src/types';
 
 import { styles } from './style';
 import MessageBox from '../messageBox';
-import { useLanguage } from '../../context/LanguageContext';
+import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
+  const { customizeConfiguration, language } = useCustomizeConfiguration();
   const {
     userMessageBoxTextColor,
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
     chatBody,
-    fontSettings
-  } = props.customizeConfiguration;
+    fontSettings,
+    dateSettings,
+  } = customizeConfiguration;
   const { scrollViewRef } = props;
 
-  const { language } = useLanguage();
-
-
-
-  const getCurrentDate2 = (locale: string) => {
-    return new Date().toLocaleDateString(locale, { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const getCurrentDate = (locale: string) => {
+    return new Date().toLocaleDateString(locale, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -35,22 +36,26 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
         <View
           style={[styles.textContainer, { backgroundColor: chatBody?.value }]}
         >
-          <View
-            style={{
-              ...styles.textSubContainer,
-              backgroundColor: chatBotMessageBoxBackground,
-            }}
-          >
-            <Text
+          {customizeConfiguration?.dateSettings?.use && (
+            <View
               style={{
-                ...styles.text,
-                color: chatBotMessageBoxTextColor,
-                fontSize: fontSettings?.descriptionFontSize,
+                ...styles.textSubContainer,
+                borderRadius: dateSettings?.borderRadius ?? 20,
+                backgroundColor:
+                  dateSettings?.backgroundColor ?? chatBotMessageBoxBackground,
               }}
             >
-              {getCurrentDate2(language)}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...styles.text,
+                  color: dateSettings?.textColor ?? chatBotMessageBoxTextColor,
+                  fontSize: fontSettings?.descriptionFontSize,
+                }}
+              >
+                {getCurrentDate(language)}
+              </Text>
+            </View>
+          )}
         </View>
         {props.messageList
           .slice(1)
@@ -58,7 +63,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           .map((x: any, key: number) => (
             <MessageBox
               {...props}
-              modules={props.modules}
               userMessageBoxTextColor={userMessageBoxTextColor ?? ''}
               key={key}
               position={x.channel ? 'left' : 'right'}
