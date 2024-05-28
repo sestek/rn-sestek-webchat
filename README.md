@@ -365,6 +365,13 @@ const startStorageSession = () => {
         closeModalNoButtonText: 'No',
       },
     },
+    dateSettings: {
+      use:true,
+      backgroundColor: '#EFEFEF',
+      textColor: 'black',
+      borderRadius:20
+    },
+    autoPlayAudio: false,
   }}
 />
 
@@ -439,6 +446,13 @@ You can customize your external components with the following values
       closeModalNoButtonText:string
     };
   };
+  dateSettings?:{
+    use?:boolean;
+    backgroundColor?:string;
+    textColor?:string;
+    borderRadius?:number;
+  },
+  autoPlayAudio?: boolean
 }
 
 interface BodyColorOrImageType {

@@ -1,7 +1,6 @@
 import React, { type FC, useEffect } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import {Text, TouchableOpacity, View } from 'react-native';
 import type { PropsHeaderComponent } from '../../types';
-import { MinusIcon, MultiplyIcon } from '../../image';
 import { styles } from './style';
 import useCheckBackground from '../../hook/useCheckBackground';
 import RenderImage from '../renderImage';
