@@ -4,6 +4,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useRef,
+  useEffect,
 } from 'react';
 import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
@@ -28,6 +29,7 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
     chatStartButtonBackgroundSize,
     chatStartButton,
     chatStartButtonHide,
+    headerColor
   } = customizeConfiguration;
 
   const { asyncStorage } = modules;
@@ -124,6 +126,14 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
     },
   }));
 
+  useEffect(() => {
+    if (visible) {
+      StatusBar.setBackgroundColor(headerColor || 'white');
+    } else {
+      StatusBar.setBackgroundColor('transparent');
+    }
+  }, [visible]);
+
   return (
     <React.Fragment>
       {chatStartButtonHide ? (
@@ -168,15 +178,6 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
               initialConfig={customizeConfiguration}
               integrationId={defaultConfiguration?.integrationId}
             >
-              {visible && (
-                <StatusBar
-                  animated={true}
-                  backgroundColor="#7743DB"
-                  barStyle="default"
-                  showHideTransition="fade"
-                  hidden={false}
-                />
-              )}
               <ModalComponent
                 ref={modalRef}
                 url={url || ChatModal.defaultProps?.url!}
