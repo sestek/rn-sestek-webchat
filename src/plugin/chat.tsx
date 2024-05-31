@@ -4,9 +4,8 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useRef,
-  useEffect,
 } from 'react';
-import { Image, StatusBar, TouchableOpacity, View } from 'react-native';
+import { Image,  TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
 import { ModalCompRef, ModalComponent } from '../components/modal/modal';
 import { ChatIcon } from '../image';
@@ -29,7 +28,6 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
     chatStartButtonBackgroundSize,
     chatStartButton,
     chatStartButtonHide,
-    headerColor
   } = customizeConfiguration;
 
   const { asyncStorage } = modules;
@@ -125,14 +123,6 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
       startStorageSession();
     },
   }));
-
-  useEffect(() => {
-    if (visible) {
-      StatusBar.setBackgroundColor(headerColor || 'white');
-    } else {
-      StatusBar.setBackgroundColor('transparent');
-    }
-  }, [visible]);
 
   return (
     <React.Fragment>
