@@ -8,10 +8,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   header: {
-    height: Platform.OS === 'android' ? 45 : 80,
+    height: Platform.OS === 'android' ? 45 : GeneralManager.getStatusBarHeight() +45,
     width: '100%',
     paddingTop:
-      Platform.OS === 'android' ? 0 : GeneralManager.getMobileTopBottom('top'),
+      Platform.OS === 'android' ? 0 : GeneralManager.getStatusBarHeight(),
   },
   body: {},
   footer: {

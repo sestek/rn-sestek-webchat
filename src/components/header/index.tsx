@@ -20,7 +20,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
 
-  const { headerAlignmentType, headerTextColor } = customizeConfiguration;
+  const { headerAlignmentType,headerTextStyle } = customizeConfiguration;
 
   const { background } = useCheckBackground();
 
@@ -51,7 +51,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           },
         ]}
       >
-        <Text style={[styles.headerText, { color: headerTextColor }]}>
+        <Text style={headerTextStyle}>
           {texts.headerText}
         </Text>
       </View>

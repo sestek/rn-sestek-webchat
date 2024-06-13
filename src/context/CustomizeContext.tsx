@@ -27,7 +27,11 @@ interface CustomizeConfigurationContextType {
 
 const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   headerColor: '#7743DB',
-  headerTextColor: 'white',
+  headerTextStyle:{
+    fontWeight: 'bold',
+    fontSize: 24,
+    color:'white'
+  },
   headerHideIcon: {
     type: 'url',
     value: MinusIcon,

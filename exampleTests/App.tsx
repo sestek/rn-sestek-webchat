@@ -142,7 +142,7 @@ export default function App() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-         url={config?.URL_}
+        url={config.URL_}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -157,8 +157,9 @@ export default function App() {
           sendConversationStart: true,
           channel: 'mobil',
           clientId: 'mobile-testing',
-          tenant: config.TNAME_,
-          projectName: config.PNAME_,
+           tenant: config.TNAME_,
+           projectName: config.PNAME_,
+      
           // enableNdUi: false,
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),
@@ -166,7 +167,11 @@ export default function App() {
         customizeConfiguration={{
           // Header
           headerColor: '#7743DB',
-          headerTextColor: 'white',
+  
+          // headerTextStyle:{
+          //   color:'red',
+          //   fontSize:20
+          // },
           // headerHideIcon: {
           //   type: 'url',
           //   value: require('./src/images/hide.png'),

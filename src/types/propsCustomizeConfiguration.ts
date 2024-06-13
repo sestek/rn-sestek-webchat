@@ -1,7 +1,6 @@
 export default interface PropsCustomizeConfiguration {
   headerColor?: string;
-  headerText?: string;
-  headerTextColor?: string;
+  headerTextStyle?:any;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
   headerAlignmentType?: HeaderAlignmentType;

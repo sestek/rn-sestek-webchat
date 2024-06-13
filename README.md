@@ -216,7 +216,11 @@ const startStorageSession = () => {
     // Header
     headerColor: '#7743DB',
     headerText: 'Knovvu',
-    headerTextColor: 'white',
+    headerTextStyle:{
+      fontWeight: 'bold',
+      fontSize: 18,
+      color:'white'
+    },
     headerHideIcon: {
       type: 'component',
       value:  <Icon name="example" size={20} color="#900" />,
@@ -400,7 +404,7 @@ You can customize your external components with the following values
   export default interface PropsCustomizeConfiguration {
   headerColor?: string;
   headerText?: string;
-  headerTextColor?: string;
+  headerTextStyle?: any;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
   headerAlignmentType?: HeaderAlignmentType;

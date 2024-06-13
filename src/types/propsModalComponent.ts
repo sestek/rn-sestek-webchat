@@ -5,7 +5,6 @@ export default interface PropsModalComponent {
   url: string;
   defaultConfiguration: PropsDefaultConfiguration;
   placeholderText?: string;
-  headerText?: string;
   visible: boolean;
   hideModal: () => void;
   closeConversation: () => void;

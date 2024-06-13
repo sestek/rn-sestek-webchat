@@ -1,12 +1,21 @@
-import { Platform } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
+
+const { height: SCREEN_HEIGHT} = Dimensions.get('window');
 
 export default class GeneralManager {
-  static getMobileTopBottom(type: 'bottom' | 'top') {
+  static getStatusBarHeight = () => {
     if (Platform.OS === 'ios') {
-      return type === 'bottom' ? 20 : 35;
+      console.log(SCREEN_HEIGHT);
+      if (SCREEN_HEIGHT > 845) {
+        return 45; 
+      } else if (SCREEN_HEIGHT >= 670 && SCREEN_HEIGHT <= 845) {
+        return 35; 
+      } else {
+        return 20; 
+      }
     }
-    return 0;
-  }
+    return 0; 
+  };
 
   static getWebchatHost() {
     return `http://${
