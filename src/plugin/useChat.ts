@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { PropsUseChat } from '../types';
 import useCheckBackground from '../hook/useCheckBackground';
 import { useCustomizeConfiguration } from '../context/CustomizeContext';
+import { specialMessageTypes } from '../constant/ChatModalConstant';
 const useChat = ({
   defaultConfiguration,
   sessionId,
@@ -40,6 +41,14 @@ const useChat = ({
           messages.pop();
           return [...messages, message];
         }
+
+        if (
+          specialMessageTypes.includes(lastElement?.type) &&
+          lastElement?.type === message.type
+        ) {
+          return messages;
+        }
+
         return [...messages, message];
       }
       return [message];
@@ -384,26 +393,39 @@ const useChat = ({
   const parseAttachment = (data: any, i: number) => {
     const parsedJsonContent = JSON.parse(data[i].jsonContent);
 
-    const updatedAttachments = parsedJsonContent.attachments.map(
-      (attachment: any) => {
-        const parsedContent = JSON.parse(attachment.content);
-        return {
-          ...attachment,
-          content: parsedContent,
-        };
-      }
-    );
-    const updatedJsonContent = {
-      ...parsedJsonContent,
-      attachments: updatedAttachments,
-      timestamp: new Date(data[i].dialogTime),
-      channel:
-        data[i].messageType === 'VirtualAgent'
-          ? null
-          : defaultConfiguration.channel,
-      conversationId: sessionId,
-    };
-    return updatedJsonContent;
+    if (parsedJsonContent?.attachments) {
+      const updatedAttachments = parsedJsonContent.attachments.map(
+        (attachment: any) => {
+          const parsedContent = JSON.parse(attachment.content);
+          return {
+            ...attachment,
+            content: parsedContent,
+          };
+        }
+      );
+      const updatedJsonContent = {
+        ...parsedJsonContent,
+        attachments: updatedAttachments,
+        timestamp: new Date(data[i].dialogTime),
+        channel:
+          data[i].messageType === 'VirtualAgent'
+            ? null
+            : defaultConfiguration.channel,
+        conversationId: sessionId,
+      };
+      return updatedJsonContent;
+    } else {
+      const updatedParsedJson = {
+        ...parsedJsonContent,
+        timestamp: new Date(data[i].dialogTime),
+        channel:
+          data[i].messageType === 'VirtualAgent'
+            ? null
+            : defaultConfiguration.channel,
+        conversationId: sessionId,
+      };
+      return updatedParsedJson;
+    }
   };
 
   const getHistory = () => {

@@ -5,7 +5,6 @@ const { height: SCREEN_HEIGHT} = Dimensions.get('window');
 export default class GeneralManager {
   static getStatusBarHeight = () => {
     if (Platform.OS === 'ios') {
-      console.log(SCREEN_HEIGHT);
       if (SCREEN_HEIGHT > 845) {
         return 45; 
       } else if (SCREEN_HEIGHT >= 670 && SCREEN_HEIGHT <= 845) {

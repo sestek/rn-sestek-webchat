@@ -16,6 +16,7 @@ import Avatar from './avatar';
 import styles from './style';
 import CarouselPage from './carousel';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { specialMessageTypes } from '../../constant/ChatModalConstant';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const messageType = props.type ? props.type : '';
@@ -164,9 +165,32 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     }${date.getMinutes()}`;
   };
 
+  const isSpecialMessageType = (type: string) => {
+    return specialMessageTypes.includes(type);
+  };
+  const renderEndOfConversation = () => (
+    <View
+      style={{
+        ...styles.endOfConversationContainer,
+        backgroundColor: customizeConfiguration?.chatBotMessageBoxBackground,
+      }}
+    >
+      <Text
+        style={{
+          ...styles.endOfConversationText,
+          color: customizeConfiguration?.chatBotMessageBoxTextColor,
+        }}
+      >
+        {props?.activity?.text}
+      </Text>
+    </View>
+  );
+
   return (
     <View style={{ ...styles.messageBoxContainer }}>
-      {messageType === 'system' ? null : (
+      {messageType === 'system' ? null : isSpecialMessageType(messageType) ? (
+        renderEndOfConversation()
+      ) : (
         <View style={{ ...styles.messageBoxInContainer }}>
           <View
             style={{

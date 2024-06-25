@@ -98,4 +98,14 @@ export default StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 6,
   },
+  endOfConversationContainer: {
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  endOfConversationText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 });

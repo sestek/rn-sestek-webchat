@@ -6,3 +6,11 @@ export const DefaultFontSettings = {
     subtitleFontSize: 15,
     descriptionFontSize: 13,
   }
+
+export const specialMessageTypes = [
+  'endOfConversation',
+  'CustomerAssignedToLiveAgent',
+  'CustomerTransferringToLiveAgent',
+  'LiveAgentAssignmentTimeout',
+  'EndOfLiveConversation',
+];

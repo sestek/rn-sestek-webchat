@@ -29,7 +29,7 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   headerColor: '#7743DB',
   headerTextStyle:{
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 15,
     color:'white'
   },
   headerHideIcon: {

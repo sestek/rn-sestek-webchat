@@ -1,4 +1,3 @@
-import type PropsModules from './propsModules';
 
 export default interface PropsMessageBoxComponent {
   position: 'left' | 'right';
