@@ -458,7 +458,6 @@ const useChat = ({
         if (data.length > historyCount) {
           for (let i = historyCount; i < data.length; i++) {
             const message = await parseAttachment(data, i);
-            console.log(message);
             addMessageList(message);
           }
         } else if (historyCount > data.length) {
