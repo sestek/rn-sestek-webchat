@@ -58,7 +58,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           )}
         </View>
         {props.messageList
-          .slice(1)
+        //  .slice(1)
           .filter((x) => x.message !== '' && x.message !== '<p></p>')
           .map((x: any, key: number) => (
             <MessageBox

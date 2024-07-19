@@ -41,7 +41,7 @@ export default function App() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
-     console.log('value', value);
+    console.log('value', value);
   };
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function App() {
   };
 
   const customActionDataExample = {
-    tel: '900000000000',
+    user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
   };
 
   const startStorageSession = () => {
@@ -100,9 +100,6 @@ export default function App() {
       </View>
 
       <View style={{flex: 1}}>
-        <Pressable style={styles.button} onPress={startStorageSession}>
-          <Text style={styles.text}>Deep Test2</Text>
-        </Pressable>
         <Pressable style={styles.button} onPress={pressStartConversation}>
           <Text style={styles.text}>Start Conversation</Text>
         </Pressable>
@@ -111,6 +108,9 @@ export default function App() {
         </Pressable>
         <Pressable style={styles.button} onPress={pressTriggerVisible}>
           <Text style={styles.text}>Trigger Visible</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={startStorageSession}>
+          <Text style={styles.text}>Deep Test</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={pressGetMessageList}>
           <Text style={styles.text}>Get Message Data</Text>
@@ -155,12 +155,11 @@ export default function App() {
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          channel: 'mobil',
-          clientId: 'mobile-testing',
-           tenant: config.TNAME_,
-           projectName: config.PNAME_,
-      
-          // enableNdUi: false,
+          channel: 'webchatmobile-sestek',
+          clientId: '1111',
+          tenant: config.TNAME_,
+          projectName: config.PNAME_,
+
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),
         }}
@@ -251,29 +250,29 @@ export default function App() {
           chatStartButtonHide: false,
           // Slider
           // audioSliderSettings: {
-            // userSliderMinimumTrackTintColor: '#C3ACD0',
-            // userSliderMaximumTrackTintColor: 'white',
-            // userSliderThumbTintColor: '#C3ACD0',
-            // userSliderPlayImage: {
-            //   type: 'component',
-            //   value:  <Icon name="rocket" size={40} color="#900" />,
-            // },
-            // userSliderPauseImage: {
-            //   type: 'url',
-            //   value: require('../src/image/pause-audio.png'),
-            // },
-            //bot
-            // botSliderMinimumTrackTintColor: 'red',
-            // botSliderMaximumTrackTintColor: 'blue',
-            // botSliderThumbTintColor: 'black',
-            // botSliderPlayImage: {
-            //   type: 'component',
-            //   value: <Icon name="rocket" size={40} color="#900" />,
-            // },
-            // botSliderPauseImage: {
-            //   type: 'url',
-            //   value: require('../src/image/pause-audio.png'),
-            // },
+          // userSliderMinimumTrackTintColor: '#C3ACD0',
+          // userSliderMaximumTrackTintColor: 'white',
+          // userSliderThumbTintColor: '#C3ACD0',
+          // userSliderPlayImage: {
+          //   type: 'component',
+          //   value:  <Icon name="rocket" size={40} color="#900" />,
+          // },
+          // userSliderPauseImage: {
+          //   type: 'url',
+          //   value: require('../src/image/pause-audio.png'),
+          // },
+          //bot
+          // botSliderMinimumTrackTintColor: 'red',
+          // botSliderMaximumTrackTintColor: 'blue',
+          // botSliderThumbTintColor: 'black',
+          // botSliderPlayImage: {
+          //   type: 'component',
+          //   value: <Icon name="rocket" size={40} color="#900" />,
+          // },
+          // botSliderPauseImage: {
+          //   type: 'url',
+          //   value: require('../src/image/pause-audio.png'),
+          // },
           // },
           // Before Func
           permissionAudioCheck: permissionAudioCheck,

@@ -20,7 +20,18 @@ const useChat = ({
   const { background } = useCheckBackground();
 
   const parseUrl = url ? url.split('/chathub')[0] : '';
-
+  const sessionInfo = defaultConfiguration?.clientId
+    ? defaultConfiguration?.clientId
+    : sessionId;
+  const histortURL = enableNdUi
+    ? parseUrl + '/history/' + sessionId
+    : parseUrl +
+      '/history?projectName=' +
+      defaultConfiguration?.projectName +
+      '&tenantName=' +
+      defaultConfiguration?.tenant +
+      '&clientId=' +
+      sessionInfo;
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
       if (background) {
@@ -71,17 +82,16 @@ const useChat = ({
   }, []);
 
   const initSocket = async () => {
-    await client
-      .connectAsync()
-      .then(() => {
-        if (defaultConfiguration.sendConversationStart === true) {
-          sendConversationStart();
-        }
-        conversationContinue();
-      })
-      .catch((e) => {
-        console.error('connection error', JSON.stringify(e));
-      });
+    try {
+      await client.connectAsync();
+      if (defaultConfiguration.sendConversationStart === true) {
+        sendConversationStart();
+      }
+
+      conversationContinue();
+    } catch (e) {
+      console.error('connection error', JSON.stringify(e));
+    }
     attachClientOnMessage();
     funcTyping();
   };
@@ -176,6 +186,7 @@ const useChat = ({
         project: defaultConfiguration.projectName,
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
+        // Local
       });
       client.sendAsync(
         sessionId,
@@ -233,6 +244,7 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
+      //local
     });
     setMessageList((messages: any) => [
       ...messages,
@@ -370,6 +382,7 @@ const useChat = ({
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
+      //local
     };
     addMessageList(startObj);
     await client.startConversation(JSON.stringify(startObj));
@@ -387,21 +400,27 @@ const useChat = ({
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
     };
+    setMessageList([]);
     client.endConversation(JSON.stringify(dataToSend));
   };
 
-  const parseAttachment = (data: any, i: number) => {
+  const parseAttachment = async (data: any, i: number) => {
     const parsedJsonContent = JSON.parse(data[i].jsonContent);
 
     if (parsedJsonContent?.attachments) {
-      const updatedAttachments = parsedJsonContent.attachments.map(
-        (attachment: any) => {
-          const parsedContent = JSON.parse(attachment.content);
+      const updatedAttachments = await Promise.all(
+        parsedJsonContent.attachments.map(async (attachment: any) => {
+          let parsedContent;
+          try {
+            parsedContent = JSON.parse(attachment.content);
+          } catch (e) {
+            parsedContent = attachment.content;
+          }
           return {
             ...attachment,
             content: parsedContent,
           };
-        }
+        })
       );
       const updatedJsonContent = {
         ...parsedJsonContent,
@@ -428,33 +447,33 @@ const useChat = ({
     }
   };
 
-  const getHistory = () => {
-    if (parseUrl) {
-      fetch(parseUrl + '/history/' + sessionId, {
+  const getHistory = async () => {
+    if (sessionInfo) {
+     
+      const res = await fetch(histortURL, {
         method: 'GET',
-      })
-        .then((res) => res.json())
-        .then((data: any) => {
-          if (data && data.length > 0) {
-            if (data.length > historyCount) {
-              for (let i = historyCount; i < data.length; i++) {
-                const message = parseAttachment(data, i);
-                addMessageList(message);
-              }
-            } else if (historyCount > data.length) {
-              for (let i = 0; i < data.length; i++) {
-                const message = parseAttachment(data, i);
-                addMessageList(message);
-              }
-            }
+      });
+      const data: any = await res.json();
+      if (data && data.length > 0) {
+        if (data.length > historyCount) {
+          for (let i = historyCount; i < data.length; i++) {
+            const message = await parseAttachment(data, i);
+            console.log(message);
+            addMessageList(message);
           }
-        });
+        } else if (historyCount > data.length) {
+          for (let i = 0; i < data.length; i++) {
+            const message = await parseAttachment(data, i);
+            addMessageList(message);
+          }
+        }
+      }
     }
   };
 
   const getHistoryBackground = () => {
-    if (parseUrl) {
-      fetch(parseUrl + '/history/' + sessionId, {
+    if (sessionInfo) {
+      fetch(histortURL, {
         method: 'GET',
       })
         .then((res) => res.json())
@@ -481,6 +500,7 @@ const useChat = ({
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
+      //local
     };
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';

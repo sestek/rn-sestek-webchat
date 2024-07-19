@@ -168,23 +168,29 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const isSpecialMessageType = (type: string) => {
     return specialMessageTypes.includes(type);
   };
-  const renderEndOfConversation = () => (
-    <View
-      style={{
-        ...styles.endOfConversationContainer,
-        backgroundColor: customizeConfiguration?.chatBotMessageBoxBackground,
-      }}
-    >
-      <Text
+  const renderEndOfConversation = () => {
+    if (!props?.activity?.text) {
+      return null;
+    }
+  
+    return (
+      <View
         style={{
-          ...styles.endOfConversationText,
-          color: customizeConfiguration?.chatBotMessageBoxTextColor,
+          ...styles.endOfConversationContainer,
+          backgroundColor: customizeConfiguration?.chatBotMessageBoxBackground,
         }}
       >
-        {props?.activity?.text}
-      </Text>
-    </View>
-  );
+        <Text
+          style={{
+            ...styles.endOfConversationText,
+            color: customizeConfiguration?.chatBotMessageBoxTextColor,
+          }}
+        >
+          {props?.activity?.text}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <View style={{ ...styles.messageBoxContainer }}>
