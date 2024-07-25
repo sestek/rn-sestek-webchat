@@ -28,7 +28,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
         }
       >
         <View
-          style={[styles.textContainer, { backgroundColor: chatBody?.value }]}
+          style={[styles.textContainer]}
         >
           {customizeConfiguration?.dateSettings?.use && (
             <View

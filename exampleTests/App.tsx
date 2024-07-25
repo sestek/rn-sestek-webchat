@@ -234,7 +234,7 @@ export default function App() {
           // Chat Body
           // chatBody: {
           //   type: 'image',
-          //   value: require('./src/images/background.jpg'),
+          //   value: require('./src/images/background.png'),
           // },
           chatBodyMessageBoxGap: 20,
           // Chat Start Button
