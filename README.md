@@ -407,10 +407,9 @@ For other additional information, we have created a document that you can use in
 You can customize your external components with the following values
 
 ```javascript
-  export default interface PropsCustomizeConfiguration {
+ export default interface PropsCustomizeConfiguration {
   headerColor?: string;
-  headerText?: string;
-  headerTextStyle?: any;
+  headerTextStyle?:any;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
   headerAlignmentType?: HeaderAlignmentType;
@@ -425,24 +424,24 @@ You can customize your external components with the following values
   bottomAttachmentIcon?: IconType;
   bottomInputSendButtonColor?: string;
   userMessageBoxTextColor?: string;
+  userMessageIcon?: IconType;
   chatBotMessageIcon?: IconType;
   chatBotMessageBoxTextColor?: string;
   chatBotMessageBoxBackground?: string;
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
   chatBotMessageBoxButtonTextColor?: string;
+  messageBoxAvatarIconSize?: number;
+  chatBotCarouselSettings?: CarouselSettings;
   chatBody?: BodyColorOrImageType;
+  chatBodyMessageBoxGap?: number;
   chatBodyTimeBackground?: string;
   chatStartButtonHide?: boolean;
   chatStartButton?: IconType;
   chatStartButtonBackground?: string;
   chatStartButtonBackgroundSize?: number;
   userMessageBoxBackground?: string;
-  sliderMinimumTrackTintColor?: string;
-  sliderMaximumTrackTintColor?: string;
-  sliderThumbTintColor?: string;
-  sliderPlayImage?: BodyColorOrImageType;
-  sliderPauseImage?: BodyColorOrImageType;
+  audioSliderSettings?: AudioSliderSettings;
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
   fontSettings?: FontSettings;
@@ -461,6 +460,7 @@ You can customize your external components with the following values
     backgroundColor?:string;
     textColor?:string;
     borderRadius?:number;
+    format?:DateFormatType;
   },
   autoPlayAudio?: boolean
 }
@@ -470,37 +470,61 @@ interface BodyColorOrImageType {
   value: any;
 }
 
+type DateFormatType = 'short' | 'long' ;
+
 type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
 export interface IconType {
-  type: 'uri' | 'component';
-  value: string | React.ReactElement | React.ReactNode;;
+  type: 'url' | 'component' | undefined;
+  value: string | React.ReactElement | React.ReactNode;
 }
+
 export interface FontSettings {
   titleFontSize?:number;
   subtitleFontSize?:number;
   descriptionFontSize?:number;
 }
 
+interface CarouselSettings {
+  nextButtonIcon?: IconType;
+  prevButtonIcon?: IconType;
+  buttonGroup?: {
+    borderColor?: string;
+    backgroundColor?: string;
+    textColor?: string;
+  };
+}
+
 interface CloseModalSettings {
   use: boolean;
-  text: string;
   textColor: string;
   background: string;
   buttons: {
     yesButton: {
-      text: string;
       textColor: string;
       background: string;
       borderColor: string;
     };
     noButton: {
-      text: string;
       textColor: string;
       background: string;
       borderColor: string;
     };
   };
 }
+
+export interface AudioSliderSettings {
+  userSliderMinimumTrackTintColor?: string;
+  userSliderMaximumTrackTintColor?: string;
+  userSliderThumbTintColor?: string;
+  userSliderPlayImage?: IconType;
+  userSliderPauseImage?: IconType;
+  botSliderMinimumTrackTintColor?: string;
+  botSliderMaximumTrackTintColor?: string;
+  botSliderThumbTintColor?: string;
+  botSliderPlayImage?: IconType;
+  botSliderPauseImage?: IconType;
+}
+
 
 ```
