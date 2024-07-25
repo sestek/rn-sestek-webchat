@@ -1,19 +1,19 @@
 import { Dimensions, Platform } from 'react-native';
 
-const { height: SCREEN_HEIGHT} = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default class GeneralManager {
   static getStatusBarHeight = () => {
     if (Platform.OS === 'ios') {
       if (SCREEN_HEIGHT > 845) {
-        return 45; 
+        return 45;
       } else if (SCREEN_HEIGHT >= 670 && SCREEN_HEIGHT <= 845) {
-        return 35; 
+        return 35;
       } else {
-        return 20; 
+        return 20;
       }
     }
-    return 0; 
+    return 0;
   };
 
   static getWebchatHost() {
@@ -55,6 +55,25 @@ export default class GeneralManager {
         return { uri: value };
       default:
         return defaultIcon;
+    }
+  }
+
+  static getCurrentDate(locale: string, format: 'short' | 'long' | undefined): string {
+    const date = new Date();
+
+    if (format === 'short') {
+      return date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+    } else if (format === 'long') {
+      const day = date.getDate();
+      const month = date.toLocaleString(locale, { month: 'short' });
+      const year = date.getFullYear();
+      return `${day} ${month} ${year}`;
+    } else {
+      throw new Error('Invalid format');
     }
   }
 }

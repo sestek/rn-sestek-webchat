@@ -15,13 +15,14 @@ export default interface PropsCustomizeConfiguration {
   bottomAttachmentIcon?: IconType;
   bottomInputSendButtonColor?: string;
   userMessageBoxTextColor?: string;
+  userMessageIcon?: IconType;
   chatBotMessageIcon?: IconType;
   chatBotMessageBoxTextColor?: string;
   chatBotMessageBoxBackground?: string;
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
   chatBotMessageBoxButtonTextColor?: string;
-  chatBotMessageBoxAvatarIconSize?: number;
+  messageBoxAvatarIconSize?: number;
   chatBotCarouselSettings?: CarouselSettings;
   chatBody?: BodyColorOrImageType;
   chatBodyMessageBoxGap?: number;
@@ -50,6 +51,7 @@ export default interface PropsCustomizeConfiguration {
     backgroundColor?:string;
     textColor?:string;
     borderRadius?:number;
+    format?:DateFormatType;
   },
   autoPlayAudio?: boolean
 }
@@ -58,6 +60,8 @@ interface BodyColorOrImageType {
   type: 'image' | 'color';
   value: any;
 }
+
+type DateFormatType = 'short' | 'long' ;
 
 type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 

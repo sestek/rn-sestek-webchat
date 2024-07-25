@@ -5,16 +5,18 @@ import React, {
   forwardRef,
   useRef,
 } from 'react';
-import { Image,  TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
 import { ModalCompRef, ModalComponent } from '../components/modal/modal';
-import { ChatIcon } from '../image';
 import type { PropsChatModal } from '../types';
 import { ChatModalProps } from '../types/plugin/ChatModalProps';
 import { styles } from './chat-styles';
 import { LoadingProvider } from '../context/LoadingContext';
 import RenderImage from '../../src/components/renderImage';
-import { CustomizeConfigurationProvider } from '../context/CustomizeContext';
+import {
+  CustomizeConfigurationProvider,
+  defaultCustomizeConfiguration,
+} from '../context/CustomizeContext';
 import { ModulesProvider } from '../context/ModulesContext';
 
 let sessionId = GeneralManager.createUUID();
@@ -23,12 +25,14 @@ let client = new SignalRClient(GeneralManager.getWebchatHost());
 const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
   const { defaultConfiguration, url, modules, customizeConfiguration } = props;
 
+  const customizeConfigurationData =
+    customizeConfiguration || defaultCustomizeConfiguration;
   const {
     chatStartButtonBackground,
     chatStartButtonBackgroundSize,
     chatStartButton,
     chatStartButtonHide,
-  } = customizeConfiguration;
+  } = customizeConfigurationData;
 
   const { asyncStorage } = modules;
 
@@ -123,7 +127,6 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
       startStorageSession();
     },
   }));
-
   return (
     <React.Fragment>
       {chatStartButtonHide ? (
@@ -139,7 +142,7 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
             ]}
             onPress={() => startConversation()}
           >
-            {chatStartButton ? (
+            {chatStartButton && (
               <RenderImage
                 type={chatStartButton.type}
                 value={chatStartButton.value}
@@ -147,14 +150,6 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
                   width: chatStartButtonBackgroundSize || 50,
                   height: chatStartButtonBackgroundSize || 50,
                 }}
-              />
-            ) : (
-              <Image
-                style={{
-                  width: chatStartButtonBackgroundSize || 50,
-                  height: chatStartButtonBackgroundSize || 50,
-                }}
-                source={ChatIcon}
               />
             )}
           </TouchableOpacity>
@@ -165,7 +160,7 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
           <ModulesProvider modules={modules}>
             <CustomizeConfigurationProvider
               url={url}
-              initialConfig={customizeConfiguration}
+              initialConfig={customizeConfigurationData}
               integrationId={defaultConfiguration?.integrationId}
             >
               <ModalComponent

@@ -153,13 +153,13 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                         marginHorizontal: 12,
                         flex: 1,
                         borderColor:
-                          carouselStyle?.buttonGroup?.borderColor ?? '#E2E2E4',
+                          carouselStyle?.buttonGroup?.borderColor ?? customizeConfiguration?.chatBotMessageBoxButtonBorderColor,
                         borderRadius: 8,
                         borderWidth: 1.5,
                         padding: 10,
                         backgroundColor:
                           carouselStyle?.buttonGroup?.backgroundColor ??
-                          'white',
+                          customizeConfiguration?.chatBotMessageBoxButtonBackground,
                         marginBottom:
                           item?.buttons?.length - 1 === idx ? 15 : 0,
                       }}

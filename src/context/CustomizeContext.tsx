@@ -25,7 +25,7 @@ interface CustomizeConfigurationContextType {
   getTexts: () => Record<string, string>;
 }
 
-const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
+export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   headerColor: '#7743DB',
   headerTextStyle:{
     fontWeight: 'bold',
@@ -41,7 +41,7 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     value: CloseIcon,
   },
   headerAlignmentType: 'textToCenter',
-  bottomColor: 'red',
+  bottomColor: 'transparent',
   bottomInputBackgroundColor: 'white',
   bottomInputBorderColor: '#d5d5d5',
   bottomInputSendButtonColor: '#7743DB',
@@ -67,6 +67,10 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   },
   userMessageBoxBackground: '#863CEB',
   userMessageBoxTextColor: 'white',
+  userMessageIcon:{
+    type: undefined,
+    value: undefined,
+  },
   chatBotMessageBoxBackground: '#EFEFEF',
   chatBotMessageBoxTextColor: 'black',
   chatBotMessageIcon: {
@@ -76,7 +80,7 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   chatBotMessageBoxButtonBackground: 'white',
   chatBotMessageBoxButtonTextColor: '#863CEB',
   chatBotMessageBoxButtonBorderColor: '#EFEFEF',
-  chatBotMessageBoxAvatarIconSize: 28,
+  messageBoxAvatarIconSize: 28,
   chatBotCarouselSettings: {
     nextButtonIcon: {
       type: 'url',
@@ -87,9 +91,9 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       value: Back,
     },
     buttonGroup: {
-      borderColor: '#E2E2E4',
-      backgroundColor: '#ffffff',
-      textColor: '#863CEB',
+      borderColor: undefined,
+      backgroundColor: undefined,
+      textColor: undefined,
     },
   },
   chatBody: { type: 'color', value: 'white' },
@@ -169,7 +173,8 @@ const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     use:true,
     backgroundColor: '#EFEFEF',
     textColor: 'black',
-    borderRadius:20
+    borderRadius:20,
+    format:'long'
   },
   autoPlayAudio: false,
 };

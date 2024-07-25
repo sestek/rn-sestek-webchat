@@ -7,8 +7,9 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 10,
     borderTopRightRadius: 10,
-    marginLeft: 20,
-    marginRight: 5,
+    // marginLeft: 20,
+    // marginRight: 8,
+    // marginLeft:8,
     flexDirection: 'column',
     paddingLeft: 9,
     paddingRight: 9,
@@ -60,7 +61,6 @@ export default StyleSheet.create({
   },
   messageBoxAvatarContainer: {
     display: 'flex',
-    marginLeft: 15,
     paddingTop: 12,
   },
 
@@ -86,9 +86,6 @@ export default StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     alignSelf: 'center',
-  },
-  messageBoxAvatarTitleContainer: {
-    marginRight: 5,
   },
 
   generalMessageBoxButton: {

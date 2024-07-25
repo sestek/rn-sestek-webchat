@@ -143,30 +143,35 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
           >
             <GenerateBody
               BodyComponent={
-                <BodyComponent
-                  messageList={messageList}
-                  changeInputData={changeInputData}
-                  sendMessage={sendMessage}
-                  scrollViewRef={scrollViewRef}
-                />
+                <>
+                  <BodyComponent
+                    messageList={messageList}
+                    changeInputData={changeInputData}
+                    sendMessage={sendMessage}
+                    scrollViewRef={scrollViewRef}
+                  />
+                  <View
+                    style={[
+                      styles.footer,
+                        customizeConfiguration?.bottomColor
+                          ? {
+                              backgroundColor:
+                                customizeConfiguration?.bottomColor,
+                            }
+                          : {},
+                    ]}
+                  >
+                    <FooterComponent
+                      inputData={inputData}
+                      changeInputData={changeInputData}
+                      sendMessage={sendMessage}
+                      sendAudio={sendAudio}
+                      sendAttachment={sendAttachment}
+                      scrollViewRef={scrollViewRef}
+                    />
+                  </View>
+                </>
               }
-            />
-          </View>
-          <View
-            style={[
-              styles.footer,
-              customizeConfiguration?.bottomColor
-                ? { backgroundColor: customizeConfiguration?.bottomColor }
-                : {},
-            ]}
-          >
-            <FooterComponent
-              inputData={inputData}
-              changeInputData={changeInputData}
-              sendMessage={sendMessage}
-              sendAudio={sendAudio}
-              sendAttachment={sendAttachment}
-              scrollViewRef={scrollViewRef}
             />
           </View>
         </KeyboardAvoidingView>

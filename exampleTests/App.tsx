@@ -19,6 +19,7 @@ import DocumentPicker from 'react-native-document-picker';
 import config from './src/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import RenderHTML from 'react-native-render-html';
 
 export default function App() {
   const modalRef = useRef<ChatModalProps>(null);
@@ -116,20 +117,6 @@ export default function App() {
           <Text style={styles.text}>Get Message Data</Text>
         </Pressable>
       </View>
-      {/*<View style={{ flex: 1, flexDirection: 'row' }}>
-        <Pressable style={[styles.button, styles.buttonRow]} onPress={() => recorder.onStartRecord()}>
-          <Text style={styles.text}>Start Record</Text>
-        </Pressable>
-        <Pressable style={[styles.button, styles.buttonRow]} onPress={() => recorder.onStopRecord()}>
-          <Text style={styles.text}>Stop Record</Text>
-        </Pressable>
-        <Pressable style={[styles.button, styles.buttonRow]} onPress={() => {
-          recorder.onStartPlay();
-          //'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
-        }}>
-          <Text style={styles.text}>Record Play</Text>
-        </Pressable>
-      </View>*/}
       <View style={{flex: 0.5, justifyContent: 'center'}}>
         <Text style={{margin: 20, fontSize: 12, fontWeight: '100'}}>
           Sestek is a global technology company helping organizations with
@@ -139,6 +126,7 @@ export default function App() {
           language processing and voice biometrics technologies.
         </Text>
       </View>
+
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
@@ -151,12 +139,13 @@ export default function App() {
           Record: AudioRecord,
           RNFileSelector: DocumentPicker,
           asyncStorage: AsyncStorage,
+          // renderHtml: RenderHTML,
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
           channel: 'webchatmobile-sestek',
-          clientId: '1111',
+          // clientId: '1111',
           tenant: config.TNAME_,
           projectName: config.PNAME_,
 
@@ -166,7 +155,7 @@ export default function App() {
         customizeConfiguration={{
           // Header
           headerColor: '#7743DB',
-  
+
           // headerTextStyle:{
           //   color:'red',
           //   fontSize:20
@@ -181,7 +170,7 @@ export default function App() {
           // },
           headerAlignmentType: 'textToCenter',
           // Bottom
-          bottomColor: 'white',
+          // bottomColor: 'red',
           bottomInputBackgroundColor: 'white',
           bottomInputBorderColor: '#d5d5d5',
           bottomInputSendButtonColor: '#7743DB',
@@ -208,6 +197,11 @@ export default function App() {
           // User MessageBox
           userMessageBoxBackground: '#863CEB',
           userMessageBoxTextColor: 'white',
+          // userMessageIcon: {
+          //   type: 'url',
+          //   value:
+          //   require('./src/images/knovvu_logo.png'),
+          // },
 
           // ChatBot MessageBox
           chatBotMessageBoxBackground: '#EFEFEF',
@@ -217,10 +211,10 @@ export default function App() {
           //   value:
           //     'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
           // },
-          chatBotMessageBoxButtonBackground: 'white',
-          chatBotMessageBoxButtonTextColor: '#863CEB',
-          chatBotMessageBoxButtonBorderColor: '#EFEFEF',
-          chatBotMessageBoxAvatarIconSize: 28,
+          // chatBotMessageBoxButtonBackground: 'pink',
+          // chatBotMessageBoxButtonTextColor: 'blue',
+          // chatBotMessageBoxButtonBorderColor: 'red',
+          messageBoxAvatarIconSize: 28,
           // Carousel
           // chatBotCarouselSettings: {
           //   // nextButtonIcon: {
@@ -238,7 +232,10 @@ export default function App() {
           //   },
           // },
           // Chat Body
-          chatBody: {type: 'color', value: 'white'},
+          // chatBody: {
+          //   type: 'image',
+          //   value: require('./src/images/background.jpg'),
+          // },
           chatBodyMessageBoxGap: 20,
           // Chat Start Button
           chatStartButton: {
@@ -302,13 +299,6 @@ export default function App() {
             },
           },
           language: {
-            tr: {
-              headerText: 'Knovvu',
-              bottomInputText: 'Lütfen bir mesaj yazınız',
-              closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
-              closeModalYesButtonText: 'Evet',
-              closeModalNoButtonText: 'Hayır',
-            },
             en: {
               headerText: 'Knovvu',
               bottomInputText: 'Please write a message',
@@ -316,12 +306,28 @@ export default function App() {
               closeModalYesButtonText: 'Yes',
               closeModalNoButtonText: 'No',
             },
+            tr: {
+              headerText: 'Knovvu',
+              bottomInputText: 'Lütfen bir mesaj yazınız',
+              closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
+              closeModalYesButtonText: 'Evet',
+              closeModalNoButtonText: 'Hayır',
+            },
+
+            es: {
+              headerText: 'ispanyol',
+              bottomInputText: 'Please write a message',
+              closeModalText: 'Are you sure you want to exit chat?',
+              closeModalYesButtonText: 'Yes',
+              closeModalNoButtonText: 'No',
+            },
           },
           //  dateSettings: {
-          //     use:false,
-          //    backgroundColor: 'pink',
-          //    textColor: 'black',
-          //     borderRadius:20
+          //     use:true,
+          //     backgroundColor: 'pink',
+          //     textColor: 'black',
+          //     borderRadius:0,
+          //     format:'short'
           //  },
           autoPlayAudio: false,
         }}

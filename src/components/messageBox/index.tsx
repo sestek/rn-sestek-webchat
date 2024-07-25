@@ -30,11 +30,19 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
 
   const { customizeConfiguration } = useCustomizeConfiguration();
 
+  const {
+    chatBodyMessageBoxGap,
+    chatBotMessageBoxBackground,
+    chatBotMessageBoxTextColor,
+    userMessageBoxBackground,
+    userMessageBoxTextColor,
+  } = customizeConfiguration;
+
   var positionCls = [
     styles.messageBox,
     messageBoxPosition === 'right' && styles.messageBoxRight,
     {
-      marginBottom: customizeConfiguration?.chatBodyMessageBoxGap ?? 20,
+      marginBottom: chatBodyMessageBoxGap ?? 20,
     },
   ];
 
@@ -172,18 +180,18 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     if (!props?.activity?.text) {
       return null;
     }
-  
+    
     return (
       <View
         style={{
           ...styles.endOfConversationContainer,
-          backgroundColor: customizeConfiguration?.chatBotMessageBoxBackground,
+          backgroundColor: chatBotMessageBoxBackground,
         }}
       >
         <Text
           style={{
             ...styles.endOfConversationText,
-            color: customizeConfiguration?.chatBotMessageBoxTextColor,
+            color: chatBotMessageBoxTextColor,
           }}
         >
           {props?.activity?.text}
@@ -197,77 +205,71 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
       {messageType === 'system' ? null : isSpecialMessageType(messageType) ? (
         renderEndOfConversation()
       ) : (
-        <View style={{ ...styles.messageBoxInContainer }}>
-          <View
-            style={{
-              flexDirection: messageBoxPosition === 'right' ? 'row' : undefined,
-            }}
-          >
-            {messageBoxPosition === 'right' && (
-              <View style={styles.messageBoxAvatarContainer}>
-                <Avatar />
-              </View>
+        <View
+          style={{
+            ...styles.messageBoxInContainer,
+            flexDirection:
+              messageBoxPosition === 'right' ? 'row' : 'row-reverse',
+          }}
+        >
+          <Avatar position={messageBoxPosition} />
+          <View style={[positionCls]}>
+            {carouselType && cardList.length > 1 && (
+              <CarouselPage data={cardList} onPressButton={onPressButton} />
             )}
-            <View style={[positionCls]}>
-              {carouselType && cardList.length > 1 && (
-                <CarouselPage data={cardList} onPressButton={onPressButton} />
+            <View
+              style={[
+                styles.messageBoxBody,
+                {
+                  backgroundColor:
+                    messageBoxPosition != 'right'
+                      ? userMessageBoxBackground
+                      : chatBotMessageBoxBackground,
+                  width: carouselType
+                    ? Dimensions.get('screen').width * 0.8
+                    : 'auto',
+                  display: carouselType ? 'none' : undefined,
+                },
+              ]}
+            >
+              {!carouselType && (
+                <GeneralMessage imageList={imageList} generalProps={props} />
               )}
-              <View
-                style={[
-                  styles.messageBoxBody,
-                  {
-                    backgroundColor:
+              {(messageType === 'audio' || audioMesType === 'audio/base64') && (
+                <AudioMessage
+                  activity={props.activity}
+                  userMessageBoxTextColor={props.userMessageBoxTextColor}
+                  inlineText={true}
+                />
+              )}
+
+              {props.activity.type === 'typing' ? <TypingMessage /> : null}
+
+              <View style={styles.messageBoxTimeBlock}>
+                <Text
+                  style={{
+                    ...styles.messageBoxTimeBlockText,
+                    color:
                       messageBoxPosition != 'right'
-                        ? customizeConfiguration?.userMessageBoxBackground
-                        : customizeConfiguration?.chatBotMessageBoxBackground,
-                    width: carouselType
-                      ? Dimensions.get('screen').width * 0.8
-                      : 'auto',
-                    display: carouselType ? 'none' : undefined,
-                  },
-                ]}
-              >
-                {!carouselType && (
-                  <GeneralMessage imageList={imageList} generalProps={props} />
-                )}
-                {(messageType === 'audio' ||
-                  audioMesType === 'audio/base64') && (
-                  <AudioMessage
-                    activity={props.activity}
-                    userMessageBoxTextColor={props.userMessageBoxTextColor}
-                    inlineText={true}
-                  />
-                )}
-
-                {props.activity.type === 'typing' ? <TypingMessage /> : null}
-
-                <View style={styles.messageBoxTimeBlock}>
-                  <Text
-                    style={{
-                      ...styles.messageBoxTimeBlockText,
-                      color:
-                        messageBoxPosition != 'right'
-                          ? customizeConfiguration?.userMessageBoxTextColor
-                          : customizeConfiguration?.chatBotMessageBoxTextColor,
-                      fontSize:
-                        customizeConfiguration?.fontSettings
-                          ?.descriptionFontSize,
-                    }}
-                  >
-                    {(props.activity?.timestamp || props.dateString) &&
-                      getTimeGenerate({ timestamp: props.activity.timestamp })}
-                  </Text>
-                </View>
+                        ? userMessageBoxTextColor
+                        : chatBotMessageBoxTextColor,
+                    fontSize:
+                      customizeConfiguration?.fontSettings?.descriptionFontSize,
+                  }}
+                >
+                  {(props.activity?.timestamp || props.dateString) &&
+                    getTimeGenerate({ timestamp: props.activity.timestamp })}
+                </Text>
               </View>
-              {!carouselType &&
-                Array.isArray(attachmentsData) &&
-                attachmentsData[0] && (
-                  <OutsideButton
-                    attachmentsData={attachmentsData}
-                    onPressButton={onPressButton}
-                  />
-                )}
             </View>
+            {!carouselType &&
+              Array.isArray(attachmentsData) &&
+              attachmentsData[0] && (
+                <OutsideButton
+                  attachmentsData={attachmentsData}
+                  onPressButton={onPressButton}
+                />
+              )}
           </View>
         </View>
       )}

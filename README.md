@@ -258,6 +258,11 @@ const startStorageSession = () => {
     // User MessageBox
     userMessageBoxBackground: '#863CEB',
     userMessageBoxTextColor: 'white',
+    userMessageIcon: { // You can add a profile picture or icon to user messages using this props. If you don't send, the user profile picture or icon will not be visible.
+       type: 'url',
+       value:
+       require('./src/images/knovvu_logo.png'),
+      },
 
     // ChatBot MessageBox
     chatBotMessageBoxBackground: '#EFEFEF',
@@ -269,9 +274,9 @@ const startStorageSession = () => {
     chatBotMessageBoxButtonBackground: 'white',
     chatBotMessageBoxButtonTextColor: 'black',
     chatBotMessageBoxButtonBorderColor: '#863CEB',
-    chatBotMessageBoxAvatarIconSize: 28,
+    messageBoxAvatarIconSize: 28,
     // Chat Body
-    chatBody: {type: 'color', value: 'white'},
+    chatBody: {type: 'color', value: 'white'},// Use to set body background color or image.
     chatBodyMessageBoxGap: 20,
     // Chat Start Button
     chatStartButton: {
@@ -373,7 +378,8 @@ const startStorageSession = () => {
       use:true,
       backgroundColor: '#EFEFEF',
       textColor: 'black',
-      borderRadius:20
+      borderRadius:20,
+      format:'long' //If you want to change the date format, these props are used.
     },
     autoPlayAudio: false,
   }}

@@ -38,6 +38,7 @@ const OutsideButton: React.FC<Props> = ({
               borderRadius: 8,
               borderColor: customizeConfiguration?.chatBotMessageBoxButtonBorderColor,
               borderWidth: 1.5,
+              backgroundColor:customizeConfiguration?.chatBotMessageBoxButtonBackground
             }}
           >
             <Text style={{ color: customizeConfiguration?.chatBotMessageBoxButtonTextColor, fontSize:customizeConfiguration?.fontSettings?.descriptionFontSize }}>

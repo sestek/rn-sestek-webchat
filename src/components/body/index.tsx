@@ -5,6 +5,7 @@ import type { PropsBodyComponent } from 'src/types';
 import { styles } from './style';
 import MessageBox from '../messageBox';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { GeneralManager } from '../../services';
 const BodyComponent: FC<PropsBodyComponent> = (props) => {
   const { customizeConfiguration, language } = useCustomizeConfiguration();
   const {
@@ -17,13 +18,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
   } = customizeConfiguration;
   const { scrollViewRef } = props;
 
-  const getCurrentDate = (locale: string) => {
-    return new Date().toLocaleDateString(locale, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -52,13 +46,13 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
                   fontSize: fontSettings?.descriptionFontSize,
                 }}
               >
-                {getCurrentDate(language)}
+                {GeneralManager.getCurrentDate(language, dateSettings?.format)}
               </Text>
             </View>
           )}
         </View>
         {props.messageList
-        //  .slice(1)
+          //  .slice(1)
           .filter((x) => x.message !== '' && x.message !== '<p></p>')
           .map((x: any, key: number) => (
             <MessageBox

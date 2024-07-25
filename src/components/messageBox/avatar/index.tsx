@@ -4,18 +4,40 @@ import styles from '../style';
 import RenderImage from '../../renderImage';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 
-const Avatar: FC = () => {
+interface AvatarProps {
+  position: string;
+}
+
+const Avatar: FC<AvatarProps> = (props) => {
   const { customizeConfiguration } = useCustomizeConfiguration();
+
+  const isRightPosition = props.position === 'right';
+  const messageIcon = isRightPosition
+    ? customizeConfiguration?.chatBotMessageIcon
+    : customizeConfiguration?.userMessageIcon;
+
+  if (!messageIcon?.type || !messageIcon?.value) {
+    return null;
+  }
+
   return (
-    <View style={styles.messageBoxAvatarTitleContainer}>
+    <View
+      style={{
+        ...styles.messageBoxAvatarContainer,
+        marginLeft: isRightPosition ? 8 : 0,
+        marginRight: !isRightPosition ? 8 : 0,
+      }}
+    >
       <RenderImage
-        type={customizeConfiguration?.chatBotMessageIcon?.type}
-        value={customizeConfiguration?.chatBotMessageIcon?.value}
-        style={{ width: customizeConfiguration?.chatBotMessageBoxAvatarIconSize, height: customizeConfiguration?.chatBotMessageBoxAvatarIconSize}}
+        type={messageIcon.type}
+        value={messageIcon.value}
+        style={{
+          width: customizeConfiguration?.messageBoxAvatarIconSize,
+          height: customizeConfiguration?.messageBoxAvatarIconSize,
+        }}
       />
     </View>
   );
 };
-
 
 export default Avatar;

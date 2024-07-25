@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, Text } from 'react-native';
 import { styles } from '../modal/style';
 import { GenerateBodyComponent } from '../../types/components/GenerateBodyComponent';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
@@ -11,11 +11,11 @@ const GenerateBody = (props: GenerateBodyComponent) => {
     <>
       {customizeConfiguration?.chatBody?.type == 'image' ? (
         <ImageBackground
-          source={{ uri: customizeConfiguration?.chatBody?.value }}
+          source={customizeConfiguration?.chatBody?.value}
           style={styles.imageBackground}
           resizeMode="stretch"
         >
-          {BodyComponent && BodyComponent}
+           {BodyComponent && BodyComponent} 
         </ImageBackground>
       ) : (
         BodyComponent
