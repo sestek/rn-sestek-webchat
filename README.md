@@ -207,7 +207,7 @@ const startStorageSession = () => {
     tenant: 'exampleTenant',
     projectName: 'exampleProjectName',
     channel: 'Mobil',
-    clientId: 'mobile-testing',
+   // clientId: 'Please send the user id',
     enableNdUi: true,
     getResponseData: setResponse,
     customActionData: JSON.stringify(customActionDataExample),
