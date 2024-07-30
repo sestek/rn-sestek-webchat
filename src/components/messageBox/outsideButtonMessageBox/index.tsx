@@ -41,7 +41,7 @@ const OutsideButton: React.FC<Props> = ({
               backgroundColor:customizeConfiguration?.chatBotMessageBoxButtonBackground
             }}
           >
-            <Text style={{ color: customizeConfiguration?.chatBotMessageBoxButtonTextColor, fontSize:customizeConfiguration?.fontSettings?.descriptionFontSize }}>
+            <Text style={{ color: customizeConfiguration?.chatBotMessageBoxButtonTextColor, fontSize:customizeConfiguration?.fontSettings?.descriptionFontSize, fontWeight:'500' }}>
               {button?.title}
             </Text>
           </TouchableOpacity>

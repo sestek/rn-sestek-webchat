@@ -6,11 +6,10 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import Markdown from '../../../plugin/markdown/index';
 import styles from '../style';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 import { useModules } from '../../../context/ModulesContext';
-
+import useRenderContent from '../../../hook/useRenderContent';
 interface Props {
   imageList: any[];
   generalProps: any;
@@ -19,10 +18,10 @@ const GeneralMessage: React.FC<Props> = (props) => {
   const { imageList, generalProps } = props;
   const webViewRef = useRef<any>();
   const { customizeConfiguration } = useCustomizeConfiguration();
-  const {modules} = useModules();
+  const { modules } = useModules();
   const WebView = modules?.RNWebView;
   const messageColor =
-    generalProps?.position != 'right'
+    generalProps?.position !== 'right'
       ? customizeConfiguration?.userMessageBoxTextColor
       : customizeConfiguration?.chatBotMessageBoxTextColor;
   const aspectRatioCorrection = 1.5;
@@ -33,15 +32,13 @@ const GeneralMessage: React.FC<Props> = (props) => {
   const messageAttachmentsContent = messageAttachments?.[0]?.content;
   const messageActivityEntities = messageActivity?.entities?.[0];
 
-  const renderMarkdown = (text: string, textType: string) => (
-    <Markdown
-      color={messageColor}
-      fontSettings={customizeConfiguration?.fontSettings}
-      textType={textType}
-    >
-      {text}
-    </Markdown>
-  );
+  const renderContent = (text: string, textType: string) =>
+    useRenderContent(
+      text,
+      messageColor,
+      customizeConfiguration?.fontSettings,
+      textType
+    );
   return (
     <>
       {imageList.map((image, index) => (
@@ -66,22 +63,22 @@ const GeneralMessage: React.FC<Props> = (props) => {
 
       {messageType === 'message' &&
         messageAttachmentsContent?.title &&
-        renderMarkdown(messageAttachmentsContent?.title, 'title')}
+        renderContent(messageAttachmentsContent?.title, 'title')}
 
       {messageType === 'message' &&
         messageAttachmentsContent?.subtitle &&
-        renderMarkdown(messageAttachmentsContent?.subtitle, 'subtitle')}
+        renderContent(messageAttachmentsContent?.subtitle, 'subtitle')}
 
       {(messageType === 'text' || messageType === 'message') &&
         (messageActivity?.text || messageActivity?.message) &&
-        renderMarkdown(
+        renderContent(
           messageActivity?.text || messageActivity?.message,
           'text'
         )}
 
       {messageType === 'message' &&
         messageAttachmentsContent?.text &&
-        renderMarkdown(messageAttachmentsContent?.text, 'text')}
+        renderContent(messageAttachmentsContent?.text, 'text')}
 
       {WebView &&
         Array.isArray(messageActivity?.entities) &&
@@ -113,9 +110,9 @@ const GeneralMessage: React.FC<Props> = (props) => {
               />
             </TouchableOpacity>
 
-            {renderMarkdown(messageActivityEntities?.geo?.name, 'title')}
-            {renderMarkdown(messageActivityEntities?.address, 'subtitle')}
-            {renderMarkdown(messageActivityEntities?.hasMap, 'text')}
+            {renderContent(messageActivityEntities?.geo?.name, 'title')}
+            {renderContent(messageActivityEntities?.address, 'subtitle')}
+            {renderContent(messageActivityEntities?.hasMap, 'text')}
           </View>
         )}
     </>

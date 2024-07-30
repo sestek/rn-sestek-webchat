@@ -12,7 +12,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     userMessageBoxTextColor,
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
-    chatBody,
     fontSettings,
     dateSettings,
   } = customizeConfiguration;

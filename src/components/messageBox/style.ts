@@ -42,8 +42,8 @@ export default StyleSheet.create({
     padding: 8,
     borderRadius: 15,
     maxWidth: Dimensions.get('screen').width * 0.8,
-    justifyContent: 'center',
-    alignItems: 'center', 
+    // justifyContent: 'center',
+    // alignItems: 'center', 
   },
 
   messageBoxTimeBlock: {
