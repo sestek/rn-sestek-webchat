@@ -104,9 +104,9 @@ export default StyleSheet.create({
         marginBottom: 10,
         flexWrap: 'wrap',
         flexDirection: 'row',
-        textAlign: 'center',
+        // textAlign: 'center',
         alignItems: 'flex-start',
-        justifyContent: 'center',
+        // justifyContent: 'center',
     },
     paragraphWithImage: {
         marginTop: 10,

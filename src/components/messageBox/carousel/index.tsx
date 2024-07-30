@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
-import Markdown from '../../../plugin/markdown';
 import RenderImage from '../../renderImage';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
+import useRenderContent from '../../../hook/useRenderContent';
 
 const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const CARD_WIDTH = 220;
@@ -11,7 +11,13 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { customizeConfiguration } = useCustomizeConfiguration();
-
+  const renderContent = (text: string, textType: string) =>
+    useRenderContent(
+      text,
+      customizeConfiguration?.chatBotMessageBoxTextColor,
+      customizeConfiguration?.fontSettings,
+      textType
+    );
   const onScroll = (event: any) => {
     const newIndex = Math.round(
       event.nativeEvent.contentOffset.x / SNAP_INTERVAL
@@ -99,6 +105,14 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         onScroll={onScroll}
       >
         {data.map((item: any, idx: number) => {
+          const title =
+            item?.title && item.title.length > 46
+              ? item.title.substring(0, 43) + '...'
+              : item.title;
+          const subtitle =
+            item?.text && item.text.length > 70
+              ? item.subtitle.substring(0, 65) + '...'
+              : item.subtitle;
           return (
             <View
               key={idx}
@@ -121,25 +135,8 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                   }}
                 />
               </View>
-              <Markdown
-                fontSettings={customizeConfiguration?.fontSettings}
-                color={customizeConfiguration?.chatBotMessageBoxTextColor}
-                textType="title"
-              >
-                {item?.title && item.title.length > 46
-                  ? item.title.substring(0, 43) + '...'
-                  : item.title}
-              </Markdown>
-              <Markdown
-                style={{ opacity: 0.5 }}
-                fontSettings={customizeConfiguration?.fontSettings}
-                color={customizeConfiguration?.chatBotMessageBoxTextColor}
-                textType="text"
-              >
-                {item?.text && item.text.length > 70
-                  ? item.subtitle.substring(0, 65) + '...'
-                  : item.subtitle}
-              </Markdown>
+              {renderContent(title, 'title')}
+              {renderContent(subtitle, 'subtitle')}
 
               {item?.buttons &&
                 item.buttons.map((btn: any, idx: number) => {
@@ -153,7 +150,8 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                         marginHorizontal: 12,
                         flex: 1,
                         borderColor:
-                          carouselStyle?.buttonGroup?.borderColor ?? customizeConfiguration?.chatBotMessageBoxButtonBorderColor,
+                          carouselStyle?.buttonGroup?.borderColor ??
+                          customizeConfiguration?.chatBotMessageBoxButtonBorderColor,
                         borderRadius: 8,
                         borderWidth: 1.5,
                         padding: 10,
@@ -162,6 +160,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                           customizeConfiguration?.chatBotMessageBoxButtonBackground,
                         marginBottom:
                           item?.buttons?.length - 1 === idx ? 15 : 0,
+                        maxHeight: 40,
                       }}
                       key={idx}
                     >
@@ -173,6 +172,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                           fontSize:
                             customizeConfiguration?.fontSettings
                               ?.descriptionFontSize,
+                          fontWeight: '500',
                         }}
                       >
                         {btn?.title}
