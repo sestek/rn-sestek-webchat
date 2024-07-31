@@ -11,15 +11,21 @@ const useRenderContent = (
   textType: string
 ) => {
   const shouldRenderAsHTML = (text: string) => {
-    const htmlTagPattern = /<\/?[a-z][\s\S]*>/i; 
+    const htmlTagPattern = /<\/?[a-z][\s\S]*>/i;
     return htmlTagPattern.test(text);
   };
 
-  const renderMarkdown = (text: string, textType: string) => (
-    <Markdown color={messageColor} fontSettings={fontSettings} textType={textType}>
-      {text}
-    </Markdown>
-  );
+  const renderMarkdown = (text: string, textType: string) => {
+    return (
+      <Markdown
+        color={messageColor}
+        fontSettings={fontSettings}
+        textType={textType}
+      >
+        {text}
+      </Markdown>
+    );
+  };
 
   const renderHTMLContent = (html: string, textType: string) => {
     let fontSize = fontSettings?.descriptionFontSize || 13;
@@ -29,8 +35,9 @@ const useRenderContent = (
 
     const commonStyles = {
       fontSize: fontSize,
-      lineHeight: 20,
       color: messageColor || 'inherit',
+      marginTop: 10,
+      marginBottom: 10,
     };
 
     const tagsStyles = {
@@ -43,12 +50,10 @@ const useRenderContent = (
       h6: commonStyles,
       b: {
         fontSize: fontSize,
-        lineHeight: 25,
       },
       i: commonStyles,
       a: {
         fontSize: fontSize,
-        lineHeight: 25,
         color: 'blue',
       },
       span: commonStyles,
@@ -56,10 +61,7 @@ const useRenderContent = (
       ul: commonStyles,
       li: commonStyles,
       br: commonStyles,
-      em:{
-        fontSize: fontSize,
-        lineHeight: 25,
-      },
+      em: { fontSize: fontSize },
     };
 
     const formattedHtml = `<div>${html.replace(/\n/g, '<br/>')}</div>`;
@@ -79,6 +81,7 @@ const useRenderContent = (
     }
     return renderMarkdown(text, textType);
   } catch (error) {
+    console.error('Error rendering content:', error);
     return renderMarkdown(text, textType);
   }
 };
