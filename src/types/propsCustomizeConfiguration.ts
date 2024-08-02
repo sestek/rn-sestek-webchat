@@ -88,18 +88,19 @@ interface CarouselSettings {
 
 interface CloseModalSettings {
   use: boolean;
-  textColor: string;
-  background: string;
-  buttons: {
-    yesButton: {
-      textColor: string;
-      background: string;
-      borderColor: string;
+  textColor?: string;
+  background?: string;
+  onClose?:Function;
+  buttons?: {
+    yesButton?: {
+      textColor?: string;
+      background?: string;
+      borderColor?: string;
     };
-    noButton: {
-      textColor: string;
-      background: string;
-      borderColor: string;
+    noButton?: {
+      textColor?: string;
+      background?: string;
+      borderColor?: string;
     };
   };
 }

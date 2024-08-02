@@ -391,6 +391,51 @@ NOTE: With the language object in customizeConfiguration, you can update all tex
 
 ```
 
+```
+### Explanation
+
+#### For Close Button (`headerCloseIcon`) (`closeModalSettings.onClose`):
+
+- If you want to call a function or navigate to another page during the close action, you should do this in the `onClose` function within the `closeModalSettings` prop. This ensures that the close modal works correctly.
+- You can only pass simple components like `Image` or `Icon` to the `headerCloseIcon` prop. These components should not be wrapped by another component (e.g., `Pressable`, `TouchableOpacity`).
+- If you pass a component with an `onPress` action to the `headerCloseIcon` prop, the close modal will be overridden and will not work properly.
+- If you do not want to send a function for the close modal, there is no need to use the `onClose` prop, and the npm package will continue to work in its natural flow.
+
+#### For Minimize Button (`hideCloseIcon`):
+
+- If you want to use a function in the `hideCloseIcon` prop, make sure to wrap this function appropriately when sending it.
+
+```
+```javascript
+ customizeConfiguration={{
+        headerCloseIcon: {
+          type: 'component',
+          value: (
+            <Image source={CloseIcon} />
+          ),
+        },
+        headerHideIcon: {
+          type: 'component',
+          value: (
+            <Pressable
+              onPress={() => {
+                modalRef.current?.triggerVisible();
+                navigation.navigate('Example');
+              }}>
+              <Image source={MinusIcon} />
+            </Pressable>
+          ),
+        },
+        closeModalSettings: {
+          use: true,
+          onClose: () => {
+            navigation.navigate('Home');
+          },
+        },
+      }}
+```
+
+
 
 ```
 
@@ -407,7 +452,7 @@ For other additional information, we have created a document that you can use in
 You can customize your external components with the following values
 
 ```javascript
- export default interface PropsCustomizeConfiguration {
+export default interface PropsCustomizeConfiguration {
   headerColor?: string;
   headerTextStyle?:any;
   headerHideIcon?: IconType;
@@ -497,18 +542,19 @@ interface CarouselSettings {
 
 interface CloseModalSettings {
   use: boolean;
-  textColor: string;
-  background: string;
-  buttons: {
-    yesButton: {
-      textColor: string;
-      background: string;
-      borderColor: string;
+  textColor?: string;
+  background?: string;
+  onClose?:Function;
+  buttons?: {
+    yesButton?: {
+      textColor?: string;
+      background?: string;
+      borderColor?: string;
     };
-    noButton: {
-      textColor: string;
-      background: string;
-      borderColor: string;
+    noButton?: {
+      textColor?: string;
+      background?: string;
+      borderColor?: string;
     };
   };
 }
@@ -525,6 +571,7 @@ export interface AudioSliderSettings {
   botSliderPlayImage?: IconType;
   botSliderPauseImage?: IconType;
 }
+
 
 
 ```

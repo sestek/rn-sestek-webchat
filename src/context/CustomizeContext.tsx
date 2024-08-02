@@ -140,6 +140,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     use: true,
     textColor: 'black',
     background: 'white',
+    onClose: () => {},
     buttons: {
       yesButton: {
         textColor: 'white',

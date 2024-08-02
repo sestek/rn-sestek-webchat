@@ -3,6 +3,7 @@ import { Text, View, Modal, TouchableOpacity } from 'react-native';
 import { PropsCloseModalSettings } from '../../types';
 import { styles } from './style';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+
 export interface InProps {
   closeModal: boolean;
   setCloseModal: any;
@@ -17,9 +18,21 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
       closeConversation,
       closeModalSettings,
     } = props;
-    const { customizeConfiguration ,getTexts} = useCustomizeConfiguration();
+    const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
     const texts = getTexts();
-  
+
+    const handleClose = () => {
+      closeConversation().then((data:boolean)=>{
+        if(data){
+          console.log("closedan sonra")
+          if (customizeConfiguration?.closeModalSettings?.onClose) {
+            customizeConfiguration.closeModalSettings.onClose();
+          }
+          setCloseModal(false);
+        }
+      });
+    };
+
     return (
       <Modal animationType="slide" transparent={true} visible={closeModal}>
         <View style={styles(closeModalSettings)?.centeredView}>
@@ -30,13 +43,13 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 { fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize },
               ]}
             >
-             {texts.closeModalText}
+              {texts.closeModalText}
             </Text>
             <View style={styles(closeModalSettings).buttonContainer}>
               <TouchableOpacity
-                onPress={() => {
-                  setCloseModal(false);
-                }}
+              onPress={() => {
+                setCloseModal(false);
+              }}
                 style={styles(closeModalSettings)?.noButton}
               >
                 <Text
@@ -50,8 +63,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  closeConversation();
-                  setCloseModal(false);
+                  handleClose();
                 }}
                 style={styles(closeModalSettings)?.yesButton}
               >
@@ -61,7 +73,7 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                     { fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize },
                   ]}
                 >
-                 {texts.closeModalYesButtonText}
+                  {texts.closeModalYesButtonText}
                 </Text>
               </TouchableOpacity>
             </View>

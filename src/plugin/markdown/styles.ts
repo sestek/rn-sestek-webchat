@@ -78,7 +78,9 @@ export default StyleSheet.create({
         flexDirection: 'row',
     },
     listItemText: {
-        flex: 1,
+        flexBasis: 'auto',
+        flexGrow: 1,
+        flexShrink: 1,
 
     },
     listItemBullet: {

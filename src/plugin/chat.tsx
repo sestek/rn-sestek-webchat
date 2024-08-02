@@ -89,7 +89,8 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
     checkAudioFile();
   };
 
-  const endConversation = async () => {
+  const endConversation =  () => {
+   return new Promise<boolean>((resolve, reject) => {
     setStart(false);
     setVisible(false);
     modalRef.current?.sendEnd();
@@ -101,6 +102,8 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
         .then((res: string) => console.log(res))
         .catch((err: string) => console.log(err));
     }
+    resolve(true)
+   })
   };
 
   const clickClosedConversationModalFunc = () => {

@@ -35,7 +35,7 @@ export const styles = (props?: any) =>
     yesButton: {
       height: 45,
       width: 100,
-      backgroundColor: props?.buttons?.yesButton?.background || '#7f81ae',
+      backgroundColor: props?.buttons?.yesButton?.background || '#863CEB',
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 5,
@@ -52,7 +52,7 @@ export const styles = (props?: any) =>
       alignItems: 'center',
       borderRadius: 5,
       borderWidth: 1,
-      borderColor: props?.buttons?.noButton?.borderColor,
+      borderColor: props?.buttons?.noButton?.borderColor || '#863CEB',
     },
     noButtonText: { color: props?.buttons?.noButton?.textColor || 'black' },
   });
