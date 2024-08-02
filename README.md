@@ -389,9 +389,6 @@ const startStorageSession = () => {
 ```
 NOTE: With the language object in customizeConfiguration, you can update all texts in Chat modal from here. The first value given is set as the default language setting. If no value is given to the language object, the default values of the chat modal will be valid. Please do not forget to enter data in this field for your application. 
 
-```
-
-```
 ### Explanation
 
 #### For Close Button (`headerCloseIcon`) (`closeModalSettings.onClose`):
@@ -405,7 +402,6 @@ NOTE: With the language object in customizeConfiguration, you can update all tex
 
 - If you want to use a function in the `hideCloseIcon` prop, make sure to wrap this function appropriately when sending it.
 
-```
 ```javascript
  customizeConfiguration={{
         headerCloseIcon: {
