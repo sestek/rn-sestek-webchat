@@ -105,6 +105,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         onScroll={onScroll}
       >
         {data.map((item: any, idx: number) => {
+          console.log(item)
           const title =
             item?.title && item.title.length > 46
               ? item.title.substring(0, 43) + '...'
@@ -124,15 +125,16 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                 paddingHorizontal: 12,
               }}
             >
-              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+              <View style={{ alignItems: 'center', justifyContent: 'center', }}>
                 <Image
                   source={{ uri: item.url }}
                   style={{
-                    width: '90%',
+                    width: '99%',
                     height: 170,
                     borderRadius: 5,
-                    marginTop: 10,
+                    marginTop: 2,
                   }}
+                   resizeMode="contain"
                 />
               </View>
               {renderContent(title, 'title')}
