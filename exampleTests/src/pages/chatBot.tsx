@@ -33,7 +33,7 @@ export default function ChatbotScreen() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
-    console.log('value', value);
+    // console.log('value', value);
   };
 
   const customActionDataExample = {
@@ -85,6 +85,7 @@ export default function ChatbotScreen() {
             <Image source={CloseIcon} style={{width: 20, height: 20}}></Image>
           ),
         },
+        autoPlayAudio:false,
         headerHideIcon: {
           type: 'component',
           value: (

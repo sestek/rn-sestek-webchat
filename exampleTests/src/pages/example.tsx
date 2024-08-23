@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
+import HomeScreenPage from './home';
 
 export default function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Example Screen</Text>
-   
+   <HomeScreenPage/>
     </View>
   );
 }

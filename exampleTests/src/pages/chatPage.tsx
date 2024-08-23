@@ -41,7 +41,7 @@ export default function ChatPage() {
   const [responseData, setResponseData] = useState<any>({});
   const setResponse = (value: any) => {
     setResponseData(value);
-    console.log('value', value);
+    // console.log('value', value);
   };
 
   const pressTriggerVisible = () => {
@@ -125,7 +125,7 @@ export default function ChatPage() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
     <ChatModal      
-              url={config.URL_}
+           url={config.URL_}
               modules={{
                 AudioRecorderPlayer: AudioRecorderPlayer,
                 RNFS: RNFetchBlob,
@@ -140,6 +140,7 @@ export default function ChatPage() {
                 sendConversationStart: true,
                 channel: 'webchatmobile-sestek',
                 // clientId: '1111',
+                fullName:"{name:'rabia'}",
                 tenant: config.TNAME_,
                 projectName: config.PNAME_,
       
@@ -240,31 +241,31 @@ export default function ChatPage() {
                 chatStartButtonBackgroundSize: 70,
                 chatStartButtonHide: false,
                 // Slider
-                // audioSliderSettings: {
-                // userSliderMinimumTrackTintColor: '#C3ACD0',
-                // userSliderMaximumTrackTintColor: 'white',
-                // userSliderThumbTintColor: '#C3ACD0',
-                // userSliderPlayImage: {
-                //   type: 'component',
-                //   value:  <Icon name="rocket" size={40} color="#900" />,
-                // },
+                audioSliderSettings: {
+                // userUnplayedTrackColor: '#C3ACD0',
+                // userPlayedTrackColor: 'white',
+                // userTimerTextColor: '#C3ACD0',
+                userSliderPlayImage: {
+                  type: 'url',
+                  value:  require('../images/user_play.png'),
+                },
                 // userSliderPauseImage: {
                 //   type: 'url',
-                //   value: require('../src/image/pause-audio.png'),
+                //   value: require('../images/user_pause.png'),
                 // },
-                //bot
-                // botSliderMinimumTrackTintColor: 'red',
-                // botSliderMaximumTrackTintColor: 'blue',
-                // botSliderThumbTintColor: 'black',
-                // botSliderPlayImage: {
-                //   type: 'component',
-                //   value: <Icon name="rocket" size={40} color="#900" />,
-                // },
-                // botSliderPauseImage: {
-                //   type: 'url',
-                //   value: require('../src/image/pause-audio.png'),
-                // },
-                // },
+                // bot
+                // botUnplayedTrackColor: 'red',
+                // botPlayedTrackColor: 'blue',
+                // botTimerTextColor: 'black',
+                botSliderPlayImage: {
+                  type: 'url',
+                  value: require("../images/bot_play.png"),
+                },
+                botSliderPauseImage: {
+                  type: 'url',
+                  value: require('../images/bot_pause.png'),
+                },
+                },
                 // Before Func
                 permissionAudioCheck: permissionAudioCheck,
                 indicatorColor: '#863CEB',
