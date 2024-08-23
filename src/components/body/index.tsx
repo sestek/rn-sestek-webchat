@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 
@@ -16,6 +16,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     dateSettings,
   } = customizeConfiguration;
   const { scrollViewRef } = props;
+  const [currentPlayingUrl, setCurrentPlayingUrl] = useState<string | null>(null);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -63,6 +64,10 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               activity={x}
               status={null}
               renderAddCmp={undefined}
+              currentPlayingUrl={currentPlayingUrl} // Merkezi durumu buradan geçiriyoruz
+              setCurrentPlayingUrl={setCurrentPlayingUrl} // Merkezi durumu güncellemek için fonksiyonu geçiriyoruz
+              messageIndex={key} // Burada index değerini geçiyoruz
+              messageData={x} // Ya da doğrudan mesaj verisini geçiriyoruz
             />
           ))}
       </ScrollView>

@@ -106,14 +106,14 @@ interface CloseModalSettings {
 }
 
 export interface AudioSliderSettings {
-  userSliderMinimumTrackTintColor?: string;
-  userSliderMaximumTrackTintColor?: string;
-  userSliderThumbTintColor?: string;
+  userUnplayedTrackColor?: string;
+  userPlayedTrackColor?: string;
+  userTimerTextColor?: string;
   userSliderPlayImage?: IconType;
   userSliderPauseImage?: IconType;
-  botSliderMinimumTrackTintColor?: string;
-  botSliderMaximumTrackTintColor?: string;
-  botSliderThumbTintColor?: string;
+  botUnplayedTrackColor?: string;
+  botPlayedTrackColor?: string;
+  botTimerTextColor?: string;
   botSliderPlayImage?: IconType;
   botSliderPauseImage?: IconType;
 }

@@ -1,10 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Recorder } from '../../../services';
 import type { PropsAudio } from '../../../types';
 import RenderImage from '../../renderImage';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 import { useModules } from '../../../context/ModulesContext';
+
 interface PositionStyle {
   sliderMinimumTrackTintColor: any;
   sliderMaximumTrackTintColor: any;
@@ -12,212 +18,268 @@ interface PositionStyle {
   sliderPlayImage: { type: 'url' | 'component' | undefined; value: any };
   sliderPauseImage: { type: 'url' | 'component' | undefined; value: any };
 }
-const AudioComponent: FC<PropsAudio> = (props) => {
-  const { customizeConfiguration } = useCustomizeConfiguration();
-  const { modules } = useModules();
-  const [stateRecord, setStateRecord] = useState<any>({
-    playTime: '00:00:00',
-    duration: '00:00:00',
-  });
-  const [recorder] = useState<Recorder>(
-    new Recorder(modules.AudioRecorderPlayer, modules.RNFS, modules.Record)
-  );
-  const [start, setStart] = useState<boolean>(false);
-  const triggerStart = () => setStart((old) => !old);
 
-  const RNSlider = modules?.RNSlider;
-  const AuidoProp = customizeConfiguration?.audioSliderSettings;
+interface AudioComponentProps {
+  url: string;
+  position: string;
+  onPlayPause: () => void;
+}
 
-  const defaultPlayImage = {
-    type: AuidoProp?.botSliderPlayImage?.type,
-    value: AuidoProp?.botSliderPlayImage?.value,
-  };
-  const defaultPauseImage = {
-    type: AuidoProp?.botSliderPauseImage?.type,
-    value: AuidoProp?.botSliderPauseImage?.value,
-  };
-  let defaultPositionStyle: PositionStyle = {
-    sliderMinimumTrackTintColor: AuidoProp?.botSliderMinimumTrackTintColor,
-    sliderMaximumTrackTintColor: AuidoProp?.botSliderMaximumTrackTintColor,
-    sliderThumbTintColor: AuidoProp?.botSliderThumbTintColor,
-    sliderPlayImage: defaultPlayImage,
-    sliderPauseImage: defaultPauseImage,
-  };
-  if (AuidoProp && props?.position === 'right') {
-    defaultPositionStyle = {
-      sliderMinimumTrackTintColor:
-        AuidoProp?.userSliderMinimumTrackTintColor ||
-        defaultPositionStyle.sliderMinimumTrackTintColor,
-      sliderMaximumTrackTintColor:
-        AuidoProp?.userSliderMaximumTrackTintColor ||
-        defaultPositionStyle.sliderMaximumTrackTintColor,
-      sliderThumbTintColor:
-        AuidoProp?.userSliderThumbTintColor ||
-        defaultPositionStyle.sliderThumbTintColor,
-      sliderPlayImage: {
-        type: AuidoProp.userSliderPlayImage?.type || defaultPlayImage.type,
-        value: AuidoProp.userSliderPlayImage?.value || defaultPlayImage.value,
-      },
-      sliderPauseImage: {
-        type: AuidoProp.userSliderPauseImage?.type || defaultPauseImage.type,
-        value: AuidoProp.userSliderPauseImage?.value || defaultPauseImage.value,
-      },
+export interface AudioComponentHandles {
+  onPausePlayer: () => void;
+}
+
+const AudioComponent = forwardRef<AudioComponentHandles, AudioComponentProps>(
+  ({ url, position, onPlayPause }, ref) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    const onPlayPlayer = async () => {
+      setIsPlaying(true);
+      onPlayPause();
+      await recorder.audioRecorderPlayer.startPlayer(url);
+      recorder.audioRecorderPlayer.addPlayBackListener((e: any) => {
+        setCurrentTime(e.currentPosition);
+        setDuration(e.duration);
+        const filled = Math.ceil(
+          (e.currentPosition / e.duration) * heights.length
+        );
+        setFilledBars(Math.min(filled, heights.length));
+        return;
+      });
+      setStart(true);
     };
-  }
-  const renderSliderImage = () => {
-    const { sliderPlayImage, sliderPauseImage } = defaultPositionStyle;
-    const { value, type } =
-      stateRecord.playTime !== '00:00:00' && start === true
-        ? sliderPauseImage
-        : sliderPlayImage;
 
-    return (
-      <RenderImage
-        type={type}
-        value={value}
-        style={{ width: 25, height: 25 }}
-      />
+    const onPausePlayer = async () => {
+      setIsPlaying(false);
+      await recorder.audioRecorderPlayer.pausePlayer();
+      setStart(false);
+      // if (start) {
+      //   await recorder.audioRecorderPlayer.pausePlayer();
+      //   setStart(false);
+      // }
+    };
+
+    useImperativeHandle(ref, () => ({
+      onPausePlayer,
+    }));
+
+    const { customizeConfiguration } = useCustomizeConfiguration();
+    const { modules } = useModules();
+    const [recorder] = useState<Recorder>(
+      new Recorder(modules.AudioRecorderPlayer, modules.RNFS, modules.Record)
     );
-  };
+    const [start, setStart] = useState<boolean>(false);
 
-  useEffect(() => {
-    getDuration();
-  }, []);
+    const [currentTime, setCurrentTime] = useState<number>(0);
+    const [duration, setDuration] = useState<number>(0);
+    const [filledBars, setFilledBars] = useState<number>(0);
+    const heights = useState<number[]>(
+      Array.from({ length: 50 }, () => 10 + Math.random() * 20)
+    )[0];
 
-  useEffect(() => {
-    if (
-      props.position === 'left' &&
-      props.url &&
-      customizeConfiguration?.autoPlayAudio
-    ) {
-      recorder.audioRecorderPlayer.removePlayBackListener();
+    const AuidoProp = customizeConfiguration?.audioSliderSettings;
+    const defaultPlayImage = {
+      type: AuidoProp?.botSliderPlayImage?.type,
+      value: AuidoProp?.botSliderPlayImage?.value,
+    };
+    const defaultPauseImage = {
+      type: AuidoProp?.botSliderPauseImage?.type,
+      value: AuidoProp?.botSliderPauseImage?.value,
+    };
 
-      recorder.audioRecorderPlayer.stopPlayer();
-      onPlayPlayer();
+    let defaultPositionStyle: PositionStyle = {
+      sliderMinimumTrackTintColor: AuidoProp?.botUnplayedTrackColor,
+      sliderMaximumTrackTintColor: AuidoProp?.botPlayedTrackColor,
+      sliderThumbTintColor: AuidoProp?.botTimerTextColor,
+      sliderPlayImage: defaultPlayImage,
+      sliderPauseImage: defaultPauseImage,
+    };
+
+    if (AuidoProp && position === 'right') {
+      defaultPositionStyle = {
+        sliderMinimumTrackTintColor:
+          AuidoProp?.userUnplayedTrackColor ||
+          defaultPositionStyle.sliderMinimumTrackTintColor,
+        sliderMaximumTrackTintColor:
+          AuidoProp?.userPlayedTrackColor ||
+          defaultPositionStyle.sliderMaximumTrackTintColor,
+        sliderThumbTintColor:
+          AuidoProp?.userTimerTextColor ||
+          defaultPositionStyle.sliderThumbTintColor,
+        sliderPlayImage: {
+          type: AuidoProp.userSliderPlayImage?.type || defaultPlayImage.type,
+          value: AuidoProp.userSliderPlayImage?.value || defaultPlayImage.value,
+        },
+        sliderPauseImage: {
+          type: AuidoProp.userSliderPauseImage?.type || defaultPauseImage.type,
+          value:
+            AuidoProp.userSliderPauseImage?.value || defaultPauseImage.value,
+        },
+      };
     }
-  }, [props.url]);
 
-  const getDuration = async () => {
-    await recorder.audioRecorderPlayer.startPlayer(props.url);
-    recorder.audioRecorderPlayer.addPlayBackListener((e: any, _: any) => {
-      recorder.currentDurationSec = e.duration;
-      setStateRecord({
-        playTime: '00:00:00',
-        duration: recorder.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
+    useEffect(() => {
+      getDuration();
+    }, []);
+
+    useEffect(() => {
+      if (position === 'left' && url && customizeConfiguration?.autoPlayAudio) {
+        recorder.audioRecorderPlayer.removePlayBackListener();
+        recorder.audioRecorderPlayer.stopPlayer();
+        onPlayPlayer();
+      }
+    }, [url]);
+
+    const getDuration = async () => {
+      await recorder.audioRecorderPlayer.startPlayer(url);
+      recorder.audioRecorderPlayer.addPlayBackListener((e: any) => {
+        setDuration(e.duration);
+        setCurrentTime(e.duration);
+        recorder.audioRecorderPlayer.stopPlayer();
+        recorder.audioRecorderPlayer.removePlayBackListener();
+        setStart(false);
+        setFilledBars(0);
+        return;
       });
-      recorder.audioRecorderPlayer.stopPlayer();
-      recorder.audioRecorderPlayer.removePlayBackListener();
-      return;
-    });
-  };
+    };
+    // useEffect(() => {
+    //   if (start) {
+    //     //console.log("Ses oynatılıyor.");
+    //   } else if (!start && currentTime > 0 && currentTime < duration) {
+    //     //console.log("Ses duraklatıldı.");
+    //   }
+    //   if (!start && currentTime === duration && currentTime !== 0) {
+    //     setFilledBars(0);
+    //     //console.log("Ses oynatıldı ve bitti.");
+    //   }
+    // }, [start, currentTime, duration]);
+    useEffect(() => {
+      if (currentTime === duration && currentTime !== 0) {
+        recorder.audioRecorderPlayer.stopPlayer();
+        recorder.audioRecorderPlayer.removePlayBackListener();
+        setCurrentTime(duration);
+        setStart(false);
+        setFilledBars(0);
+      }
+    }, [currentTime, duration]);
 
-  useEffect(() => {
-    if (
-      stateRecord.playTime === stateRecord.duration &&
-      stateRecord.playTime !== '00:00:00'
-    ) {
-      recorder.audioRecorderPlayer.stopPlayer();
-      recorder.audioRecorderPlayer.removePlayBackListener();
-      setStateRecord({
-        playTime: '00:00:00',
-        duration: stateRecord.duration,
-      });
-      triggerStart();
-    }
-  }, [stateRecord]);
+    const renderSliderImage = () => {
+      const { sliderPlayImage, sliderPauseImage } = defaultPositionStyle;
+      const { value, type } = !start ? sliderPlayImage : sliderPauseImage;
 
-  const onPlayPlayer = async () => {
-    if (stateRecord.playTime !== '00:00:00') {
-      await recorder.audioRecorderPlayer.resumePlayer();
-    } else {
-      await recorder.audioRecorderPlayer.startPlayer(props.url);
-    }
-    recorder.audioRecorderPlayer.addPlayBackListener((e: any, _: any) => {
-      recorder.currentPositionSec = e.currentPosition;
-      recorder.currentDurationSec = e.duration;
-      setStateRecord({
-        playTime: recorder.audioRecorderPlayer.mmssss(
-          Math.floor(e.currentPosition)
-        ),
-        duration: recorder.audioRecorderPlayer.mmssss(Math.floor(e.duration)),
-      });
-      return;
-    });
-    triggerStart();
-  };
+      return (
+        <RenderImage
+          type={type}
+          value={value}
+          style={{ width: 25, height: 25 }}
+        />
+      );
+    };
+    const renderBars = () => {
+      return heights.map((height, index) => {
+        const barColor =
+          index < filledBars
+            ? defaultPositionStyle.sliderMaximumTrackTintColor
+            : defaultPositionStyle.sliderMinimumTrackTintColor;
 
-  const onPausePlayer = async () => {
-    recorder.audioRecorderPlayer.removePlayBackListener();
-    await recorder.audioRecorderPlayer.pausePlayer();
-    triggerStart();
-  };
-  return (
-    <View
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        minWidth: 170,
-        paddingRight: 10,
-      }}
-    >
-      <View
-        style={{
-          flex: 3,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
-        >
-          {renderSliderImage()}
-        </TouchableOpacity>
-      </View>
-      {RNSlider ? (
-        <View
-          style={{
-            flex: 9,
-            paddingLeft: 10,
-          }}
-        >
-          <RNSlider
-            style={{
-              margin: 0,
-              width: '100%',
-              transform: [{ scaleX: 0.2 }, { scaleY: 0.2 }],
-            }}
-            value={
-              stateRecord.playTime &&
-              parseInt(stateRecord.playTime.substring(3, 5))
-            }
-            minimumValue={0}
-            disabled
-            maximumValue={
-              stateRecord.duration &&
-              parseInt(stateRecord.duration.substring(3, 5))
-            }
-            minimumTrackTintColor={
-              defaultPositionStyle.sliderMinimumTrackTintColor
-            }
-            maximumTrackTintColor={
-              defaultPositionStyle.sliderMaximumTrackTintColor
-            }
-            thumbTintColor={defaultPositionStyle.sliderThumbTintColor}
+        return (
+          <View
+            key={index}
+            style={[
+              styles.bar,
+              {
+                height,
+                backgroundColor: barColor,
+              },
+            ]}
           />
-        </View>
-      ) : (
-        <Text
-          style={{
-            paddingRight: 5,
-            fontSize: customizeConfiguration?.fontSettings?.descriptionFontSize,
-          }}
-        >
-          {stateRecord.playTime + ' / ' + stateRecord.duration}
-        </Text>
-      )}
-    </View>
-  );
-};
+        );
+      });
+    };
+
+    const inLineCode = () => {
+      const { sliderPlayImage, sliderPauseImage } = defaultPositionStyle;
+      const { value, type } = !start ? sliderPlayImage : sliderPauseImage;
+
+      return (
+        <>
+          <TouchableOpacity
+            onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
+            style={{ marginRight: 10 }}
+          >
+            <RenderImage
+              type={type}
+              value={value}
+              style={{ width: 25, height: 25 }}
+            />
+          </TouchableOpacity>
+          <View style={styles.audioBar}>
+            {heights.map((height, index) => {
+              const barColor =
+                index < filledBars
+                  ? defaultPositionStyle.sliderMaximumTrackTintColor
+                  : defaultPositionStyle.sliderMinimumTrackTintColor;
+
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.bar,
+                    {
+                      height,
+                      backgroundColor: barColor,
+                    },
+                  ]}
+                />
+              );
+            })}
+          </View>
+          <Text
+            style={[
+              styles.timer,
+              { color: defaultPositionStyle.sliderThumbTintColor },
+            ]}
+          >
+            {/* {new Date(currentTime).toISOString().substr(14, 5)} */}
+            {currentTime >= 0 && duration > 0
+              ? new Date(currentTime).toISOString().substr(14, 5)
+              : '00:00'}
+          </Text>
+        </>
+      );
+    };
+    return <View style={styles.container}>{inLineCode()}</View>;
+  }
+);
+
+const styles = StyleSheet.create({
+  container: {
+    minWidth: 250,
+    flexDirection: 'row',
+    padding: 5,
+    backgroundColor: 'transparent',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  audioBar: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 5,
+  },
+  bar: {
+    flex: 1,
+    marginHorizontal: 1,
+    borderRadius: 5,
+  },
+  timer: {
+    fontSize: 12,
+    width: 50,
+    textAlign: 'right',
+    fontWeight: '500',
+  },
+});
 
 export default React.memo(AudioComponent);

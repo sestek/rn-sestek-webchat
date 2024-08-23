@@ -3,6 +3,9 @@ import type { PropsUseChat } from '../types';
 import useCheckBackground from '../hook/useCheckBackground';
 import { useCustomizeConfiguration } from '../context/CustomizeContext';
 import { specialMessageTypes } from '../constant/ChatModalConstant';
+import { Recorder } from '../services';
+import { useModules } from '../context/ModulesContext';
+
 const useChat = ({
   defaultConfiguration,
   sessionId,
@@ -10,6 +13,8 @@ const useChat = ({
   rnfs,
   url,
 }: PropsUseChat) => {
+  const { modules } = useModules();
+
   const { enableNdUi, getResponseData } = defaultConfiguration;
 
   const [messageList, setMessageList] = useState<any>([]);
@@ -135,6 +140,18 @@ const useChat = ({
 
       if (messageBody && !messageBody.timestamp) {
         messageBody.timestamp = Date.now();
+      }
+
+      if (
+        messageBody?.type === 'audio' ||
+        messageBody?.type === 'audio/base64'
+      ) {
+        'file://' +
+          new Recorder(
+            modules?.AudioRecorderPlayer,
+            modules?.RNFS,
+            modules?.Record
+          ).saveLocalFileAudio(url, messageBody?.id);
       }
       if (messageBody?.type === 'SpeechRecognized') {
         var textMessage =
@@ -449,7 +466,6 @@ const useChat = ({
 
   const getHistory = async () => {
     if (sessionInfo) {
-     
       const res = await fetch(histortURL, {
         method: 'GET',
       });
