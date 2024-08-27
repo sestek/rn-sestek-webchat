@@ -182,6 +182,13 @@ const customActionDataExample = {
 const startStorageSession = () => {
     modalRef.current?.startStorageSession();
 };
+
+  const endUserInfo = {
+    name: 'rabia vural',
+    phone: '+905555555555',
+    email: 'rabia@doe.com',
+    twitter: '@rabia',
+  };
 // start storage session and it should also be used in the case where modal hide does not work depending on navigation,
 // i.e. in the case of an existing sessionID. When this function is used, the session will continue where it left off.
 
@@ -208,6 +215,8 @@ const startStorageSession = () => {
     projectName: 'exampleProjectName',
     channel: 'Mobil',
    // clientId: 'Please send the user id',
+    locale:'en-US', //local parameter is used to set the start language for the streams in your webchat project. for more information please contact us
+    endUser: endUserInfo, //Please use this parameter to pass endUser information.
     enableNdUi: true,
     getResponseData: setResponse,
     customActionData: JSON.stringify(customActionDataExample),
@@ -387,7 +396,8 @@ const startStorageSession = () => {
 
 
 ```
-NOTE: With the language object in customizeConfiguration, you can update all texts in Chat modal from here. The first value given is set as the default language setting. If no value is given to the language object, the default values of the chat modal will be valid. Please do not forget to enter data in this field for your application. 
+
+NOTE: With the language object in customizeConfiguration, you can update all texts in Chat modal from here. The first value given is set as the default language setting. If no value is given to the language object, the default values of the chat modal will be valid. Please do not forget to enter data in this field for your application.
 
 ### Explanation
 
@@ -431,9 +441,7 @@ NOTE: With the language object in customizeConfiguration, you can update all tex
       }}
 ```
 
-
-
-```
+````
 
 For other additional information, we have created a document that you can use in the table below.
 
@@ -556,18 +564,18 @@ interface CloseModalSettings {
 }
 
 export interface AudioSliderSettings {
-  userSliderMinimumTrackTintColor?: string;
-  userSliderMaximumTrackTintColor?: string;
-  userSliderThumbTintColor?: string;
+  userUnplayedTrackColor?: string;
+  userPlayedTrackColor?: string;
+  userTimerTextColor?: string;
   userSliderPlayImage?: IconType;
   userSliderPauseImage?: IconType;
-  botSliderMinimumTrackTintColor?: string;
-  botSliderMaximumTrackTintColor?: string;
-  botSliderThumbTintColor?: string;
+  botUnplayedTrackColor?: string;
+  botPlayedTrackColor?: string;
+  botTimerTextColor?: string;
   botSliderPlayImage?: IconType;
   botSliderPauseImage?: IconType;
 }
 
 
 
-```
+````
