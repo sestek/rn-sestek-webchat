@@ -123,7 +123,7 @@ export default function ChatPage() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-     url={config.URL_}
+  url={config.URL_}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,

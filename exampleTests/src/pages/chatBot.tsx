@@ -34,6 +34,13 @@ export default function ChatbotScreen() {
   const customActionDataExample = {
     user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
   };
+
+  const endUserInfo = {
+    name: 'rabia vural',
+    phone: '+905555555555',
+    email: 'rabia@doe.com',
+    twitter: '@rabia',
+  };
   const permissionAudioCheck = async () => {
     return new Promise<void>((resolve, reject) => {
       if (Platform.OS === 'android') {
@@ -51,7 +58,7 @@ export default function ChatbotScreen() {
   };
   return (
     <ChatModal
-      url={config.URL_}
+    url={config.URL_}
       modules={{
         AudioRecorderPlayer: AudioRecorderPlayer,
         RNFS: RNFetchBlob,
@@ -68,7 +75,8 @@ export default function ChatbotScreen() {
         // clientId: '1111',
         tenant: config.TNAME_,
         projectName: config.PNAME_,
-
+        locale:'en-US',
+        endUser: endUserInfo,
         getResponseData: setResponse,
         customActionData: JSON.stringify(customActionDataExample),
       }}
