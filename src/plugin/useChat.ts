@@ -154,7 +154,7 @@ const useChat = ({
               modules?.RNFS,
               modules?.Record
             ).saveLocalFileAudio(base64Data, messageBody?.id));
-            messageBody.message = filePath;
+          messageBody.message = filePath;
 
           addMessageList(messageBody);
         } catch (error) {
@@ -210,6 +210,8 @@ const useChat = ({
         project: defaultConfiguration.projectName,
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
+        endUser: defaultConfiguration.endUser,
+        locale:defaultConfiguration.locale
         // Local
       });
       client.sendAsync(
@@ -221,7 +223,9 @@ const useChat = ({
         defaultConfiguration.clientId,
         defaultConfiguration.channel,
         defaultConfiguration.tenant,
-        defaultConfiguration.fullName
+        defaultConfiguration.fullName,
+        defaultConfiguration.endUser,
+        defaultConfiguration.locale
       );
     }
   };
@@ -304,9 +308,19 @@ const useChat = ({
       name: 'customActionData',
       data:
         JSON.stringify({
-          ...defaultConfiguration.customAction,
+          ...defaultConfiguration.customActionData,
           ResponseType: 'AudioBase64',
         }) || `{ResponseType: 'AudioBase64'}`,
+    });
+    formData.push({
+      name: 'endUser',
+      data: JSON.stringify({
+        ...defaultConfiguration.endUser,
+      }),
+    });
+    formData.push({
+      name: 'locale',
+      data: defaultConfiguration.locale,
     });
     formData.push({
       name: 'channel',
@@ -356,6 +370,8 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
+      endUser: defaultConfiguration.endUser,
+      locale:defaultConfiguration.locale
     });
     setMessageList((messages: any) => [
       ...messages,
@@ -406,8 +422,10 @@ const useChat = ({
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
-      //local
+      endUser: defaultConfiguration.endUser,
+      locale:defaultConfiguration.locale
     };
+    
     addMessageList(startObj);
     await client.startConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
@@ -423,6 +441,8 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
+      endUser: defaultConfiguration.endUser,
+      locale:defaultConfiguration.locale
     };
     setMessageList([]);
     client.endConversation(JSON.stringify(dataToSend));
@@ -522,7 +542,8 @@ const useChat = ({
       fullName: defaultConfiguration.fullName,
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
-      //local
+      endUser: defaultConfiguration.endUser,
+      locale:defaultConfiguration.locale
     };
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';

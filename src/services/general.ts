@@ -61,15 +61,17 @@ export default class GeneralManager {
   static getCurrentDate(locale: string, format: 'short' | 'long' | undefined): string {
     const date = new Date();
 
+    var localSet = locale ? locale : 'en'
+
     if (format === 'short') {
-      return date.toLocaleDateString(locale, {
+      return date.toLocaleDateString(localSet, {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
       });
     } else if (format === 'long') {
       const day = date.getDate();
-      const month = date.toLocaleString(locale, { month: 'short' });
+      const month = date.toLocaleString(localSet, { month: 'short' });
       const year = date.getFullYear();
       return `${day} ${month} ${year}`;
     } else {

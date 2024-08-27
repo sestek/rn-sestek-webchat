@@ -105,7 +105,6 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         onScroll={onScroll}
       >
         {data.map((item: any, idx: number) => {
-          console.log(item)
           const title =
             item?.title && item.title.length > 46
               ? item.title.substring(0, 43) + '...'
