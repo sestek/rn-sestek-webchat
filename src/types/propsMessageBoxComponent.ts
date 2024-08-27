@@ -25,8 +25,4 @@ export default interface PropsMessageBoxComponent {
   notch?: boolean;
   renderAddCmp: any;
   userMessageBoxTextColor: string;
-  currentPlayingUrl:any // Merkezi durumu buradan geçiriyoruz
-  setCurrentPlayingUrl: any // Merkezi durumu güncellemek için fonksiyonu geçiriyoruz
-  messageIndex:any // Burada index değerini geçiyoruz
-  messageData:any // Ya da doğrudan mesaj verisini geçiriyoruz
 }

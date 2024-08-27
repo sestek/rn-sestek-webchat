@@ -24,7 +24,6 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
     const handleClose = () => {
       closeConversation().then((data:boolean)=>{
         if(data){
-          console.log("closedan sonra")
           if (customizeConfiguration?.closeModalSettings?.onClose) {
             customizeConfiguration.closeModalSettings.onClose();
           }

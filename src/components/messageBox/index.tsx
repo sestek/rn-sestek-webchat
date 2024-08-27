@@ -200,12 +200,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
       </View>
     );
   };
-  const handleAudioMessageClick = (audioUrl: string) => {
-    
-    // Burada messageIndex veya messageData kullanarak istediğiniz işlemi yapabilirsiniz.
-    console.log(`Tıklanan mesajın indexi: ${props.messageIndex}`);
-    console.log(`Tıklanan mesajın verisi:`, props.messageData);
-  };
   return (
     <View style={{ ...styles.messageBoxContainer }}>
       {messageType === 'system' ? null : isSpecialMessageType(messageType) ? (
@@ -247,9 +241,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   activity={props.activity}
                   userMessageBoxTextColor={props.userMessageBoxTextColor}
                   inlineText={true}
-                  currentPlayingUrl={props.currentPlayingUrl}
-                  setCurrentPlayingUrl={props.setCurrentPlayingUrl}
-                  onAudioClick={handleAudioMessageClick} // Tıklama işlevini geçiyoruz
                 />
               )}
 

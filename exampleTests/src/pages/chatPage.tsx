@@ -1,4 +1,4 @@
-import React, { useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -19,9 +19,7 @@ import DocumentPicker from 'react-native-document-picker';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function ChatPage() {
-
   const modalRef = useRef<ChatModalProps>(null);
-
 
   const pressStartConversation = () => {
     modalRef.current?.startConversation();
@@ -124,211 +122,210 @@ export default function ChatPage() {
 
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
-    <ChatModal      
-           url={config.URL_}
-              modules={{
-                AudioRecorderPlayer: AudioRecorderPlayer,
-                RNFS: RNFetchBlob,
-                RNSlider: Slider,
-                RNWebView: WebView,
-                Record: AudioRecord,
-                RNFileSelector: DocumentPicker,
-                asyncStorage: AsyncStorage,
-              }}
-              ref={modalRef}
-              defaultConfiguration={{
-                sendConversationStart: true,
-                channel: 'webchatmobile-sestek',
-                // clientId: '1111',
-                fullName:"{name:'rabia'}",
-                tenant: config.TNAME_,
-                projectName: config.PNAME_,
-      
-                getResponseData: setResponse,
-                customActionData: JSON.stringify(customActionDataExample),
-              }}
-              customizeConfiguration={{
-                // Header
-                headerColor: '#7743DB',
-      
-                // headerTextStyle:{
-                //   color:'red',
-                //   fontSize:20
-                // },
-                // headerHideIcon: {
-                //   type: 'url',
-                //   value: require('./src/images/hide.png'),
-                // },
-                // headerCloseIcon: {
-                //   type: 'url',
-                //   value: require('./src/images/close.png'),
-                // },
-                headerAlignmentType: 'textToCenter',
-                // Bottom
-                // bottomColor: 'red',
-                bottomInputBackgroundColor: 'white',
-                bottomInputBorderColor: '#d5d5d5',
-                bottomInputSendButtonColor: '#7743DB',
-                //  bottomAttachmentIcon: {
-                //    type: 'component',
-                //    value: <Icon name="rocket" size={40} color="#900" />,
-                //  },
-                // bottomSendIcon: {
-                //   type: 'component',
-                //   value:  <Icon name="rocket" size={40} color="#900" />,
-                // },
-                // bottomVoiceIcon: {
-                //   type: 'component',
-                //   value: <Icon name="rocket" size={20} color="black" />,
-                // },
-                // bottomVoiceStopIcon: {
-                //   type: 'component',
-                //   value:  <Icon name="rocket" size={20} color="pink" />,
-                // },
-                // bottomVoiceDisabledIcon: {
-                //   type: 'component',
-                //   value:  <Icon name="rocket" size={20} color="blue" />,
-                // },
-                // User MessageBox
-                userMessageBoxBackground: '#863CEB',
-                userMessageBoxTextColor: 'white',
-                // userMessageIcon: {
-                //   type: 'url',
-                //   value:
-                //   require('example image'),
-                // },
-      
-                // ChatBot MessageBox
-                chatBotMessageBoxBackground: '#EFEFEF',
-                chatBotMessageBoxTextColor: 'black',
-                // chatBotMessageIcon: {
-                //   type: 'url',
-                //   value:
-                //     'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
-                // },
-                // chatBotMessageBoxButtonBackground: 'pink',
-                // chatBotMessageBoxButtonTextColor: 'blue',
-                // chatBotMessageBoxButtonBorderColor: 'red',
-                messageBoxAvatarIconSize: 28,
-                // Carousel
-                // chatBotCarouselSettings: {
-                //   // nextButtonIcon: {
-                //   //   type: 'component',
-                //   //   value: <Icon name="rocket" size={30} color="#900" />,
-                //   // },
-                //   //  prevButtonIcon: {
-                //   //    type: 'component',
-                //   //    value: <Icon name="rocket" size={30} color="#900" />,
-                //   //  },
-                //   buttonGroup: {
-                //     borderColor: '#E2E2E4',
-                //     backgroundColor: '#ffffff',
-                //     textColor: '#863CEB',
-                //   },
-                // },
-                // Chat Body
-                // chatBody: {
-                //   type: 'image',
-                //   value: require('./src/images/background.png'),
-                // },
-                chatBodyMessageBoxGap: 20,
-                // Chat Start Button
-                chatStartButton: {
-                  type: 'url',
-                  value: require('../images/knovvu_logo.png'),
-                },
-                chatStartButtonBackground: 'white',
-                chatStartButtonBackgroundSize: 70,
-                chatStartButtonHide: false,
-                // Slider
-                audioSliderSettings: {
-                // userUnplayedTrackColor: '#C3ACD0',
-                // userPlayedTrackColor: 'white',
-                // userTimerTextColor: '#C3ACD0',
-                userSliderPlayImage: {
-                  type: 'url',
-                  value:  require('../images/user_play.png'),
-                },
-                // userSliderPauseImage: {
-                //   type: 'url',
-                //   value: require('../images/user_pause.png'),
-                // },
-                // bot
-                // botUnplayedTrackColor: 'red',
-                // botPlayedTrackColor: 'blue',
-                // botTimerTextColor: 'black',
-                botSliderPlayImage: {
-                  type: 'url',
-                  value: require("../images/bot_play.png"),
-                },
-                botSliderPauseImage: {
-                  type: 'url',
-                  value: require('../images/bot_pause.png'),
-                },
-                },
-                // Before Func
-                permissionAudioCheck: permissionAudioCheck,
-                indicatorColor: '#863CEB',
-                // FontSettings
-                fontSettings: {
-                  titleFontSize: 18,
-                  subtitleFontSize: 16,
-                  descriptionFontSize: 13,
-                },
-                // Close Modal
-                closeModalSettings: {
-                  use: true,
-                  // onClose : ()=>{console.log("call the functions you want to do when close modal yes is called")},
-                  textColor: 'black',
-                  background: 'white',
-                  buttons: {
-                    yesButton: {
-                      textColor: 'white',
-                      background: '#863CEB',
-                      borderColor: 'transparent',
-                    },
-                    noButton: {
-                      textColor: 'black',
-                      background: 'transparent',
-                      borderColor: '#863CEB',
-                    },
-                  },
-                },
-                language: {
-                  en: {
-                    headerText: 'Knovvu',
-                    bottomInputText: 'Please write a message',
-                    closeModalText: 'Are you sure you want to exit chat?',
-                    closeModalYesButtonText: 'Yes',
-                    closeModalNoButtonText: 'No',
-                  },
-                  tr: {
-                    headerText: 'Knovvu',
-                    bottomInputText: 'Lütfen bir mesaj yazınız',
-                    closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
-                    closeModalYesButtonText: 'Evet',
-                    closeModalNoButtonText: 'Hayır',
-                  },
-      
-                  es: {
-                    headerText: 'ispanyol',
-                    bottomInputText: 'Please write a message',
-                    closeModalText: 'Are you sure you want to exit chat?',
-                    closeModalYesButtonText: 'Yes',
-                    closeModalNoButtonText: 'No',
-                  },
-                },
-                //  dateSettings: {
-                //     use:true,
-                //     backgroundColor: 'pink',
-                //     textColor: 'black',
-                //     borderRadius:0,
-                //     format:'short'
-                //  },
-                autoPlayAudio: false,
-              }}
-    />
-     </View>
+      <ChatModal
+     url={config.URL_}
+        modules={{
+          AudioRecorderPlayer: AudioRecorderPlayer,
+          RNFS: RNFetchBlob,
+          RNSlider: Slider,
+          RNWebView: WebView,
+          Record: AudioRecord,
+          RNFileSelector: DocumentPicker,
+          asyncStorage: AsyncStorage,
+        }}
+        ref={modalRef}
+        defaultConfiguration={{
+          sendConversationStart: true,
+          channel: 'webchatmobile-sestek',
+          // clientId: '1111',
+          fullName: "{name:'rabia'}",
+          tenant: config.TNAME_,
+          projectName: config.PNAME_,
+
+          getResponseData: setResponse,
+          customActionData: JSON.stringify(customActionDataExample),
+        }}
+        customizeConfiguration={{
+          // Header
+          headerColor: '#7743DB',
+
+          // headerTextStyle:{
+          //   color:'red',
+          //   fontSize:20
+          // },
+          headerHideIcon: {
+            type: 'url',
+            value: require('../images/close.png'),
+          },
+          // headerCloseIcon: {
+          //   type: 'url',
+          //   value: require('./src/images/close.png'),
+          // },
+          headerAlignmentType: 'textToCenter',
+          // Bottom
+          // bottomColor: 'red',
+          bottomInputBackgroundColor: 'white',
+          bottomInputBorderColor: '#d5d5d5',
+          bottomInputSendButtonColor: '#7743DB',
+          //  bottomAttachmentIcon: {
+          //    type: 'component',
+          //    value: <Icon name="rocket" size={40} color="#900" />,
+          //  },
+          // bottomSendIcon: {
+          //   type: 'component',
+          //   value:  <Icon name="rocket" size={40} color="#900" />,
+          // },
+          // bottomVoiceIcon: {
+          //   type: 'component',
+          //   value: <Icon name="rocket" size={20} color="black" />,
+          // },
+          // bottomVoiceStopIcon: {
+          //   type: 'component',
+          //   value:  <Icon name="rocket" size={20} color="pink" />,
+          // },
+          // bottomVoiceDisabledIcon: {
+          //   type: 'component',
+          //   value:  <Icon name="rocket" size={20} color="blue" />,
+          // },
+          // User MessageBox
+          userMessageBoxBackground: '#863CEB',
+          userMessageBoxTextColor: 'white',
+          // userMessageIcon: {
+          //   type: 'url',
+          //   value:
+          //   require('example image'),
+          // },
+
+          // ChatBot MessageBox
+          chatBotMessageBoxBackground: '#EFEFEF',
+          chatBotMessageBoxTextColor: 'black',
+          // chatBotMessageIcon: {
+          //   type: 'url',
+          //   value:
+          //     'https://demo-app.sestek.com/sestek-com-avatar/image/ppp.png',
+          // },
+          // chatBotMessageBoxButtonBackground: 'pink',
+          // chatBotMessageBoxButtonTextColor: 'blue',
+          // chatBotMessageBoxButtonBorderColor: 'red',
+          messageBoxAvatarIconSize: 28,
+          // Carousel
+          // chatBotCarouselSettings: {
+          //   // nextButtonIcon: {
+          //   //   type: 'component',
+          //   //   value: <Icon name="rocket" size={30} color="#900" />,
+          //   // },
+          //   //  prevButtonIcon: {
+          //   //    type: 'component',
+          //   //    value: <Icon name="rocket" size={30} color="#900" />,
+          //   //  },
+          //   buttonGroup: {
+          //     borderColor: '#E2E2E4',
+          //     backgroundColor: '#ffffff',
+          //     textColor: '#863CEB',
+          //   },
+          // },
+          // Chat Body
+          // chatBody: {
+          //   type: 'image',
+          //   value: require('./src/images/background.png'),
+          // },
+          chatBodyMessageBoxGap: 20,
+          // Chat Start Button
+          chatStartButton: {
+            type: 'url',
+            value: require('../images/knovvu_logo.png'),
+          },
+          chatStartButtonBackground: 'white',
+          chatStartButtonBackgroundSize: 70,
+          chatStartButtonHide: false,
+          // Slider
+          audioSliderSettings: {
+            userUnplayedTrackColor: 'white',
+            userPlayedTrackColor: '#FF4081',
+            userTimerTextColor: 'white',
+            userSliderPlayImage: {
+              type: 'url',
+              value: require('../images/user_play.png'),
+            },
+            userSliderPauseImage: {
+              type: 'url',
+              value: require('../images/user_pause.png'),
+            },
+            botUnplayedTrackColor: 'gray',
+            botPlayedTrackColor: '#007BFF',
+            botTimerTextColor: 'black',
+            botSliderPlayImage: {
+              type: 'url',
+              value: require('../images/bot_play.png'),
+            },
+            botSliderPauseImage: {
+              type: 'url',
+              value: require('../images/bot_pause.png'),
+            },
+          },
+          // Before Func
+          permissionAudioCheck: permissionAudioCheck,
+          indicatorColor: '#863CEB',
+          // FontSettings
+          fontSettings: {
+            titleFontSize: 18,
+            subtitleFontSize: 16,
+            descriptionFontSize: 13,
+          },
+          // Close Modal
+          closeModalSettings: {
+            use: true,
+            // onClose : ()=>{console.log("call the functions you want to do when close modal yes is called")},
+            textColor: 'black',
+            background: 'white',
+            buttons: {
+              yesButton: {
+                textColor: 'white',
+                background: '#863CEB',
+                borderColor: 'transparent',
+              },
+              noButton: {
+                textColor: 'black',
+                background: 'transparent',
+                borderColor: '#863CEB',
+              },
+            },
+          },
+          language: {
+            en: {
+              headerText: 'Knovvu',
+              bottomInputText: 'Please write a message',
+              closeModalText: 'Are you sure you want to exit chat?',
+              closeModalYesButtonText: 'Yes',
+              closeModalNoButtonText: 'No',
+            },
+            tr: {
+              headerText: 'Knovvu',
+              bottomInputText: 'Lütfen bir mesaj yazınız',
+              closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
+              closeModalYesButtonText: 'Evet',
+              closeModalNoButtonText: 'Hayır',
+            },
+
+            es: {
+              headerText: 'ispanyol',
+              bottomInputText: 'Please write a message',
+              closeModalText: 'Are you sure you want to exit chat?',
+              closeModalYesButtonText: 'Yes',
+              closeModalNoButtonText: 'No',
+            },
+          },
+          //  dateSettings: {
+          //     use:true,
+          //     backgroundColor: 'pink',
+          //     textColor: 'black',
+          //     borderRadius:0,
+          //     format:'short'
+          //  },
+          autoPlayAudio: false,
+        }}
+      />
+    </View>
   );
 }
 

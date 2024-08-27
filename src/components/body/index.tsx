@@ -16,8 +16,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     dateSettings,
   } = customizeConfiguration;
   const { scrollViewRef } = props;
-  const [currentPlayingUrl, setCurrentPlayingUrl] = useState<string | null>(null);
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -64,10 +62,6 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               activity={x}
               status={null}
               renderAddCmp={undefined}
-              currentPlayingUrl={currentPlayingUrl} // Merkezi durumu buradan geçiriyoruz
-              setCurrentPlayingUrl={setCurrentPlayingUrl} // Merkezi durumu güncellemek için fonksiyonu geçiriyoruz
-              messageIndex={key} // Burada index değerini geçiyoruz
-              messageData={x} // Ya da doğrudan mesaj verisini geçiriyoruz
             />
           ))}
       </ScrollView>

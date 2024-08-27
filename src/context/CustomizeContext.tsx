@@ -189,37 +189,13 @@ const CustomizeConfigurationProvider: React.FC<{
   initialConfig: PropsCustomizeConfiguration;
   integrationId?: any;
 }> = ({ url, initialConfig, integrationId, children }) => {
-  // const mergedInitialConfig: PropsCustomizeConfiguration = {
-  //   ...defaultCustomizeConfiguration,
-  //   ...initialConfig,
-  // };
+  const mergedInitialConfig: PropsCustomizeConfiguration = {
+    ...defaultCustomizeConfiguration,
+    ...initialConfig,
+  };
 
-  function deepMergeDefaults<T>(defaults: T, source: T): T {
-    const output: any = Array.isArray(defaults) ? [...defaults] : { ...defaults };
+ 
 
-    for (const key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-            if (
-                typeof source[key] === 'object' &&
-                source[key] !== null &&
-                !Array.isArray(source[key])
-            ) {
-                output[key] = deepMergeDefaults(
-                    (defaults as any)[key],
-                    source[key]
-                );
-            } else {
-                output[key] = source[key];
-            }
-        }
-    }
-
-    return output;
-}
-const mergedInitialConfig: PropsCustomizeConfiguration = deepMergeDefaults(
-  defaultCustomizeConfiguration,
-  initialConfig
-);
   const [customizeConfiguration, setCustomizeConfiguration] =
     useState<PropsCustomizeConfiguration>(mergedInitialConfig);
 

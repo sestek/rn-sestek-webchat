@@ -1,10 +1,5 @@
-import React, { useRef, useState, useLayoutEffect} from 'react';
-import {
-  Image,
-  Pressable,
-  PermissionsAndroid,
-  Platform,
-} from 'react-native';
+import React, {useRef, useState, useLayoutEffect} from 'react';
+import {Image, Pressable, PermissionsAndroid, Platform} from 'react-native';
 import {ChatModal, ChatModalProps} from '../../../src/index';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'react-native-fetch-blob';
@@ -18,7 +13,7 @@ import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native'; 
 import {CloseIcon, MinusIcon} from '../../../src/image';
 
 export default function ChatbotScreen() {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
   const route = useRoute();
   const modalRef = useRef<ChatModalProps>(null);
 
@@ -79,13 +74,13 @@ export default function ChatbotScreen() {
       }}
       customizeConfiguration={{
         permissionAudioCheck: permissionAudioCheck,
-        headerCloseIcon: {
-          type: 'component',
-          value: (
-            <Image source={CloseIcon} style={{width: 20, height: 20}}></Image>
-          ),
-        },
-        autoPlayAudio:false,
+        // headerCloseIcon: {
+        //   type: 'component',
+        //   value: (
+        //     <Image source={CloseIcon} style={{width: 20, height: 20}}></Image>
+        //   ),
+        // },
+        autoPlayAudio: false,
         headerHideIcon: {
           type: 'component',
           value: (
@@ -94,7 +89,7 @@ export default function ChatbotScreen() {
                 modalRef.current?.triggerVisible();
                 navigation.navigate('Example');
               }}>
-              <Image source={MinusIcon} style={{width: 20, height: 20}}></Image>
+              <Image source={MinusIcon} style={{width: 20, height: 20}} />
             </Pressable>
           ),
         },
@@ -133,7 +128,6 @@ export default function ChatbotScreen() {
             closeModalYesButtonText: 'Yes',
             closeModalNoButtonText: 'No',
           },
-         
 
           es: {
             headerText: 'Knovvu',

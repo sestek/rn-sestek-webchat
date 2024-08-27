@@ -115,9 +115,8 @@ const useChat = ({
       }
     });
   };
-
   const attachClientOnMessage = () => {
-    client.onmessage((_: any, message: any) => {
+    client.onmessage(async (_: any, message: any) => {
       const messageBody =
         typeof message === 'string' ? JSON.parse(message) : message;
       if (messageBody?.channelData) {
@@ -144,16 +143,24 @@ const useChat = ({
 
       if (
         messageBody?.type === 'audio' ||
-        messageBody?.type === 'audio/base64'
+        messageBody?.attachments?.[0]?.contentType === 'audio/base64'
       ) {
-        'file://' +
-          new Recorder(
-            modules?.AudioRecorderPlayer,
-            modules?.RNFS,
-            modules?.Record
-          ).saveLocalFileAudio(url, messageBody?.id);
-      }
-      if (messageBody?.type === 'SpeechRecognized') {
+        try {
+          const base64Data = messageBody?.attachments?.[0]?.content;
+          const filePath =
+            'file://' +
+            (await new Recorder(
+              modules?.AudioRecorderPlayer,
+              modules?.RNFS,
+              modules?.Record
+            ).saveLocalFileAudio(base64Data, messageBody?.id));
+            messageBody.message = filePath;
+
+          addMessageList(messageBody);
+        } catch (error) {
+          console.error('Error saving audio file:', error);
+        }
+      } else if (messageBody?.type === 'SpeechRecognized') {
         var textMessage =
           messageBody?.channelData?.CustomProperties?.textFromSr;
         messageBody.type = 'message';
