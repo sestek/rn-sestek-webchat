@@ -153,10 +153,10 @@ export default function ChatPage() {
           //   color:'red',
           //   fontSize:20
           // },
-          headerHideIcon: {
-            type: 'url',
-            value: require('../images/close.png'),
-          },
+          // headerHideIcon: {
+          //   type: 'url',
+          //   value: require('../images/close.png'),
+          // },
           // headerCloseIcon: {
           //   type: 'url',
           //   value: require('./src/images/close.png'),
