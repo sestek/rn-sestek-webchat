@@ -212,21 +212,22 @@ const useChat = ({
         fullName: defaultConfiguration.fullName,
         endUser: defaultConfiguration.endUser,
         locale:defaultConfiguration.locale
-        // Local
       });
-      client.sendAsync(
-        sessionId,
-        message,
-        defaultConfiguration.customAction,
-        defaultConfiguration.customActionData,
-        defaultConfiguration.projectName,
-        defaultConfiguration.clientId,
-        defaultConfiguration.channel,
-        defaultConfiguration.tenant,
-        defaultConfiguration.fullName,
-        defaultConfiguration.endUser,
-        defaultConfiguration.locale
-      );
+
+      const sendMesObj = {
+        message: displayMessageText,
+        customAction: '',
+        customActionData: defaultConfiguration.customActionData,
+        clientId: defaultConfiguration.clientId,
+        tenant: defaultConfiguration.tenant,
+        channel: defaultConfiguration.channel,
+        project: defaultConfiguration.projectName,
+        conversationId: sessionId,
+        fullName: defaultConfiguration.fullName,
+        endUser: defaultConfiguration.endUser,
+        locale:defaultConfiguration.locale
+      };
+      client.sendAsync(JSON.stringify(sendMesObj))
     }
   };
 
@@ -272,7 +273,7 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
-      //local
+      locale:defaultConfiguration.locale
     });
     setMessageList((messages: any) => [
       ...messages,
@@ -404,6 +405,7 @@ const useChat = ({
       name: 'channel',
       data: defaultConfiguration.channel || '',
     });
+    
     const replaceLink = url.replace('chathub', 'Home/SendAttachment');
     sendAttachmentSocket({ replaceLink, formData });
   };
@@ -442,7 +444,6 @@ const useChat = ({
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
       endUser: defaultConfiguration.endUser,
-      locale:defaultConfiguration.locale
     };
     setMessageList([]);
     client.endConversation(JSON.stringify(dataToSend));

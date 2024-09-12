@@ -36,10 +36,10 @@ export default function ChatbotScreen() {
   };
 
   const endUserInfo = {
-    name: 'rabia vural',
+    name: 'sestek user',
     phone: '+905555555555',
-    email: 'rabia@doe.com',
-    twitter: '@rabia',
+    email: 'sestek@doe.com',
+    twitter: '@sestek',
   };
   const permissionAudioCheck = async () => {
     return new Promise<void>((resolve, reject) => {
@@ -76,6 +76,7 @@ export default function ChatbotScreen() {
         tenant: config.TNAME_,
         projectName: config.PNAME_,
         locale:'en-US',
+        // fullName:'',
         endUser: endUserInfo,
         getResponseData: setResponse,
         customActionData: JSON.stringify(customActionDataExample),

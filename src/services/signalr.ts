@@ -56,7 +56,7 @@ class SignalRClient {
       return val;
     }
     this.connection
-      .send('SendMessage', ...args)
+      .send('SendMessageAsync', ...args)
       .then(() => {})
       .catch(() => {
         this.connected = false;

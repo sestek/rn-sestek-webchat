@@ -11,6 +11,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { customizeConfiguration } = useCustomizeConfiguration();
+  const [contentHeight, setContentHeight] = useState(0);
   const renderContent = (text: string, textType: string) =>
     useRenderContent(
       text,
@@ -53,7 +54,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         style={{
           position: 'absolute',
           left: -40,
-          top: 150,
+          top: contentHeight / 2 - 15,
           zIndex: 1,
           height: 30,
           width: 30,
@@ -74,7 +75,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
         style={{
           position: 'absolute',
           right: 0,
-          top: 150,
+          top: contentHeight / 2 - 15,
           zIndex: 1,
           height: 30,
           width: 30,
@@ -116,6 +117,12 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
           return (
             <View
               key={idx}
+              onLayout={(event) => {
+                const { height } = event.nativeEvent.layout;
+                if (height > contentHeight) {
+                  setContentHeight(height);
+                }
+              }}
               style={{
                 marginLeft: idx !== 0 ? 10 : 0,
                 backgroundColor: '#F5F5F5',
@@ -124,20 +131,26 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                 paddingHorizontal: 12,
               }}
             >
-              <View style={{ alignItems: 'center', justifyContent: 'center', }}>
-                <Image
-                  source={{ uri: item.url }}
-                  style={{
-                    width: '99%',
-                    height: 170,
-                    borderRadius: 5,
-                    marginTop: 2,
-                  }}
-                   resizeMode="contain"
-                />
+              {item?.url && (
+                <View
+                  style={{ alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <Image
+                    source={{ uri: item.url }}
+                    style={{
+                      width: '99%',
+                      height: 170,
+                      borderRadius: 5,
+                      marginTop: 2,
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+              )}
+              <View style={{paddingBottom: item.url ? 0 : 15, paddingTop: item.url? 0:15}}>
+                {renderContent(title, 'title')}
+                {renderContent(subtitle, 'subtitle')}
               </View>
-              {renderContent(title, 'title')}
-              {renderContent(subtitle, 'subtitle')}
 
               {item?.buttons &&
                 item.buttons.map((btn: any, idx: number) => {
