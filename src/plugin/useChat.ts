@@ -214,8 +214,9 @@ const useChat = ({
         locale:defaultConfiguration.locale
       });
 
+
       const sendMesObj = {
-        message: displayMessageText,
+        message: message,
         customAction: '',
         customActionData: defaultConfiguration.customActionData,
         clientId: defaultConfiguration.clientId,
