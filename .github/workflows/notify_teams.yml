@@ -1,0 +1,24 @@
+name: Notify Teams on Version Update
+
+on:
+  release:
+    types: [published]  
+
+jobs:
+  notify_teams:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Teams
+        run: |
+          curl -H 'Content-Type: application/json' \
+            -d '{
+                 "text": "Yeni bir Npm paketi sürümü yayımlandı! Versiyon: ${{ github.event.release.tag_name }}",
+                 "attachments": [
+                     {
+                         "title": "Proje İsmi: ${{ github.repository }}",
+                         "text": "Yayınlanan versiyon: ${{ github.event.release.tag_name }}",
+                         "color": "#36a64f"
+                     }
+                 ]
+                }' \
+            ${{ secrets.TEAMS_WEBHOOK_URL }}
