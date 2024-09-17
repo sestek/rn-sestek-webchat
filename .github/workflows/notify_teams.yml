@@ -1,8 +1,8 @@
-# name: Notify Teams on Version Update
+name: Notify Teams on New Release
 
-# on:
-#   release:
-#     types: [published]  
+on:
+  release:
+    types: [published]
 
 jobs:
   notify_teams:
@@ -22,5 +22,3 @@ jobs:
                  ]
                 }' \
             ${{ secrets.TEAMS_WEBHOOK_URL }}
-
-
