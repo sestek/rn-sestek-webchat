@@ -10,13 +10,13 @@ jobs:
     steps:
       - name: Send notification to Teams
         run: |
-          curl -H 'Content-Type: application/json' \
+          curl -H "Content-Type: application/json" \
             -d '{
                  "text": "Yeni bir NPM paketi sürümü yayımlandı!\n\n
-                          Versiyon: ${{ github.event.release.tag_name }}\n
-                          Proje İsmi: ${{ github.repository }}\n
-                          Yayınlanan versiyon: ${{ github.event.release.tag_name }}\n
-                          Sürüm URL\'si: ${{ github.event.release.html_url }}",
+                          Versiyon: '${{ github.event.release.tag_name }}'\n
+                          Proje İsmi: '${{ github.repository }}'\n
+                          Yayınlanan versiyon: '${{ github.event.release.tag_name }}'\n
+                          Sürüm URL\'si: '${{ github.event.release.html_url }}'",
                  "color": "#36a64f"
                 }' \
             ${{ secrets.TEAMS_WEBHOOK_URL }}
