@@ -5,4 +5,6 @@ export default interface PropsBodyComponent {
   changeInputData: (text: string) => void;
   sendMessage: any;
   scrollViewRef: React.RefObject<ScrollView>;
+  url:string;
+  defaultConfiguration:any
 }

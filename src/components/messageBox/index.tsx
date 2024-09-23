@@ -17,6 +17,7 @@ import styles from './style';
 import CarouselPage from './carousel';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { specialMessageTypes } from '../../constant/ChatModalConstant';
+import FileMessages from './fileMessage';
 
 const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   const messageType = props.type ? props.type : '';
@@ -242,6 +243,9 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   userMessageBoxTextColor={props.userMessageBoxTextColor}
                   inlineText={true}
                 />
+              )}
+               {(audioMesType === 'file/minio') && (
+               <FileMessages url={props.url} activity={props.activity} defaultConfiguration={props.defaultConfiguration}/>
               )}
 
               {props.activity.type === 'typing' ? <TypingMessage /> : null}

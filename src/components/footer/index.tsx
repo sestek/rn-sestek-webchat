@@ -3,7 +3,7 @@ import { TextInput, TouchableOpacity, View, Platform } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
 import { Recorder } from '../../services';
-import { useLoading } from '../../context/LoadingContext';
+// import { useLoading } from '../../context/LoadingContext';
 import RenderImage from '../renderImage';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
@@ -11,13 +11,8 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
 
-  const {modules } = useModules();
+  const { modules } = useModules();
 
-  const RNFSModule = modules?.RNFS;
-  const RNFileSelector = modules?.RNFileSelector;
-  const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
-
-  const { setLoading } = useLoading();
   const {
     sendAudio,
     sendAttachment,
@@ -88,57 +83,11 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     }
   };
 
-  const convertToBase64 = async (uri: string): Promise<string | null> => {
-    try {
-      const fileBase64 = await RNFSModule.fs.readFile(uri, 'base64');
-      return fileBase64;
-    } catch (error) {
-      console.error('Error converting file to base64:', error);
-      return null;
-    }
-  };
 
-  const pickDocument = async () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const res = await RNFileSelector.pick({
-          type: [RNFileSelector.types.allFiles],
-        });
-        resolve(res);
-      } catch (err) {
-        if (RNFileSelector.isCancel(err)) {
-          reject(err);
-        } else {
-          reject(err);
-        }
-      }
-    });
-  };
-
-  const readAndConvertPickDocument = async () => {
-    pickDocument()
-      .then((res: any) => {
-        setLoading(true);
-        const path =
-          Platform.OS === 'android'
-            ? res[0]?.uri
-            : res[0]?.uri.replace('file://', '');
-        const fileSizeBytes = res[0].size;
-        if (fileSizeBytes < MAX_FILE_SIZE_BYTES) {
-          convertToBase64(path)
-            .then((data) => {
-              sendAttachment && sendAttachment(res[0]?.uri, data);
-            })
-            .then(() => {
-              setLoading(false);
-            });
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+ 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }}>
+      <View style={styles.inputWrapper}>
         <TextInput
           style={[
             styles.textInput,
@@ -163,58 +112,52 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           placeholderTextColor="grey"
           keyboardType="default"
         />
+        {modules?.RNFileSelector && modules?.RNFS && (
+          <TouchableOpacity
+            onPress={sendAttachment}
+            style={[
+              styles.iconContainer,
+              {
+                borderColor: bottomInputBorderColor,
+                backgroundColor: bottomInputBackgroundColor,
+              },
+            ]}
+          >
+            <RenderImage
+              type={bottomAttachmentIcon?.type}
+              value={bottomAttachmentIcon?.value}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        )}
+        {modules?.AudioRecorderPlayer && modules?.RNFS && (
+          <TouchableOpacity
+            onPress={() => touchRecord()}
+            style={styles.iconContainer}
+          >
+            {recordStart ? (
+              <RenderImage
+                type={bottomVoiceStopIcon?.type}
+                value={bottomVoiceStopIcon?.value}
+                style={styles.icon}
+              />
+            ) : disableRecord ? (
+              <RenderImage
+                type={bottomVoiceDisabledIcon?.type}
+                value={bottomVoiceDisabledIcon?.value}
+                style={styles.icon}
+              />
+            ) : (
+              <RenderImage
+                type={bottomVoiceIcon?.type}
+                value={bottomVoiceIcon?.value}
+                style={styles.icon}
+              />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
-      {modules?.RNFileSelector && modules?.RNFS && (
-        <TouchableOpacity
-          onPress={readAndConvertPickDocument}
-          style={[
-            styles.AttachmentButton,
-            {
-              borderColor: bottomInputBorderColor,
-              backgroundColor: bottomInputBackgroundColor,
-            },
-          ]}
-        >
-          <RenderImage
-            type={bottomAttachmentIcon?.type}
-            value={bottomAttachmentIcon?.value}
-            style={styles.AttachmentIcon}
-          />
-        </TouchableOpacity>
-      )}
-      {modules?.AudioRecorderPlayer && modules?.RNFS && (
-        <TouchableOpacity
-          onPress={() => touchRecord()}
-          style={[
-            styles.audioButton,
-            {
-              borderRightWidth: 1,
-              borderColor: bottomInputBorderColor,
-              backgroundColor: bottomInputBackgroundColor,
-            },
-          ]}
-        >
-          {recordStart ? (
-            <RenderImage
-              type={bottomVoiceStopIcon?.type}
-              value={bottomVoiceStopIcon?.value}
-              style={styles.MicButtonIcon}
-            />
-          ) : disableRecord ? (
-            <RenderImage
-              type={bottomVoiceDisabledIcon?.type}
-              value={bottomVoiceDisabledIcon?.value}
-              style={styles.MicButtonIcon}
-            />
-          ) : (
-            <RenderImage
-              type={bottomVoiceIcon?.type}
-              value={bottomVoiceIcon?.value}
-              style={styles.MicButtonIcon}
-            />
-          )}
-        </TouchableOpacity>
-      )}
+
       <TouchableOpacity
         onPress={clickSendButton}
         style={[
@@ -225,7 +168,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
         <RenderImage
           type={bottomSendIcon?.type}
           value={bottomSendIcon?.value}
-          style={styles.SendButtonIcon}
+          style={styles.sendIcon}
         />
       </TouchableOpacity>
     </View>

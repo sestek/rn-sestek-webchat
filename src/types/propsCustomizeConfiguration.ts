@@ -36,6 +36,7 @@ export default interface PropsCustomizeConfiguration {
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
   fontSettings?: FontSettings;
+  fileIcon?: IconType;
   permissionAudioCheck?: () => Promise<void>;
   language?: {
     [key: string]: {
@@ -43,7 +44,15 @@ export default interface PropsCustomizeConfiguration {
       bottomInputText:string;
       closeModalText:string;
       closeModalYesButtonText:string;
-      closeModalNoButtonText:string
+      closeModalNoButtonText:string;
+      filePTitle:string;
+      filePMessage:string;
+      filePNeutral:string;
+      filePNegative:string;
+      filePPositive:string;
+      noAppFoundTitle:string;
+      noAppFoundMessage:string;
+      noAppFoundCancel:string;
     };
   };
   dateSettings?:{

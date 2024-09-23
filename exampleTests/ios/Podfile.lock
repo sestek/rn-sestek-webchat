@@ -377,8 +377,6 @@ PODS:
     - glog
   - react-native-document-picker (8.2.2):
     - React-Core
-  - react-native-fetch-blob (0.10.6):
-    - React-Core
   - react-native-safe-area-context (4.10.8):
     - React-Core
   - react-native-webview (11.26.1):
@@ -493,11 +491,15 @@ PODS:
     - React-jsi (= 0.72.3)
     - React-logger (= 0.72.3)
     - React-perflogger (= 0.72.3)
+  - rn-fetch-blob (0.12.0):
+    - React-Core
   - RNAudioRecord (0.2.2):
     - React
   - RNAudioRecorderPlayer (3.6.1):
     - React-Core
   - RNCAsyncStorage (1.23.1):
+    - React-Core
+  - RNFileViewer (2.1.5):
     - React-Core
   - RNScreens (3.33.0):
     - RCT-Folly (= 2021.07.22.00)
@@ -558,7 +560,6 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
-  - react-native-fetch-blob (from `../node_modules/react-native-fetch-blob`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -578,9 +579,11 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNAudioRecord (from `../node_modules/react-native-audio-record`)
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNFileViewer (from `../node_modules/react-native-file-viewer`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -648,8 +651,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
-  react-native-fetch-blob:
-    :path: "../node_modules/react-native-fetch-blob"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -688,12 +689,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
   RNAudioRecord:
     :path: "../node_modules/react-native-audio-record"
   RNAudioRecorderPlayer:
     :path: "../node_modules/react-native-audio-recorder-player"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNFileViewer:
+    :path: "../node_modules/react-native-file-viewer"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -736,7 +741,6 @@ SPEC CHECKSUMS:
   React-jsinspector: b511447170f561157547bc0bef3f169663860be7
   React-logger: c5b527272d5f22eaa09bb3c3a690fee8f237ae95
   react-native-document-picker: cd4d6b36a5207ad7a9e599ebb9eb0c2e84fa0b87
-  react-native-fetch-blob: 0cbdf9764c75d9438c162427395f4bc35a857d5a
   react-native-safe-area-context: b7daa1a8df36095a032dff095a1ea8963cb48371
   react-native-webview: 9f111dfbcfc826084d6c507f569e5e03342ee1c1
   React-NativeModulesApple: c57f3efe0df288a6532b726ad2d0322a9bf38472
@@ -756,9 +760,11 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 837c1bebd2f84572db17698cd702ceaf585b0d9a
   React-utils: bcb57da67eec2711f8b353f6e3d33bd8e4b2efa3
   ReactCommon: 3ccb8fb14e6b3277e38c73b0ff5e4a1b8db017a9
+  rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNAudioRecord: 162fee3b8fb628773ec704bf0333823125be2ed7
   RNAudioRecorderPlayer: 711f14e1f7634c9765e274245eeca51206c9cf0f
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
+  RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
   RNScreens: 03acbdcf84e1bf6832ba83dbe3601eae20c55de0
   RNVectorIcons: bfb663f3f7b37340cd90120151b720641523dc84
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17

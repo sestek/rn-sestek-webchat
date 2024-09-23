@@ -11,13 +11,15 @@ import {
 import {ChatModal, ChatModalProps} from '../../../src/index';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob';
 import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
 import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FileViewer from 'react-native-file-viewer';
+
 export default function ChatPage() {
   const modalRef = useRef<ChatModalProps>(null);
 
@@ -123,7 +125,7 @@ export default function ChatPage() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-  url={config.URL_}
+        url={config.URL_}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -132,6 +134,7 @@ export default function ChatPage() {
           Record: AudioRecord,
           RNFileSelector: DocumentPicker,
           asyncStorage: AsyncStorage,
+          fileViewer: FileViewer,
         }}
         ref={modalRef}
         defaultConfiguration={{
@@ -140,7 +143,7 @@ export default function ChatPage() {
           // clientId: '1111',
           fullName: "{name:'rabia'}",
           tenant: config.TNAME_,
-          projectName: config.PNAME_,
+          projectName: config.URL_,
 
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),
@@ -298,21 +301,49 @@ export default function ChatPage() {
               closeModalText: 'Are you sure you want to exit chat?',
               closeModalYesButtonText: 'Yes',
               closeModalNoButtonText: 'No',
+              filePTitle: 'Storage Permission Required',
+              filePMessage: 'This app needs permission to save and open files.',
+              filePNeutral: 'Later',
+              filePNegative: 'Cancel',
+              filePPositive: 'OK',
+              noAppFoundTitle: 'No App Found',
+              noAppFoundMessage:
+                'No suitable app found to open this file type. Install an app from the Google Play Store.',
+              noAppFoundCancel: 'Cancel',
             },
             tr: {
               headerText: 'Knovvu',
               bottomInputText: 'Lütfen bir mesaj yazınız',
-              closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
+              closeModalText: 'Chatten çıkmak istediğinize emin misiniz?',
               closeModalYesButtonText: 'Evet',
               closeModalNoButtonText: 'Hayır',
+              filePTitle: 'Depolama İzni Gerekli',
+              filePMessage:
+                'Bu uygulamanın dosya kaydetmesi ve açması için izne ihtiyacı var.',
+              filePNeutral: 'Daha Sonra',
+              filePNegative: 'İptal',
+              filePPositive: 'Tamam',
+              noAppFoundTitle: 'Uygulama Bulunamadı',
+              noAppFoundMessage:
+                'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
+              noAppFoundCancel: 'İptal',
             },
-
             es: {
-              headerText: 'ispanyol',
-              bottomInputText: 'Please write a message',
-              closeModalText: 'Are you sure you want to exit chat?',
-              closeModalYesButtonText: 'Yes',
+              headerText: 'Knovvu',
+              bottomInputText: 'Por favor, escribe un mensaje',
+              closeModalText: '¿Estás seguro de que quieres salir del chat?',
+              closeModalYesButtonText: 'Sí',
               closeModalNoButtonText: 'No',
+              filePTitle: 'Permiso de Almacenamiento Necesario',
+              filePMessage:
+                'Esta aplicación necesita permiso para guardar y abrir archivos.',
+              filePNeutral: 'Más tarde',
+              filePNegative: 'Cancelar',
+              filePPositive: 'Aceptar',
+              noAppFoundTitle: 'Aplicación No Encontrada',
+              noAppFoundMessage:
+                'No se encontró ninguna aplicación adecuada para abrir este tipo de archivo. Instala una aplicación desde Google Play Store.',
+              noAppFoundCancel: 'Cancelar',
             },
           },
           //  dateSettings: {

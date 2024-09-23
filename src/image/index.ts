@@ -13,6 +13,7 @@ const Next = require('./next.png')
 const Back = require('./back.png')
 const Error = require('./error.png')
 const KnovuuIcon = require('./knovvu_logo.png')
+const FileIcon = require('./file.png')
 
 export {
   ChatIcon,
@@ -29,5 +30,6 @@ export {
   Link,
   Next,
   Back,
-  Error
+  Error,
+  FileIcon
 };

@@ -2,7 +2,6 @@ import React, {useRef, useState, useLayoutEffect} from 'react';
 import {Image, Pressable, PermissionsAndroid, Platform} from 'react-native';
 import {ChatModal, ChatModalProps} from '../../../src/index';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import RNFetchBlob from 'react-native-fetch-blob';
 import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
@@ -11,6 +10,8 @@ import config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native'; // Import useNavigation for navigation
 import {CloseIcon, MinusIcon} from '../../../src/image';
+import RNFetchBlob from 'rn-fetch-blob';
+import FileViewer from 'react-native-file-viewer';
 
 export default function ChatbotScreen() {
   const navigation = useNavigation();
@@ -32,7 +33,7 @@ export default function ChatbotScreen() {
   };
 
   const customActionDataExample = {
-    user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
+   user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
   };
 
   const endUserInfo = {
@@ -65,8 +66,9 @@ export default function ChatbotScreen() {
         RNSlider: Slider,
         RNWebView: WebView,
         Record: AudioRecord,
-        RNFileSelector: DocumentPicker,
+         RNFileSelector: DocumentPicker,
         asyncStorage: AsyncStorage,
+        fileViewer:FileViewer
       }}
       ref={modalRef}
       defaultConfiguration={{
@@ -74,7 +76,7 @@ export default function ChatbotScreen() {
         channel: 'webchatmobile-sestek',
         // clientId: '1111',
         tenant: config.TNAME_,
-        projectName: config.PNAME_,
+        projectName:config.PNAME_,
         locale:'en-US',
         // fullName:'',
         endUser: endUserInfo,
@@ -123,28 +125,48 @@ export default function ChatbotScreen() {
           },
         },
         language: {
-          tr: {
-            headerText: 'Knovvu',
-            bottomInputText: 'Lütfen bir mesaj yazınız',
-            closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
-            closeModalYesButtonText: 'Evet',
-            closeModalNoButtonText: 'Hayır',
-          },
           en: {
             headerText: 'Knovvu',
             bottomInputText: 'Please write a message',
             closeModalText: 'Are you sure you want to exit chat?',
             closeModalYesButtonText: 'Yes',
             closeModalNoButtonText: 'No',
+            filePTitle: 'Storage Permission Required',
+            filePMessage: 'This application needs permission to save and open files.',
+            filePNeutral: 'Later',
+            filePNegative: 'Cancel',
+            filePPositive: 'OK',
+            noAppFoundTitle: 'No App Found',
+            noAppFoundMessage:
+              'No suitable application found to open this file type. Please download an app from the Google Play Store.',
+            noAppFoundCancel: 'Cancel',
           },
-
-          es: {
+          tr: {
             headerText: 'Knovvu',
-            bottomInputText: 'Please write a message',
-            closeModalText: 'Are you sure you want to exit chat?',
-            closeModalYesButtonText: 'Yes',
-            closeModalNoButtonText: 'No',
+            bottomInputText: 'Lütfen bir mesaj yazınız',
+            closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
+            closeModalYesButtonText: 'Evet',
+            closeModalNoButtonText: 'Hayır',
+            filePTitle: 'Depolama İzni Gerekli',
+            filePMessage:
+              'Bu uygulamanın dosya kaydetmesi ve açması için izne ihtiyacı var.',
+            filePNeutral: 'Daha Sonra',
+            filePNegative: 'İptal',
+            filePPositive: 'Tamam',
+            noAppFoundTitle: 'Uygulama Bulunamadı',
+            noAppFoundMessage:
+              'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
+            noAppFoundCancel: 'İptal',
           },
+        
+
+          // es: {
+          //   headerText: 'Knovvu',
+          //   bottomInputText: 'Please write a message',
+          //   closeModalText: 'Are you sure you want to exit chat?',
+          //   closeModalYesButtonText: 'Yes',
+          //   closeModalNoButtonText: 'No',
+          // },
         },
       }}
     />

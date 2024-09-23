@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 
@@ -62,6 +62,8 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
               activity={x}
               status={null}
               renderAddCmp={undefined}
+              url={props.url}
+              defaultConfiguration={props.defaultConfiguration}
             />
           ))}
       </ScrollView>

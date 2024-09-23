@@ -6,4 +6,5 @@ export default interface PropsModules {
   Record?: any;
   RNFileSelector?: any;
   asyncStorage?: any;
+  fileViewer?:any
 }

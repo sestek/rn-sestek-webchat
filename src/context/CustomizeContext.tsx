@@ -3,6 +3,7 @@ import type PropsCustomizeConfiguration from '../types/propsCustomizeConfigurati
 import {
   Back,
   CloseIcon,
+  FileIcon,
   KnovuuIcon,
   Link,
   MinusIcon,
@@ -27,10 +28,10 @@ interface CustomizeConfigurationContextType {
 
 export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   headerColor: '#7743DB',
-  headerTextStyle:{
+  headerTextStyle: {
     fontWeight: 'bold',
     fontSize: 15,
-    color:'white'
+    color: 'white',
   },
   headerHideIcon: {
     type: 'url',
@@ -67,7 +68,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   },
   userMessageBoxBackground: '#863CEB',
   userMessageBoxTextColor: 'white',
-  userMessageIcon:{
+  userMessageIcon: {
     type: undefined,
     value: undefined,
   },
@@ -161,6 +162,16 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
       closeModalYesButtonText: 'Evet',
       closeModalNoButtonText: 'Hayır',
+      filePTitle: 'Depolama İzni Gerekli',
+      filePMessage:
+        'Bu uygulamanın dosya kaydetmesi ve açması için izne ihtiyacı var.',
+      filePNeutral: 'Daha Sonra',
+      filePNegative: 'İptal',
+      filePPositive: 'Tamam',
+      noAppFoundTitle: 'Uygulama Bulunamadı',
+      noAppFoundMessage:
+        'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
+      noAppFoundCancel: 'İptal',
     },
     en: {
       headerText: 'Knovvu',
@@ -168,16 +179,29 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       closeModalText: 'Are you sure you want to exit chat?',
       closeModalYesButtonText: 'Yes',
       closeModalNoButtonText: 'No',
+      filePTitle: 'Storage Permission Required',
+      filePMessage: 'This application needs permission to save and open files.',
+      filePNeutral: 'Later',
+      filePNegative: 'Cancel',
+      filePPositive: 'OK',
+      noAppFoundTitle: 'No App Found',
+      noAppFoundMessage:
+        'No suitable application found to open this file type. Please download an app from the Google Play Store.',
+      noAppFoundCancel: 'Cancel',
     },
   },
   dateSettings: {
-    use:true,
+    use: true,
     backgroundColor: '#EFEFEF',
     textColor: 'black',
-    borderRadius:20,
-    format:'long'
+    borderRadius: 20,
+    format: 'long',
   },
   autoPlayAudio: false,
+  fileIcon: {
+    type: 'url',
+    value: FileIcon,
+  },
 };
 
 const CustomizeConfigurationContext = createContext<
@@ -193,8 +217,6 @@ const CustomizeConfigurationProvider: React.FC<{
     ...defaultCustomizeConfiguration,
     ...initialConfig,
   };
-
- 
 
   const [customizeConfiguration, setCustomizeConfiguration] =
     useState<PropsCustomizeConfiguration>(mergedInitialConfig);

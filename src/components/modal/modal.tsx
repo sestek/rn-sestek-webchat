@@ -149,6 +149,8 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                     changeInputData={changeInputData}
                     sendMessage={sendMessage}
                     scrollViewRef={scrollViewRef}
+                    defaultConfiguration={defaultConfiguration}
+                    url={url}
                   />
                   <View
                     style={[

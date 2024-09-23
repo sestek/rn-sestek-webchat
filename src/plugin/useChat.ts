@@ -211,9 +211,8 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
         endUser: defaultConfiguration.endUser,
-        locale:defaultConfiguration.locale
+        locale: defaultConfiguration.locale,
       });
-
 
       const sendMesObj = {
         message: message,
@@ -226,9 +225,9 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
         endUser: defaultConfiguration.endUser,
-        locale:defaultConfiguration.locale
+        locale: defaultConfiguration.locale,
       };
-      client.sendAsync(JSON.stringify(sendMesObj))
+      client.sendAsync(JSON.stringify(sendMesObj));
     }
   };
 
@@ -274,7 +273,7 @@ const useChat = ({
       project: defaultConfiguration.projectName,
       conversationId: sessionId,
       fullName: defaultConfiguration.fullName,
-      locale:defaultConfiguration.locale
+      locale: defaultConfiguration.locale,
     });
     setMessageList((messages: any) => [
       ...messages,
@@ -332,84 +331,89 @@ const useChat = ({
     sendAudioSocket({ replaceLink, formData });
   };
 
-  const sendAttachmentSocket = (props: {
-    replaceLink: string;
-    formData: any;
-  }) => {
-    const { replaceLink, formData } = props;
-    rnfs
-      .fetch(
-        'POST',
+
+
+  const sendAttachment = async () => {
+    try {
+      console.log("Dosya gönderme işlemi başlıyor");
+  
+      const res = await modules.RNFileSelector.pick({
+        type: [modules.RNFileSelector.types.allFiles], 
+      });
+  
+      const fileUri = res[0].uri; 
+      const fileName = res[0].name; 
+      const fileType = res[0].type; 
+  
+      const formData = new FormData();
+  
+    
+      formData.append('attachment', {
+        uri: fileUri,
+        name: fileName,
+        type: fileType, 
+      });
+  
+      formData.append('user', sessionId);
+      formData.append('project', defaultConfiguration.projectName);
+      formData.append('tenant', defaultConfiguration.tenant);
+      formData.append('customAction', defaultConfiguration.customAction);
+      formData.append('customActionData', defaultConfiguration.customActionData);
+      formData.append('channel', 'webchatmobile-sestek');
+      formData.append('locale', defaultConfiguration.locale);
+      formData.append('clientId', defaultConfiguration.clientId);
+      formData.append('endUser', JSON.stringify(defaultConfiguration.endUser));
+
+      const replaceLink = url.replace('chathub', 'Home/SendAttachment');
+      const response = await fetch(
         replaceLink,
         {
-          'Content-Type': 'multipart/form-data',
-          'Accept': 'application/json',
-        },
-        formData
-      )
-      .catch((err: any) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setMessageList((messages: any) =>
-          messages.filter((x: any) => x?.type !== 'typing')
-        );
-      });
+          method: 'POST',
+          headers: {
+            Accept: '*/*',
+            'Content-Type': 'multipart/form-data', 
+          },
+          body: formData,
+        }
+      );
+  
+      const responseData = await response.json();
+  
+      if (responseData.message === 'Hata') {
+        console.log('Başarılı:', responseData);
+
+        addMessageList({
+          timestamp: new Date().getTime(),
+          type: 'text',
+          message: fileName ?? '',
+          customAction: '',
+          customActionData: '',
+          clientId: defaultConfiguration.clientId,
+          tenant: defaultConfiguration.tenant,
+          channel: defaultConfiguration.channel,
+          project: defaultConfiguration.projectName,
+          conversationId: sessionId,
+          fullName: defaultConfiguration.fullName,
+          endUser: defaultConfiguration.endUser,
+          locale: defaultConfiguration.locale,
+        });
+        setMessageList((messages: any) => [
+          ...messages,
+          { type: 'typing', message: 'xxxxx' },
+        ]);
+      } else {
+        console.error('Başarısız:', responseData);
+      }
+    } catch (err) {
+      if (modules.RNFileSelector.isCancel(err)) {
+        console.log('Kullanıcı dosya seçimini iptal etti');
+      } else {
+        console.error('Dosya yükleme hatası:', err);
+      }
+    }
   };
-  const sendAttachment = async (filename: string, data: string) => {
-    const splitPath = filename?.split('/');
-    const onlyFileName = splitPath && splitPath[splitPath.length - 1];
+  
 
-    addMessageList({
-      timestamp: new Date().getTime(),
-      type: 'text',
-      message: onlyFileName ?? '',
-      customAction: '',
-      customActionData: '',
-      clientId: defaultConfiguration.clientId,
-      tenant: defaultConfiguration.tenant,
-      channel: defaultConfiguration.channel,
-      project: defaultConfiguration.projectName,
-      conversationId: sessionId,
-      fullName: defaultConfiguration.fullName,
-      endUser: defaultConfiguration.endUser,
-      locale:defaultConfiguration.locale
-    });
-    setMessageList((messages: any) => [
-      ...messages,
-      { type: 'typing', message: 'xxxxx' },
-    ]);
-
-    const formData = new Array();
-    formData.push({
-      name: 'attachment',
-      data: data,
-      filename: onlyFileName ?? '',
-      type: 'attachment/' + filename.split('.')[1],
-    });
-    formData.push({ name: 'user', data: sessionId });
-    formData.push({
-      name: 'project',
-      data: defaultConfiguration.projectName || '',
-    });
-    formData.push({
-      name: 'clientId',
-      data: defaultConfiguration.clientId || '',
-    });
-    formData.push({ name: 'tenant', data: defaultConfiguration.tenant || '' });
-    formData.push({
-      name: 'fullName',
-      data: defaultConfiguration.fullName || '',
-    });
-
-    formData.push({
-      name: 'channel',
-      data: defaultConfiguration.channel || '',
-    });
-    
-    const replaceLink = url.replace('chathub', 'Home/SendAttachment');
-    sendAttachmentSocket({ replaceLink, formData });
-  };
   const sendConversationStart = async () => {
     defaultConfiguration.customAction = 'startOfConversation';
     const startObj = {
@@ -426,9 +430,9 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
       endUser: defaultConfiguration.endUser,
-      locale:defaultConfiguration.locale
+      locale: defaultConfiguration.locale,
     };
-    
+
     addMessageList(startObj);
     await client.startConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';
@@ -545,7 +549,7 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
       endUser: defaultConfiguration.endUser,
-      locale:defaultConfiguration.locale
+      locale: defaultConfiguration.locale,
     };
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';

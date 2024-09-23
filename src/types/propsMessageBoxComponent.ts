@@ -25,4 +25,7 @@ export default interface PropsMessageBoxComponent {
   notch?: boolean;
   renderAddCmp: any;
   userMessageBoxTextColor: string;
+  url:string
+  defaultConfiguration:any
+
 }
