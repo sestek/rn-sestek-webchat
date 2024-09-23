@@ -1,8 +1,8 @@
-name: Notify Teams on New Release
+name: Notify Teams on Version Update
 
 on:
   release:
-    types: [published]
+    types: [published]  
 
 jobs:
   notify_teams:
@@ -12,11 +12,13 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
             -d '{
-                 "text": "Yeni bir NPM paketi sürümü yayımlandı!\n\n
-                          Versiyon: '${{ github.event.release.tag_name }}'\n
-                          Proje İsmi: '${{ github.repository }}'\n
-                          Yayınlanan versiyon: '${{ github.event.release.tag_name }}'\n
-                          Sürüm URL\'si: '${{ github.event.release.html_url }}'",
-                 "color": "#36a64f"
+                 "text": "Yeni bir Npm paketi sürümü yayımlandı! Versiyon: ${{ github.event.release.tag_name }}. Detaylara release tag kısmından ulaşabilirisniz.",
+                 "attachments": [
+                     {
+                         "title": "Proje İsmi: ${{ github.repository }}",
+                         "text": "Yayınlanan versiyon: ${{ github.event.release.tag_name }}",
+                         "color": "#36a64f"
+                     }
+                 ]
                 }' \
             ${{ secrets.TEAMS_WEBHOOK_URL }}
