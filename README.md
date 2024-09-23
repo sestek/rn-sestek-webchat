@@ -27,14 +27,16 @@ npm i --save  react-native-audio-record@0.2.2
 - To record and " listen " audio, you need to install the package above and [click this link](https://www.npmjs.com/package/react-native-audio-recorder-player) to make the necessary integrations.
 - To record and "send " audio, you need to install the package above and [click this link](https://www.npmjs.com/package/react-native-audio-record) to make the necessary integrations.
 
-##### Step 2: Install react-native-fetch-blob
+##### Step 2: Install rn-fetch-blob
 
 ```
-npm i --save react-native-fetch-blob@0.10.8
+npm i --save rn-fetch-blob
 ```
 
-If you want to send audio, you must also install the "react-native-fetch-blob" package. Because it is needed to keep the recorded audio in the cache and listen again.
-You can follow the [link](https://www.npmjs.com/package/react-native-fetch-blob) below to integrate
+If you want to send files, you also need to install the "rn-fetch-blob" package. Because we need it to read the selected file and convert it to base64.
+You can follow the [link](https://www.npmjs.com/package/rn-fetch-blob) below to integrate
+
+---
 
 ##### Step 3: Install react-native-slider
 
@@ -45,6 +47,17 @@ npm i --save @miblanchard/react-native-slider
 If you use to slider, you must also install the "@miblanchard/react-native-slider" package. You can follow the [link](https://www.npmjs.com/package/@miblanchard/react-native-slider) below to integrate
 
 ---
+
+##### Step 4: Install react-native-file-viewer
+
+```
+npm i --save react-native-file-viewer
+```
+If you do not include this package, users won't be able to open or view the files that are downloaded. This package handles file viewing functionality across different file types and ensures that files can be properly viewed once downloaded.
+
+You can follow the [link](https://www.npmjs.com/package/react-native-file-viewer)  to integrate this package and ensure files open correctly in your application.
+
+
 
 ### If you want to send files and pictures, you need to follow these steps
 
@@ -66,14 +79,14 @@ You can follow the [link](https://www.npmjs.com/package/react-native-document-pi
 
 RN < 0.63 Older RN versions are not supported.
 
-##### Step 2: Install react-native-fetch-blob
+##### Step 2: Install rn-fetch-blob
 
 ```
-npm i --save react-native-fetch-blob@0.10.8
+npm i --save rn-fetch-blob
 ```
 
-If you want to send files, you also need to install the "react-native-fetch-blob" package. Because we need it to read the selected file and convert it to base64.
-You can follow the [link](https://www.npmjs.com/package/react-native-fetch-blob) below to integrate
+If you want to send files, you also need to install the "rn-fetch-blob" package. Because we need it to read the selected file and convert it to base64.
+You can follow the [link](https://www.npmjs.com/package/rn-fetch-blob) below to integrate
 
 ---
 
@@ -106,12 +119,15 @@ You may have a general understanding of how it works with the following snippet.
 ```javascript
 import { ChatModal, ChatModalProps } from 'rn-sestek-webchat';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player'; //Required package to listen to audio files
-import RNFetchBlob from 'react-native-fetch-blob'; //Required package to listen to audio files
+import RNFetchBlob from 'rn-fetch-blob'; //Required package to listen to audio files
 import AudioRecord from 'react-native-audio-record'; //Required package to send audio files as waw
 import AudioRecord from 'react-native-audio-record'; //Required package to send audio files as waw
 import DocumentPicker from 'react-native-document-picker'
 
+import {WebView} from 'react-native-webview';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';// for the start storage session
+import FileViewer from 'react-native-file-viewer';
 
 
 const modalRef = useRef<ChatModalProps>(null);
@@ -203,21 +219,24 @@ const startStorageSession = () => {
     AudioRecorderPlayer: AudioRecorderPlayer,
     RNFS: RNFetchBlob,
     RNSlider: Slider,
-    RNWebView: null,
+    RNWebView: WebView,
     Record: AudioRecord,
     RNFileSelector: DocumentPicker,
     asyncStorage: AsyncStorage,
+    fileViewer: FileViewer,
+
   }}
   ref={modalRef}
   defaultConfiguration={{
     sendConversationStart: true,
     tenant: 'exampleTenant',
     projectName: 'exampleProjectName',
+    fullName: "optional information",
     channel: 'Mobil',
    // clientId: 'Please send the user id',
     locale:'en-US', //local parameter is used to set the start language for the streams in your webchat project. for more information please contact us
     endUser: endUserInfo, //Please use this parameter to pass endUser information.
-    enableNdUi: true,
+    enableNdUi: false,
     getResponseData: setResponse,
     customActionData: JSON.stringify(customActionDataExample),
   }}
@@ -336,6 +355,10 @@ const startStorageSession = () => {
       type: 'url',
       value: require('./example.png'),
     },
+    fileIcon:{
+      type: 'url',
+      value: require('./example.png'),
+    },
     // Before Func
     permissionAudioCheck: permissionAudioCheck,
     //loading indicator
@@ -374,6 +397,14 @@ const startStorageSession = () => {
         closeModalText: 'Chatden çıkmak istediğinize emin misiniz?',
         closeModalYesButtonText: 'Evet',
         closeModalNoButtonText: 'Hayır',
+        filePTitle: 'Depolama İzni Gerekli',
+        filePMessage:'Bu uygulamanın dosya kaydetmesi ve açması için izne ihtiyacı var.',
+        filePNeutral: 'Daha Sonra',
+        filePNegative: 'İptal',
+        filePPositive: 'Tamam',
+        noAppFoundTitle: 'Uygulama Bulunamadı',
+        noAppFoundMessage:'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
+        noAppFoundCancel: 'İptal',
       },
       en: {
         headerText: 'Knovvu',
@@ -381,6 +412,14 @@ const startStorageSession = () => {
         closeModalText: 'Are you sure you want to exit chat?',
         closeModalYesButtonText: 'Yes',
         closeModalNoButtonText: 'No',
+        filePTitle: 'Storage Permission Required',
+        filePMessage: 'This app needs permission to save and openfiles.',
+        filePNeutral: 'Later',
+        filePNegative: 'Cancel',
+        filePPositive: 'OK',
+        noAppFoundTitle: 'No App Found',
+        noAppFoundMessage:'No suitable app found to open this file type. Install anapp from the Google Play Store.',
+        noAppFoundCancel: 'Cancel',
       },
     },
     dateSettings: {
@@ -494,6 +533,7 @@ export default interface PropsCustomizeConfiguration {
   closeModalSettings?: CloseModalSettings;
   indicatorColor?: string;
   fontSettings?: FontSettings;
+  fileIcon?: IconType;
   permissionAudioCheck?: () => Promise<void>;
   language?: {
     [key: string]: {
@@ -501,7 +541,15 @@ export default interface PropsCustomizeConfiguration {
       bottomInputText:string;
       closeModalText:string;
       closeModalYesButtonText:string;
-      closeModalNoButtonText:string
+      closeModalNoButtonText:string;
+      filePTitle:string;
+      filePMessage:string;
+      filePNeutral:string;
+      filePNegative:string;
+      filePPositive:string;
+      noAppFoundTitle:string;
+      noAppFoundMessage:string;
+      noAppFoundCancel:string;
     };
   };
   dateSettings?:{
