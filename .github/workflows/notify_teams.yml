@@ -12,7 +12,7 @@ jobs:
         run: |
           curl -H 'Content-Type: application/json' \
             -d '{
-                 "text": "Yeni bir Npm paketi sürümü yayımlandı! Detayları release tagden ulaşabilirsiniz. Versiyon: ${{ github.event.release.tag_name }}",
+                 "text": "Yeni bir Npm paketi sürümü yayımlandı! Detaylara release tag üzerinden ulaşabilirsiniz. Versiyon: ${{ github.event.release.tag_name }}",
                  "attachments": [
                      {
                          "title": "Proje İsmi: ${{ github.repository }}",
