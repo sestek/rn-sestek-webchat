@@ -10,9 +10,9 @@ jobs:
     steps:
       - name: Send notification to Teams
         run: |
-          curl -H "Content-Type: application/json" \
+          curl -H 'Content-Type: application/json' \
             -d '{
-                 "text": "Yeni bir Npm paketi sürümü yayımlandı! Versiyon: ${{ github.event.release.tag_name }}. Detaylara release tag kısmından ulaşabilirisniz.",
+                 "text": "Yeni bir Npm paketi sürümü yayımlandı! Detayları release tagden ulaşabilirsiniz. Versiyon: ${{ github.event.release.tag_name }}",
                  "attachments": [
                      {
                          "title": "Proje İsmi: ${{ github.repository }}",
