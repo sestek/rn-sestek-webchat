@@ -308,10 +308,10 @@ const useChat = ({
     formData.push({
       name: 'customActionData',
       data:
-        JSON.stringify({
-          ...defaultConfiguration.customActionData,
-          ResponseType: 'AudioBase64',
-        }) || `{ResponseType: 'AudioBase64'}`,
+      JSON.stringify({
+        ...JSON.parse(defaultConfiguration.customActionData) ,
+        ResponseType: 'AudioBase64',
+      }),
     });
     formData.push({
       name: 'endUser',
@@ -335,7 +335,6 @@ const useChat = ({
 
   const sendAttachment = async () => {
     try {
-      console.log("Dosya gönderme işlemi başlıyor");
   
       const res = await modules.RNFileSelector.pick({
         type: [modules.RNFileSelector.types.allFiles], 
