@@ -12,7 +12,7 @@ import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native'; 
 import {CloseIcon, MinusIcon} from '../../../src/image';
 import RNFetchBlob from 'rn-fetch-blob';
 import FileViewer from 'react-native-file-viewer';
-
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 export default function ChatbotScreen() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -33,7 +33,7 @@ export default function ChatbotScreen() {
   };
 
   const customActionDataExample = {
-   user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
+    user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
   };
 
   const endUserInfo = {
@@ -66,9 +66,11 @@ export default function ChatbotScreen() {
         RNSlider: Slider,
         RNWebView: WebView,
         Record: AudioRecord,
-         RNFileSelector: DocumentPicker,
+        RNFileSelector: DocumentPicker,
         asyncStorage: AsyncStorage,
-        fileViewer:FileViewer
+        fileViewer: FileViewer,
+        camera: launchCamera,
+        galery: launchImageLibrary,
       }}
       ref={modalRef}
       defaultConfiguration={{
@@ -77,7 +79,7 @@ export default function ChatbotScreen() {
         // clientId: '1111',
         tenant: config.TNAME_,
         projectName:config.PNAME_,
-        locale:'en-US',
+        locale: 'en-US',
         // fullName:'',
         endUser: endUserInfo,
         getResponseData: setResponse,
@@ -132,7 +134,8 @@ export default function ChatbotScreen() {
             closeModalYesButtonText: 'Yes',
             closeModalNoButtonText: 'No',
             filePTitle: 'Storage Permission Required',
-            filePMessage: 'This application needs permission to save and open files.',
+            filePMessage:
+              'This application needs permission to save and open files.',
             filePNeutral: 'Later',
             filePNegative: 'Cancel',
             filePPositive: 'OK',
@@ -158,7 +161,6 @@ export default function ChatbotScreen() {
               'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
             noAppFoundCancel: 'İptal',
           },
-        
 
           // es: {
           //   headerText: 'Knovvu',

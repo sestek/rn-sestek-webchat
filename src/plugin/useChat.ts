@@ -5,6 +5,7 @@ import { useCustomizeConfiguration } from '../context/CustomizeContext';
 import { specialMessageTypes } from '../constant/ChatModalConstant';
 import { Recorder } from '../services';
 import { useModules } from '../context/ModulesContext';
+import { useLoading } from '../context/LoadingContext';
 
 const useChat = ({
   defaultConfiguration,
@@ -14,7 +15,7 @@ const useChat = ({
   url,
 }: PropsUseChat) => {
   const { modules } = useModules();
-
+  const { setLoading } = useLoading();
   const { enableNdUi, getResponseData } = defaultConfiguration;
 
   const [messageList, setMessageList] = useState<any>([]);
@@ -161,6 +162,7 @@ const useChat = ({
           console.error('Error saving audio file:', error);
         }
       } else if (messageBody?.type === 'SpeechRecognized') {
+        console.log(messageBody)
         var textMessage =
           messageBody?.channelData?.CustomProperties?.textFromSr;
         messageBody.type = 'message';
@@ -307,9 +309,8 @@ const useChat = ({
     });
     formData.push({
       name: 'customActionData',
-      data:
-      JSON.stringify({
-        ...JSON.parse(defaultConfiguration.customActionData) ,
+      data: JSON.stringify({
+        ...JSON.parse(defaultConfiguration.customActionData),
         ResponseType: 'AudioBase64',
       }),
     });
@@ -331,56 +332,100 @@ const useChat = ({
     sendAudioSocket({ replaceLink, formData });
   };
 
-
-
-  const sendAttachment = async () => {
+  const sendAttachment = async (source: any) => {
     try {
-  
-      const res = await modules.RNFileSelector.pick({
-        type: [modules.RNFileSelector.types.allFiles], 
-      });
-  
-      const fileUri = res[0].uri; 
-      const fileName = res[0].name; 
-      const fileType = res[0].type; 
-  
+      let res;
+      let fileUri, fileName, fileType;
+
+      if (source === 'document') {
+        // Belge seçimi
+        res = await modules.RNFileSelector.pick({
+          type: [modules.RNFileSelector.types.allFiles],
+        });
+
+        if (res && res.length > 0) {
+          // Belge için dosya bilgilerini al
+          fileUri = res[0].uri;
+          fileName = res[0].name;
+          fileType = res[0].type;
+        } else {
+          console.log('Belge seçilmedi');
+          return;
+        }
+      } else if (source === 'camera') {
+        // Kameradan resim veya video seçimi
+        res = await modules.camera({
+          mediaType: 'photo', // Hem fotoğraf hem de video için
+          includeBase64: false,
+        });
+
+        console.log(res);
+
+        if (res.assets && res.assets.length > 0) {
+          // Kamera için dosya bilgilerini al
+          fileUri = res.assets[0].uri;
+          fileName = res.assets[0].fileName;
+          fileType = res.assets[0].type;
+        } else {
+          console.log('Dosya seçilmedi');
+          return;
+        }
+      } else if (source === 'gallery') {
+        // Galeriden resim veya video seçimi
+        res = await modules.galery({
+          mediaType: 'photo', // Hem fotoğraf hem de video için
+          includeBase64: false,
+        });
+
+        if (res.assets && res.assets.length > 0) {
+          // Galeri için dosya bilgilerini al
+          fileUri = res.assets[0].uri;
+          fileName = res.assets[0].fileName;
+          fileType = res.assets[0].type;
+        } else {
+          console.log('Dosya seçilmedi');
+          return;
+        }
+      }
+      setLoading(true);
+      // Ortak formData işlemleri
       const formData = new FormData();
-  
-    
+
       formData.append('attachment', {
         uri: fileUri,
         name: fileName,
-        type: fileType, 
+        type: fileType,
       });
-  
+
       formData.append('user', sessionId);
       formData.append('project', defaultConfiguration.projectName);
       formData.append('tenant', defaultConfiguration.tenant);
       formData.append('customAction', defaultConfiguration.customAction);
-      formData.append('customActionData', defaultConfiguration.customActionData);
+      formData.append(
+        'customActionData',
+        defaultConfiguration.customActionData
+      );
       formData.append('channel', 'webchatmobile-sestek');
       formData.append('locale', defaultConfiguration.locale);
       formData.append('clientId', defaultConfiguration.clientId);
       formData.append('endUser', JSON.stringify(defaultConfiguration.endUser));
 
       const replaceLink = url.replace('chathub', 'Home/SendAttachment');
-      const response = await fetch(
-        replaceLink,
-        {
-          method: 'POST',
-          headers: {
-            Accept: '*/*',
-            'Content-Type': 'multipart/form-data', 
-          },
-          body: formData,
-        }
-      );
-  
-      const responseData = await response.json();
-  
-      if (responseData.message === 'Hata') {
-        console.log('Başarılı:', responseData);
+      const response = await fetch(replaceLink, {
+        method: 'POST',
+        headers: {
+          'Accept': '*/*',
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
 
+      const responseData = await response.json();
+
+      console.log(responseData)
+      if (responseData.message === 'Hata') {
+        // console.log('Başarılı:', responseData);
+        setLoading(false);
         addMessageList({
           timestamp: new Date().getTime(),
           type: 'text',
@@ -411,7 +456,6 @@ const useChat = ({
       }
     }
   };
-  
 
   const sendConversationStart = async () => {
     defaultConfiguration.customAction = 'startOfConversation';

@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to take photos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to select photos.</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>We need access to your photo library to save photos.</string>
+
 <key>NSMicrophoneUsageDescription</key>
 <string>Mikrofon erişimi gereklidir çünkü...</string>
 	<key>UIBackgroundModes</key>

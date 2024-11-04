@@ -1,12 +1,19 @@
 import React, { FC, useState } from 'react';
-import { TextInput, TouchableOpacity, View, Platform } from 'react-native';
+import {
+  TextInput,
+  TouchableOpacity,
+  View,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
 import { Recorder } from '../../services';
-// import { useLoading } from '../../context/LoadingContext';
 import RenderImage from '../renderImage';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
+import AttachmentDropdown from '../attachmentDropdown';
+import { CameraIcon, FolderIcon, PhotoIcon } from '../../image';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
@@ -20,6 +27,8 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     sendMessage,
     changeInputData,
     scrollViewRef,
+    isDropdownVisible,
+    setDropdownVisible,
   } = props;
 
   const {
@@ -83,8 +92,50 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     }
   };
 
+  const openAttachmentMenu = () => {
+    const availableOptions = [];
 
- 
+    if (modules?.camera) availableOptions.push('camera');
+    if (modules?.galery) availableOptions.push('gallery');
+    if (modules?.RNFileSelector) availableOptions.push('document');
+
+    if (availableOptions.length === 1) {
+      handleSelect(availableOptions[0]);
+    } else {
+      setDropdownVisible(true);
+    }
+  };
+
+  const handleSelect = async (option: string) => {
+    if (option === 'document') {
+      sendAttachment('document');
+    } else if (option === 'gallery') {
+      sendAttachment('gallery');
+    } else if (option === 'camera') {
+      sendAttachment('camera');
+    }
+    setDropdownVisible(false);
+  };
+
+  const availableOptions = [
+    modules?.RNFileSelector && {
+      key: 'document',
+      label: 'Dosya Ekle',
+      icon: FolderIcon,
+    },
+    modules?.galery && {
+      key: 'gallery',
+      label: 'Fotoğraf Ekle',
+      icon: PhotoIcon,
+    },
+
+    modules?.camera && {
+      key: 'camera',
+      label: 'Fotoğraf Çek',
+      icon: CameraIcon,
+    },
+  ].filter(Boolean);
+
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
@@ -112,24 +163,22 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           placeholderTextColor="grey"
           keyboardType="default"
         />
-        {modules?.RNFileSelector && modules?.RNFS && (
-          <TouchableOpacity
-            onPress={sendAttachment}
-            style={[
-              styles.iconContainer,
-              {
-                borderColor: bottomInputBorderColor,
-                backgroundColor: bottomInputBackgroundColor,
-              },
-            ]}
-          >
-            <RenderImage
-              type={bottomAttachmentIcon?.type}
-              value={bottomAttachmentIcon?.value}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          onPress={openAttachmentMenu}
+          style={[
+            styles.iconContainer,
+            {
+              borderColor: bottomInputBorderColor,
+              backgroundColor: bottomInputBackgroundColor,
+            },
+          ]}
+        >
+          <RenderImage
+            type={bottomAttachmentIcon?.type}
+            value={bottomAttachmentIcon?.value}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
         {modules?.AudioRecorderPlayer && modules?.RNFS && (
           <TouchableOpacity
             onPress={() => touchRecord()}
@@ -171,6 +220,12 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           style={styles.sendIcon}
         />
       </TouchableOpacity>
+      <AttachmentDropdown
+        isVisible={isDropdownVisible}
+        onSelect={handleSelect}
+        onClose={() => setDropdownVisible(false)}
+        options={availableOptions}
+      />
     </View>
   );
 };

@@ -7,4 +7,6 @@ export default interface PropsFooterComponent {
   sendAudio: any;
   sendAttachment?: any;
   scrollViewRef: React.RefObject<ScrollView>;
+  isDropdownVisible:any
+  setDropdownVisible:any
 }

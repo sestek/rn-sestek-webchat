@@ -14,6 +14,9 @@ const Back = require('./back.png')
 const Error = require('./error.png')
 const KnovuuIcon = require('./knovvu_logo.png')
 const FileIcon = require('./file.png')
+const CameraIcon =require('./camera.png')
+const PhotoIcon = require('./photo.png')
+const FolderIcon = require('./folder.png')
 
 export {
   ChatIcon,
@@ -31,5 +34,8 @@ export {
   Next,
   Back,
   Error,
-  FileIcon
+  FileIcon,
+  CameraIcon,
+  PhotoIcon,
+  FolderIcon
 };
