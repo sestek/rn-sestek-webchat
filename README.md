@@ -61,7 +61,7 @@ You can follow the [link](https://www.npmjs.com/package/react-native-file-viewer
 
 ### If you want to send files and pictures, you need to follow these steps
 
-##### Step 1: Install react-native-document-picker
+##### Step 1: Install react-native-document-picker for file 
 
 RN >= 0.69
 
@@ -79,7 +79,15 @@ You can follow the [link](https://www.npmjs.com/package/react-native-document-pi
 
 RN < 0.63 Older RN versions are not supported.
 
-##### Step 2: Install rn-fetch-blob
+##### Step 2: Install react-native-image-picker for gallery
+
+```
+npm i --save react-native-image-picker@7.1.2
+```
+
+You can follow the [link](https://www.npmjs.com/package/react-native-image-picker) below to integrate
+
+##### Step 3: Install rn-fetch-blob
 
 ```
 npm i --save rn-fetch-blob
@@ -89,6 +97,7 @@ If you want to send files, you also need to install the "rn-fetch-blob" package.
 You can follow the [link](https://www.npmjs.com/package/rn-fetch-blob) below to integrate
 
 ---
+
 
 ### Listening to event from conversation
 
@@ -128,6 +137,9 @@ import {WebView} from 'react-native-webview';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';// for the start storage session
 import FileViewer from 'react-native-file-viewer';
+
+import {launchImageLibrary} from 'react-native-image-picker';
+
 
 
 const modalRef = useRef<ChatModalProps>(null);
@@ -224,6 +236,7 @@ const startStorageSession = () => {
     RNFileSelector: DocumentPicker,
     asyncStorage: AsyncStorage,
     fileViewer: FileViewer,
+    launchImageLibrary: launchImageLibrary,
 
   }}
   ref={modalRef}
@@ -405,6 +418,8 @@ const startStorageSession = () => {
         noAppFoundTitle: 'Uygulama Bulunamadı',
         noAppFoundMessage:'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
         noAppFoundCancel: 'İptal',
+        addFile:'Dosya Ekle',
+        addPhoto:'Fotoğraf Ekle'
       },
       en: {
         headerText: 'Knovvu',
@@ -420,6 +435,8 @@ const startStorageSession = () => {
         noAppFoundTitle: 'No App Found',
         noAppFoundMessage:'No suitable app found to open this file type. Install anapp from the Google Play Store.',
         noAppFoundCancel: 'Cancel',
+        addFile:'Add File',
+        addPhoto:'Add Photo'
       },
     },
     dateSettings: {
@@ -550,6 +567,8 @@ export default interface PropsCustomizeConfiguration {
       noAppFoundTitle:string;
       noAppFoundMessage:string;
       noAppFoundCancel:string;
+      addFile:string;
+      addPhoto:string;
     };
   };
   dateSettings?:{
