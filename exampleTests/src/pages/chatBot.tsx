@@ -12,7 +12,7 @@ import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native'; 
 import {CloseIcon, MinusIcon} from '../../../src/image';
 import RNFetchBlob from 'rn-fetch-blob';
 import FileViewer from 'react-native-file-viewer';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 export default function ChatbotScreen() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -69,8 +69,7 @@ export default function ChatbotScreen() {
         RNFileSelector: DocumentPicker,
         asyncStorage: AsyncStorage,
         fileViewer: FileViewer,
-        camera: launchCamera,
-        galery: launchImageLibrary,
+        launchImageLibrary: launchImageLibrary,
       }}
       ref={modalRef}
       defaultConfiguration={{
@@ -143,6 +142,9 @@ export default function ChatbotScreen() {
             noAppFoundMessage:
               'No suitable application found to open this file type. Please download an app from the Google Play Store.',
             noAppFoundCancel: 'Cancel',
+            addFile:'Add File',
+            addPhoto:'Add Photo'
+            
           },
           tr: {
             headerText: 'Knovvu',
@@ -160,6 +162,8 @@ export default function ChatbotScreen() {
             noAppFoundMessage:
               'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
             noAppFoundCancel: 'İptal',
+            addFile:'Dosya Ekle',
+            addPhoto:'Fotoğraf Ekle'
           },
 
           // es: {

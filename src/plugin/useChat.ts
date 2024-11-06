@@ -162,7 +162,6 @@ const useChat = ({
           console.error('Error saving audio file:', error);
         }
       } else if (messageBody?.type === 'SpeechRecognized') {
-        console.log(messageBody)
         var textMessage =
           messageBody?.channelData?.CustomProperties?.textFromSr;
         messageBody.type = 'message';
@@ -352,27 +351,9 @@ const useChat = ({
           console.log('Belge seçilmedi');
           return;
         }
-      } else if (source === 'camera') {
-        // Kameradan resim veya video seçimi
-        res = await modules.camera({
-          mediaType: 'photo', // Hem fotoğraf hem de video için
-          includeBase64: false,
-        });
-
-        console.log(res);
-
-        if (res.assets && res.assets.length > 0) {
-          // Kamera için dosya bilgilerini al
-          fileUri = res.assets[0].uri;
-          fileName = res.assets[0].fileName;
-          fileType = res.assets[0].type;
-        } else {
-          console.log('Dosya seçilmedi');
-          return;
-        }
       } else if (source === 'gallery') {
         // Galeriden resim veya video seçimi
-        res = await modules.galery({
+        res = await modules.launchImageLibrary({
           mediaType: 'photo', // Hem fotoğraf hem de video için
           includeBase64: false,
         });
@@ -387,8 +368,26 @@ const useChat = ({
           return;
         }
       }
+      // else if (source === 'camera') {
+      //   // Kameradan resim veya video seçimi
+      //   res = await modules.camera({
+      //     mediaType: 'photo', // Hem fotoğraf hem de video için
+      //     includeBase64: false,
+      //   });
+
+      //   console.log(res);
+
+      //   if (res.assets && res.assets.length > 0) {
+      //     // Kamera için dosya bilgilerini al
+      //     fileUri = res.assets[0].uri;
+      //     fileName = res.assets[0].fileName;
+      //     fileType = res.assets[0].type;
+      //   } else {
+      //     console.log('Dosya seçilmedi');
+      //     return;
+      //   }
+      // }
       setLoading(true);
-      // Ortak formData işlemleri
       const formData = new FormData();
 
       formData.append('attachment', {
@@ -422,7 +421,6 @@ const useChat = ({
 
       const responseData = await response.json();
 
-      console.log(responseData)
       if (responseData.message === 'Hata') {
         // console.log('Başarılı:', responseData);
         setLoading(false);

@@ -3,8 +3,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Platform,
-  PermissionsAndroid,
 } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
@@ -13,7 +11,7 @@ import RenderImage from '../renderImage';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
 import AttachmentDropdown from '../attachmentDropdown';
-import { CameraIcon, FolderIcon, PhotoIcon } from '../../image';
+import { FolderIcon, PhotoIcon } from '../../image';
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
@@ -95,8 +93,8 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const openAttachmentMenu = () => {
     const availableOptions = [];
 
-    if (modules?.camera) availableOptions.push('camera');
-    if (modules?.galery) availableOptions.push('gallery');
+    // if (modules?.camera) availableOptions.push('camera');
+    if (modules?.launchImageLibrary) availableOptions.push('gallery');
     if (modules?.RNFileSelector) availableOptions.push('document');
 
     if (availableOptions.length === 1) {
@@ -111,29 +109,30 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
       sendAttachment('document');
     } else if (option === 'gallery') {
       sendAttachment('gallery');
-    } else if (option === 'camera') {
-      sendAttachment('camera');
     }
+    //  else if (option === 'camera') {
+    //   sendAttachment('camera');
+    // }
     setDropdownVisible(false);
   };
 
   const availableOptions = [
     modules?.RNFileSelector && {
       key: 'document',
-      label: 'Dosya Ekle',
+      label: texts.addFile,
       icon: FolderIcon,
     },
-    modules?.galery && {
+    modules?.launchImageLibrary && {
       key: 'gallery',
-      label: 'Fotoğraf Ekle',
+      label: texts.addPhoto,
       icon: PhotoIcon,
     },
 
-    modules?.camera && {
-      key: 'camera',
-      label: 'Fotoğraf Çek',
-      icon: CameraIcon,
-    },
+    // modules?.camera && {
+    //   key: 'camera',
+    //   label: 'Fotoğraf Çek',
+    //   icon: CameraIcon,
+    // },
   ].filter(Boolean);
 
   return (

@@ -111,8 +111,8 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
               ? item.title.substring(0, 43) + '...'
               : item.title;
           const subtitle =
-            item?.text && item.text.length > 70
-              ? item.subtitle.substring(0, 65) + '...'
+            item?.subtitle && item.subtitle.length > 160
+              ? item.subtitle.substring(0, 157) + '...'
               : item.subtitle;
           return (
             <View
@@ -147,7 +147,12 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                   />
                 </View>
               )}
-              <View style={{paddingBottom: item.url ? 0 : 15, paddingTop: item.url? 0:15}}>
+              <View
+                style={{
+                  paddingBottom: item.url ? 0 : 15,
+                  paddingTop: item.url ? 0 : 15,
+                }}
+              >
                 {renderContent(title, 'title')}
                 {renderContent(subtitle, 'subtitle')}
               </View>

@@ -172,6 +172,8 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       noAppFoundMessage:
         'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
       noAppFoundCancel: 'İptal',
+      addFile:'Add File',
+      addPhoto:'Add Photo'
     },
     en: {
       headerText: 'Knovvu',
@@ -188,6 +190,8 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       noAppFoundMessage:
         'No suitable application found to open this file type. Please download an app from the Google Play Store.',
       noAppFoundCancel: 'Cancel',
+      addFile:'Dosya Ekle',
+      addPhoto:'Fotoğraf Ekle'
     },
   },
   dateSettings: {

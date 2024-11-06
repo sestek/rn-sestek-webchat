@@ -7,6 +7,6 @@ export default interface PropsModules {
   RNFileSelector?: any;
   asyncStorage?: any;
   fileViewer?:any;
-  camera?:any,
-  galery?:any
+  // camera?:any,
+  launchImageLibrary?:any
 }
