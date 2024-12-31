@@ -1,9 +1,5 @@
 import React, { FC, useState } from 'react';
-import {
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { TextInput, TouchableOpacity, View } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
 import { Recorder } from '../../services';
@@ -104,16 +100,18 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     }
   };
 
-  const handleSelect = async (option: string) => {
-    if (option === 'document') {
-      sendAttachment('document');
-    } else if (option === 'gallery') {
-      sendAttachment('gallery');
-    }
-    //  else if (option === 'camera') {
-    //   sendAttachment('camera');
-    // }
+  const handleSelect = (optionKey: string) => {
     setDropdownVisible(false);
+    setTimeout(() => {
+      if (optionKey === 'document') {
+        sendAttachment('document');
+      } else if (optionKey === 'gallery') {
+        sendAttachment('gallery');
+      }
+      //  else if (option === 'camera') {
+      //   sendAttachment('camera');
+      // }
+    }, 100);
   };
 
   const availableOptions = [

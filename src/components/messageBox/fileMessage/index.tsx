@@ -15,15 +15,16 @@ import useRenderContent from '../../../hook/useRenderContent';
 
 export default function FileMessages(props: any) {
   const { modules } = useModules();
+  const WebView = modules?.RNWebView;
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
-
   const renderContent = (text: string, textType: string) =>
     useRenderContent(
       text,
       customizeConfiguration?.chatBotMessageBoxTextColor,
       customizeConfiguration?.fontSettings,
-      textType
+      textType,
+      WebView
     );
   const requestStoragePermission = async () => {
     if (Platform.OS === 'android') {

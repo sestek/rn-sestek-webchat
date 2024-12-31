@@ -3,6 +3,7 @@ import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import RenderImage from '../../renderImage';
 import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 import useRenderContent from '../../../hook/useRenderContent';
+import { useModules } from '../../../context/ModulesContext';
 
 const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const CARD_WIDTH = 220;
@@ -12,12 +13,16 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { customizeConfiguration } = useCustomizeConfiguration();
   const [contentHeight, setContentHeight] = useState(0);
+  const { modules } = useModules();
+  const WebView = modules?.RNWebView;
+
   const renderContent = (text: string, textType: string) =>
     useRenderContent(
       text,
       customizeConfiguration?.chatBotMessageBoxTextColor,
       customizeConfiguration?.fontSettings,
-      textType
+      textType,
+      WebView
     );
   const onScroll = (event: any) => {
     const newIndex = Math.round(

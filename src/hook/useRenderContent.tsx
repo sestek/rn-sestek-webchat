@@ -1,6 +1,7 @@
+
 import React from 'react';
-import { Dimensions } from 'react-native';
-import RenderHTML from 'react-native-render-html';
+import { Dimensions, View } from 'react-native';
+import RenderHTML, { TNode, HTMLElementModel, HTMLContentModel } from 'react-native-render-html';
 import Markdown from '../plugin/markdown';
 import { FontSettings } from '../types/propsCustomizeConfiguration';
 
@@ -8,10 +9,11 @@ const useRenderContent = (
   text: string,
   messageColor: string | undefined,
   fontSettings: FontSettings | undefined,
-  textType: string
+  textType: string,
+  WebView:any
 ) => {
   const shouldRenderAsHTML = (text: string) => {
-    const htmlTagPattern = /<\/?[a-z][\s\S]*>/i;
+    const htmlTagPattern = /<\/?[a-z][^>]*>/i;
     return htmlTagPattern.test(text);
   };
 
@@ -48,30 +50,78 @@ const useRenderContent = (
       h4: commonStyles,
       h5: commonStyles,
       h6: commonStyles,
-      b: {
-        fontSize: fontSize,
-      },
+      b: { fontSize },
       i: commonStyles,
-      a: {
-        fontSize: fontSize,
-        color: 'blue',
-      },
+      a: { fontSize, color: 'blue' },
       span: commonStyles,
       div: commonStyles,
       ul: commonStyles,
       li: commonStyles,
       br: commonStyles,
-      em: { fontSize: fontSize },
+      em: { fontSize },
     };
 
-    const formattedHtml = `<div>${html.replace(/\n/g, '<br/>')}</div>`;
+    // const formattedHtml = `<div>${html.replace(/\n/g, '<br/>')}</div>`;
+    const cleanHTML = (html:any) => {
+      return html.replace(/<a href="([^"]*)".*?>/g, '$1');
+    };
+    
+    const formattedHtml = cleanHTML(html);
+
+    const customHTMLElementModels = {
+      iframe: HTMLElementModel.fromCustomModel({
+        tagName: 'iframe',
+        contentModel: HTMLContentModel.block,
+        mixedUAStyles: {
+          width: '100%',
+          height: '200px',
+        },
+      }),
+    };
+
+    const renderers = {
+      iframe: ({ tnode }: { tnode: TNode }) => {
+        const src = tnode.attributes.src;
+        const width = parseInt(tnode.attributes.width || '0', 10);
+        const height = parseInt(tnode.attributes.height || '0', 10);
+
+        const maxWidth = Dimensions.get('window').width;
+        const maxHeight = 400; // Define a maximum height
+
+        const calculatedWidth = width > maxWidth || width === 0 ? maxWidth : width;
+        const calculatedHeight = height > maxHeight || height === 0 ? maxHeight : height;
+
+        if (!src) {
+          console.warn('iframe src is missing');
+          return null;
+        }
+        return (
+          <WebView
+            source={{ uri: src }}
+            style={{ height: calculatedHeight, width: calculatedWidth }}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            allowFileAccess={true}
+            scrollEnabled={false} // Disable scrolling
+            onShouldStartLoadWithRequest={(request:any) => {
+              // Prevent navigation to other URLs
+              return request.url === src;
+            }}
+          />
+        );
+      },
+    };
 
     return (
+      <View>
       <RenderHTML
         contentWidth={Dimensions.get('window').width}
         source={{ html: formattedHtml }}
         tagsStyles={tagsStyles}
+        customHTMLElementModels={customHTMLElementModels}
+        renderers={renderers}
       />
+      </View>
     );
   };
 
@@ -87,3 +137,4 @@ const useRenderContent = (
 };
 
 export default useRenderContent;
+

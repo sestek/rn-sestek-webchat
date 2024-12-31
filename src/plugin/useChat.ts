@@ -218,7 +218,9 @@ const useChat = ({
       const sendMesObj = {
         message: message,
         customAction: '',
-        customActionData: defaultConfiguration.customActionData,
+        customActionData: defaultConfiguration.customActionData
+        ? defaultConfiguration.customActionData 
+        : "{}"    ,
         clientId: defaultConfiguration.clientId,
         tenant: defaultConfiguration.tenant,
         channel: defaultConfiguration.channel,
@@ -226,7 +228,7 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
         endUser: defaultConfiguration.endUser,
-        locale: defaultConfiguration.locale,
+        locale: defaultConfiguration.locale ? defaultConfiguration.locale :'en-US',
       };
       client.sendAsync(JSON.stringify(sendMesObj));
     }
@@ -309,7 +311,9 @@ const useChat = ({
     formData.push({
       name: 'customActionData',
       data: JSON.stringify({
-        ...JSON.parse(defaultConfiguration.customActionData),
+        ...(defaultConfiguration.customActionData
+          ? JSON.parse(defaultConfiguration.customActionData)
+          : {}),
         ResponseType: 'AudioBase64',
       }),
     });
@@ -321,7 +325,7 @@ const useChat = ({
     });
     formData.push({
       name: 'locale',
-      data: defaultConfiguration.locale,
+      data: defaultConfiguration.locale ? defaultConfiguration.locale :'en-US',
     });
     formData.push({
       name: 'channel',
@@ -403,9 +407,11 @@ const useChat = ({
       formData.append(
         'customActionData',
         defaultConfiguration.customActionData
+          ? defaultConfiguration.customActionData 
+          : '{}' 
       );
       formData.append('channel', 'webchatmobile-sestek');
-      formData.append('locale', defaultConfiguration.locale);
+      formData.append('locale', defaultConfiguration.locale ? defaultConfiguration.locale :'en-US');
       formData.append('clientId', defaultConfiguration.clientId);
       formData.append('endUser', JSON.stringify(defaultConfiguration.endUser));
 
@@ -419,10 +425,7 @@ const useChat = ({
         body: formData,
       });
 
-      const responseData = await response.json();
-
-      if (responseData.message === 'Hata') {
-        // console.log('Başarılı:', responseData);
+      if (response.ok) {
         setLoading(false);
         addMessageList({
           timestamp: new Date().getTime(),
@@ -444,7 +447,7 @@ const useChat = ({
           { type: 'typing', message: 'xxxxx' },
         ]);
       } else {
-        console.error('Başarısız:', responseData);
+        console.error('Başarısız:', response.json());
       }
     } catch (err) {
       if (modules.RNFileSelector.isCancel(err)) {
@@ -461,7 +464,9 @@ const useChat = ({
       timestamp: new Date().getTime(),
       message: '',
       customAction: 'startOfConversation',
-      customActionData: defaultConfiguration.customActionData,
+      customActionData: defaultConfiguration.customActionData
+      ? defaultConfiguration.customActionData  
+      : "{}"    ,
       clientId: defaultConfiguration.clientId,
       tenant: defaultConfiguration.tenant,
       channel: defaultConfiguration.channel,
@@ -471,7 +476,7 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
       endUser: defaultConfiguration.endUser,
-      locale: defaultConfiguration.locale,
+      locale: defaultConfiguration.locale ? defaultConfiguration.locale :'en-US',
     };
 
     addMessageList(startObj);
@@ -482,7 +487,9 @@ const useChat = ({
     const dataToSend = {
       message: 'Chat ended by client!',
       customAction: 'endOfConversation',
-      customActionData: defaultConfiguration.customActionData,
+      customActionData: defaultConfiguration.customActionData
+        ? defaultConfiguration.customActionData 
+        : '{}',
       clientId: defaultConfiguration.clientId,
       tenant: defaultConfiguration.tenant,
       channel: defaultConfiguration.channel,
@@ -580,7 +587,9 @@ const useChat = ({
       timestamp: new Date().getTime(),
       message: '',
       customAction: 'ContinueConversation',
-      customActionData: defaultConfiguration.customActionData,
+      customActionData: defaultConfiguration.customActionData
+      ? defaultConfiguration.customActionData 
+      : "{}"    ,
       clientId: defaultConfiguration.clientId,
       tenant: defaultConfiguration.tenant,
       channel: defaultConfiguration.channel,
@@ -590,7 +599,7 @@ const useChat = ({
       userAgent: 'USERAGENT EKLENECEK',
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
       endUser: defaultConfiguration.endUser,
-      locale: defaultConfiguration.locale,
+      locale: defaultConfiguration.locale ? defaultConfiguration.locale :'en-US',
     };
     await client.continueConversation(JSON.stringify(startObj));
     defaultConfiguration.customAction = '';

@@ -37,7 +37,8 @@ const GeneralMessage: React.FC<Props> = (props) => {
       text,
       messageColor,
       customizeConfiguration?.fontSettings,
-      textType
+      textType,
+      WebView
     );
   return (
     <>

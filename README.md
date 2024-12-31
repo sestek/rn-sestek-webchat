@@ -82,10 +82,10 @@ RN < 0.63 Older RN versions are not supported.
 ##### Step 2: Install react-native-image-picker for gallery
 
 ```
-npm i --save react-native-image-picker@7.1.2
+npm i --save react-native-image-picker@7.1.2 
 ```
 
-You can follow the [link](https://www.npmjs.com/package/react-native-image-picker) below to integrate
+You can follow the [link](https://www.npmjs.com/package/react-native-image-picker) below to integrate -note :according to the android API version, the appropriate package version can be selected.
 
 ##### Step 3: Install rn-fetch-blob
 
@@ -245,11 +245,11 @@ const startStorageSession = () => {
     tenant: 'exampleTenant',
     projectName: 'exampleProjectName',
     fullName: "optional information",
-    channel: 'Mobil',
+    channel: 'webchatmobile-sestek',
    // clientId: 'Please send the user id',
     locale:'en-US', //local parameter is used to set the start language for the streams in your webchat project. for more information please contact us
     endUser: endUserInfo, //Please use this parameter to pass endUser information.
-    enableNdUi: false,
+    enableNdUi: false, //must be true only when using legacy products. default is false. ask the consultant for detailed information.
     getResponseData: setResponse,
     customActionData: JSON.stringify(customActionDataExample),
   }}

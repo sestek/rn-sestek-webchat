@@ -11,7 +11,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import { useChat } from '../../plugin/useChat';
 import type { PropsModalComponent } from '../../types';
@@ -48,11 +47,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
     const changeInputData = (text: string) => setInputData(text);
     const scrollViewRef = useRef<ScrollView>(null);
     const { loading } = useLoading();
-    const [isDropdownVisible, setDropdownVisible] = useState(false); // AttachmentDropdown görünürlüğünü kontrol etmek için state
-
-    const closeDropdown = () => {
-      setDropdownVisible(false); // AttachmentDropdown'u kapatmak için fonksiyon
-    };
+    const [isDropdownVisible, setDropdownVisible] = useState(false);
     const {
       messageList,
       sendMessage,
@@ -95,11 +90,11 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
         }}
       >
         {loading && (
-         <>
-          <LoadingModal
-            indicatorColor={customizeConfiguration?.indicatorColor ?? 'black'}
-          />
-         </>
+          <>
+            <LoadingModal
+              indicatorColor={customizeConfiguration?.indicatorColor ?? 'black'}
+            />
+          </>
         )}
 
         {customizeConfiguration?.closeModalSettings?.use && (
@@ -139,38 +134,37 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
               closeIcon={customizeConfiguration?.headerCloseIcon}
             />
           </View>
-          <TouchableWithoutFeedback onPress={closeDropdown}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor:
-                  customizeConfiguration?.chatBody?.type == 'color'
-                    ? customizeConfiguration?.chatBody?.value
-                    : '#fff',
-              }}
-            >
-              <GenerateBody
-                BodyComponent={
-                  <>
-                    <BodyComponent
-                      messageList={messageList}
-                      changeInputData={changeInputData}
-                      sendMessage={sendMessage}
-                      scrollViewRef={scrollViewRef}
-                      defaultConfiguration={defaultConfiguration}
-                      url={url}
-                    />
-                    <View
-                      style={[
-                        styles.footer,
-                        customizeConfiguration?.bottomColor
-                          ? {
-                              backgroundColor:
-                                customizeConfiguration?.bottomColor,
-                            }
-                          : {},
-                      ]}
-                    >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor:
+                customizeConfiguration?.chatBody?.type == 'color'
+                  ? customizeConfiguration?.chatBody?.value
+                  : '#fff',
+            }}
+          >
+            <GenerateBody
+              BodyComponent={
+                <>
+                  <BodyComponent
+                    messageList={messageList}
+                    changeInputData={changeInputData}
+                    sendMessage={sendMessage}
+                    scrollViewRef={scrollViewRef}
+                    defaultConfiguration={defaultConfiguration}
+                    url={url}
+                  />
+                  <View
+                    style={[
+                      styles.footer,
+                      customizeConfiguration?.bottomColor
+                        ? {
+                            backgroundColor:
+                              customizeConfiguration?.bottomColor,
+                          }
+                        : {},
+                    ]}
+                  >
                       <FooterComponent
                         inputData={inputData}
                         changeInputData={changeInputData}
@@ -178,15 +172,14 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                         sendAudio={sendAudio}
                         sendAttachment={sendAttachment}
                         scrollViewRef={scrollViewRef}
-                        isDropdownVisible={isDropdownVisible} // Dropdown görünürlüğünü Footer'a prop olarak geçiyoruz
-                        setDropdownVisible={setDropdownVisible} // Dropdown görünürlüğünü kontrol eden fonksiyonu Footer'a geçiriyoruz
+                        isDropdownVisible={isDropdownVisible} 
+                        setDropdownVisible={setDropdownVisible} 
                       />
-                    </View>
-                  </>
-                }
-              />
-            </View>
-          </TouchableWithoutFeedback>
+                  </View>
+                </>
+              }
+            />
+          </View>
         </KeyboardAvoidingView>
       </Modal>
     );

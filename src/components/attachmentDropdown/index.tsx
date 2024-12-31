@@ -1,26 +1,29 @@
-import React, { useEffect, useRef } from 'react';
+
+
+import React, { useRef, useEffect } from 'react';
 import {
+  Modal,
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   TouchableWithoutFeedback,
   Animated,
   Image,
+  StyleSheet,
 } from 'react-native';
 
 interface AttachmentDropdownProps {
   isVisible: boolean;
   onSelect: (option: string) => void;
   onClose: () => void;
-  options: Array<{ key: string; label: string; icon: any }>; 
+  options: Array<{ key: string; label: string; icon: any }>;
 }
 
 const AttachmentDropdown: React.FC<AttachmentDropdownProps> = ({
   isVisible,
   onSelect,
   onClose,
-  options, 
+  options,
 
 }) => {
   const animation = useRef(new Animated.Value(0)).current;
@@ -61,8 +64,20 @@ const AttachmentDropdown: React.FC<AttachmentDropdownProps> = ({
 
   if (!isVisible) return null;
   return (
-    <TouchableWithoutFeedback onPress={onClose}>
-      <View>
+    <Modal
+      visible={isVisible}
+      transparent
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      
+      <View style={{ flex: 1,}}>
+
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.fullscreenOverlay} />
+        </TouchableWithoutFeedback>
+
+     
         <Animated.View style={[styles.dropdownContainer, dropdownStyle]}>
           {options.map((option) => (
             <TouchableOpacity
@@ -81,14 +96,18 @@ const AttachmentDropdown: React.FC<AttachmentDropdownProps> = ({
           ))}
         </Animated.View>
       </View>
-    </TouchableWithoutFeedback>
+    </Modal>
   );
-  
 };
+
 const styles = StyleSheet.create({
+  fullscreenOverlay: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   dropdownContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 70,
     right: 10,
     borderRadius: 8,
     paddingVertical: 2,
@@ -102,6 +121,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 10,
     zIndex: 9999,
+    maxWidth: '65%',
   },
   option: {
     paddingVertical: 8,
@@ -111,7 +131,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   optionContent: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -120,8 +139,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
     fontWeight: '600',
-    flex: 1, 
-    textAlign: 'left', 
+    flex: 1,
+    textAlign: 'left',
   },
   icon: {
     width: 18,
