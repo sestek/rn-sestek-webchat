@@ -160,22 +160,25 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           placeholderTextColor="grey"
           keyboardType="default"
         />
-        <TouchableOpacity
-          onPress={openAttachmentMenu}
-          style={[
-            styles.iconContainer,
-            {
-              borderColor: bottomInputBorderColor,
-              backgroundColor: bottomInputBackgroundColor,
-            },
-          ]}
-        >
-          <RenderImage
-            type={bottomAttachmentIcon?.type}
-            value={bottomAttachmentIcon?.value}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
+        {(modules?.RNFileSelector || modules.launchImageLibrary) && (
+          <TouchableOpacity
+            onPress={openAttachmentMenu}
+            style={[
+              styles.iconContainer,
+              {
+                borderColor: bottomInputBorderColor,
+                backgroundColor: bottomInputBackgroundColor,
+              },
+            ]}
+          >
+            <RenderImage
+              type={bottomAttachmentIcon?.type}
+              value={bottomAttachmentIcon?.value}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        )}
+
         {modules?.AudioRecorderPlayer && modules?.RNFS && (
           <TouchableOpacity
             onPress={() => touchRecord()}

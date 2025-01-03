@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 10,
     zIndex: 9999,
-    maxWidth: '65%',
+    maxWidth: 150,
   },
   option: {
     paddingVertical: 8,
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    maxWidth: 150,
   },
   optionContent: {
     flexDirection: 'row',
