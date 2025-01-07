@@ -13,7 +13,7 @@ const useRenderContent = (
   WebView:any
 ) => {
   const shouldRenderAsHTML = (text: string) => {
-    const htmlTagPattern = /<\/?[a-z][^>]*>/i;
+    const htmlTagPattern = /<\/?[a-z][\s\S]*>/i;
     return htmlTagPattern.test(text);
   };
 
@@ -52,7 +52,10 @@ const useRenderContent = (
       h6: commonStyles,
       b: { fontSize },
       i: commonStyles,
-      a: { fontSize, color: 'blue' },
+      a: {
+        fontSize: fontSize,
+        color: 'blue',
+      },
       span: commonStyles,
       div: commonStyles,
       ul: commonStyles,
@@ -61,13 +64,9 @@ const useRenderContent = (
       em: { fontSize },
     };
 
-    // const formattedHtml = `<div>${html.replace(/\n/g, '<br/>')}</div>`;
-    const cleanHTML = (html:any) => {
-      return html.replace(/<a href="([^"]*)".*?>/g, '$1');
-    };
-    
-    const formattedHtml = cleanHTML(html);
 
+    
+    const formattedHtml = `<div>${html.replace(/\n/g, '<br/>')}</div>`;
     const customHTMLElementModels = {
       iframe: HTMLElementModel.fromCustomModel({
         tagName: 'iframe',
