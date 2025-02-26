@@ -1,4 +1,4 @@
-import React, {useRef, useState, useLayoutEffect} from 'react';
+import React, {useRef, useState, useLayoutEffect, useEffect} from 'react';
 import {Image, Pressable, PermissionsAndroid, Platform} from 'react-native';
 import {ChatModal, ChatModalProps} from '../../../src/index';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
@@ -12,7 +12,7 @@ import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native'; 
 import {CloseIcon, MinusIcon} from '../../../src/image';
 import RNFetchBlob from 'rn-fetch-blob';
 import FileViewer from 'react-native-file-viewer';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 export default function ChatbotScreen() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -70,6 +70,7 @@ export default function ChatbotScreen() {
         asyncStorage: AsyncStorage,
         fileViewer: FileViewer,
         launchImageLibrary: launchImageLibrary,
+        launchcamera: launchCamera
       }}
       ref={modalRef}
       defaultConfiguration={{
@@ -143,8 +144,8 @@ export default function ChatbotScreen() {
               'No suitable application found to open this file type. Please download an app from the Google Play Store.',
             noAppFoundCancel: 'Cancel',
             addFile:'Add File',
-            addPhoto:'Add Photo'
-            
+            addPhoto:'Add Photo',
+            fileErrorText: 'The file size must be smaller than 10MB.',
           },
           tr: {
             headerText: 'Knovvu',
@@ -163,7 +164,9 @@ export default function ChatbotScreen() {
               'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
             noAppFoundCancel: 'İptal',
             addFile:'Dosya Ekle',
-            addPhoto:'Fotoğraf Ekle'
+            addPhoto:'Fotoğraf Ekle',
+            fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
+
           },
 
           // es: {
