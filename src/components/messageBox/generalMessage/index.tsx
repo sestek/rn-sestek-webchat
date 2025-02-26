@@ -72,6 +72,11 @@ const GeneralMessage: React.FC<Props> = (props) => {
 
       {(messageType === 'text' || messageType === 'message') &&
         (messageActivity?.text || messageActivity?.message) &&
+        !(
+          messageAttachments?.length > 0 && 
+          messageAttachments[0]?.contentType === 'audio/base64' &&
+          messageAttachments[0]?.messageType === 'Client'
+        ) &&
         renderContent(
           messageActivity?.text || messageActivity?.message,
           'text'

@@ -1,7 +1,5 @@
-
 export default interface PropsAudio {
   url: string;
-  position?:string
-  key?: string,
-   onPlayPause?: any
+  position?: string;
+  key?: string;
 }

@@ -54,7 +54,8 @@ export default interface PropsCustomizeConfiguration {
       noAppFoundMessage:string;
       noAppFoundCancel:string;
       addFile?:string;
-      addPhoto?:string
+      addPhoto?:string;
+      fileErrorText?:string;
     };
   };
   dateSettings?:{

@@ -1,5 +1,10 @@
-import React, { FC, useState } from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import React, { FC, useState, useEffect } from 'react';
+import {
+  TextInput,
+  TouchableOpacity,
+  View,
+  PermissionsAndroid,Platform
+} from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
 import { Recorder } from '../../services';
@@ -7,10 +12,15 @@ import RenderImage from '../renderImage';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
 import AttachmentDropdown from '../attachmentDropdown';
-import { FolderIcon, PhotoIcon } from '../../image';
+import { FolderIcon, PhotoIcon, CameraIcon } from '../../image';
+import { useCustomAction } from '../../context/CustomActionContext';
+
 const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
+  const [enableAttachmentIcon, setEnableAttachmentIcon] =
+    useState<boolean>(false);
+  const { globalCustomAction } = useCustomAction();
 
   const { modules } = useModules();
 
@@ -49,7 +59,36 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const [recorder] = useState<Recorder | undefined>(Record);
   const [recordStart, setRecordStart] = useState<boolean>(false);
   const [disableRecord, setDisableRecord] = useState<boolean>(false);
-
+  async function requestCameraPermission(): Promise<boolean> {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera permission required',
+          message: 'The app requires camera access.',
+          buttonPositive: 'Okay',
+          buttonNegative: 'Cancel',
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Kamera izni verildi');
+        return true;
+      } else {
+        console.log('Kamera izni reddedildi');
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  }
+  useEffect(() => {
+    if (globalCustomAction === 'true') {
+      setEnableAttachmentIcon(true);
+    } else {
+      setEnableAttachmentIcon(false);
+    }
+  }, [globalCustomAction]);
   const triggerRecord = async () => {
     if (disableRecord) {
       return;
@@ -100,17 +139,23 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     }
   };
 
-  const handleSelect = (optionKey: string) => {
+  const handleSelect = async (optionKey: string) => {
     setDropdownVisible(false);
-    setTimeout(() => {
+    setTimeout(async() => {
       if (optionKey === 'document') {
         sendAttachment('document');
       } else if (optionKey === 'gallery') {
         sendAttachment('gallery');
+      } else if (optionKey === 'camera') {
+        if (Platform.OS === 'android') {
+          const hasPermission = await requestCameraPermission();
+          if (hasPermission) {
+            sendAttachment('camera');
+          }
+        } else if (Platform.OS === 'ios') {
+          sendAttachment('camera');
+        }
       }
-      //  else if (option === 'camera') {
-      //   sendAttachment('camera');
-      // }
     }, 100);
   };
 
@@ -126,11 +171,11 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
       icon: PhotoIcon,
     },
 
-    // modules?.camera && {
-    //   key: 'camera',
-    //   label: 'Fotoğraf Çek',
-    //   icon: CameraIcon,
-    // },
+    modules?.launchcamera && {
+      key: 'camera',
+      label: 'Fotoğraf Çek',
+      icon: CameraIcon,
+    },
   ].filter(Boolean);
 
   return (
@@ -160,24 +205,27 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           placeholderTextColor="grey"
           keyboardType="default"
         />
-        {(modules?.RNFileSelector || modules.launchImageLibrary) && (
-          <TouchableOpacity
-            onPress={openAttachmentMenu}
-            style={[
-              styles.iconContainer,
-              {
-                borderColor: bottomInputBorderColor,
-                backgroundColor: bottomInputBackgroundColor,
-              },
-            ]}
-          >
-            <RenderImage
-              type={bottomAttachmentIcon?.type}
-              value={bottomAttachmentIcon?.value}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        )}
+        {(modules?.RNFileSelector ||
+          modules?.launchImageLibrary ||
+          modules?.launchcamera) &&
+          enableAttachmentIcon && (
+            <TouchableOpacity
+              onPress={openAttachmentMenu}
+              style={[
+                styles.iconContainer,
+                {
+                  borderColor: bottomInputBorderColor,
+                  backgroundColor: bottomInputBackgroundColor,
+                },
+              ]}
+            >
+              <RenderImage
+                type={bottomAttachmentIcon?.type}
+                value={bottomAttachmentIcon?.value}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          )}
 
         {modules?.AudioRecorderPlayer && modules?.RNFS && (
           <TouchableOpacity

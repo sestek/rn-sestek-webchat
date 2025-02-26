@@ -6,6 +6,8 @@ import { specialMessageTypes } from '../constant/ChatModalConstant';
 import { Recorder } from '../services';
 import { useModules } from '../context/ModulesContext';
 import { useLoading } from '../context/LoadingContext';
+import { useCustomAction } from '../context/CustomActionContext';
+import { Alert } from 'react-native';
 
 const useChat = ({
   defaultConfiguration,
@@ -16,10 +18,13 @@ const useChat = ({
 }: PropsUseChat) => {
   const { modules } = useModules();
   const { setLoading } = useLoading();
+  const { setGlobalCustomAction } = useCustomAction();
+
   const { enableNdUi, getResponseData } = defaultConfiguration;
 
   const [messageList, setMessageList] = useState<any>([]);
   const [historyCount, sethistoryCount] = useState(0);
+  const [exceededFileSize, setExceededFileSize] = useState<boolean>(false);
 
   const { changeLanguage } = useCustomizeConfiguration();
 
@@ -134,6 +139,12 @@ const useChat = ({
               messageBody?.channelData?.CustomActionData,
               messageBody?.channelData?.CustomProperties
             );
+
+            if (messageBody?.channelData?.CustomProperties?.EnableAttachment) {
+              setGlobalCustomAction(
+                messageBody?.channelData?.CustomProperties?.EnableAttachment
+              );
+            }
           }
         }
       }
@@ -340,7 +351,8 @@ const useChat = ({
   const sendAttachment = async (source: any) => {
     try {
       let res;
-      let fileUri, fileName, fileType;
+      let fileUri, fileName: any, fileType;
+      let selectedFileSize = 0;
 
       if (source === 'document') {
         // Belge seçimi
@@ -353,6 +365,7 @@ const useChat = ({
           fileUri = res[0].uri;
           fileName = res[0].name;
           fileType = res[0].type;
+          selectedFileSize = res[0].size || 0;
         } else {
           console.log('Belge seçilmedi');
           return;
@@ -369,30 +382,31 @@ const useChat = ({
           fileUri = res.assets[0].uri;
           fileName = res.assets[0].fileName;
           fileType = res.assets[0].type;
+          selectedFileSize = res.assets[0].fileSize || 0;
+        } else {
+          console.log('Dosya seçilmedi');
+          return;
+        }
+      } else if (source === 'camera') {
+        res = await modules.launchcamera({
+          mediaType: 'photo', 
+          includeBase64: false,
+        });
+        if (res.assets && res.assets.length > 0) {
+          fileUri = res.assets[0].uri;
+          fileName = res.assets[0].fileName;
+          fileType = res.assets[0].type;
+          selectedFileSize = res.assets[0].fileSize || 0;
         } else {
           console.log('Dosya seçilmedi');
           return;
         }
       }
-      // else if (source === 'camera') {
-      //   // Kameradan resim veya video seçimi
-      //   res = await modules.camera({
-      //     mediaType: 'photo', // Hem fotoğraf hem de video için
-      //     includeBase64: false,
-      //   });
-
-      //   console.log(res);
-
-      //   if (res.assets && res.assets.length > 0) {
-      //     // Kamera için dosya bilgilerini al
-      //     fileUri = res.assets[0].uri;
-      //     fileName = res.assets[0].fileName;
-      //     fileType = res.assets[0].type;
-      //   } else {
-      //     console.log('Dosya seçilmedi');
-      //     return;
-      //   }
-      // }
+      if (selectedFileSize > 10 * 1024 * 1024) {
+        setExceededFileSize(true); 
+        console.log('Dosya boyutu 10 MB üzeri.');
+        return;
+      }
       setLoading(true);
       const formData = new FormData();
 
@@ -419,6 +433,7 @@ const useChat = ({
       );
       formData.append('clientId', defaultConfiguration.clientId);
       formData.append('endUser', JSON.stringify(defaultConfiguration.endUser));
+      setLoading(false);
 
       const replaceLink = url.replace('chathub', 'Home/SendAttachment');
       const response = await fetch(replaceLink, {
@@ -432,7 +447,6 @@ const useChat = ({
 
       const data = await response.json();
       if (response.ok) {
-        setLoading(false);
         addMessageList({
           timestamp: new Date().getTime(),
           type: 'text',
@@ -448,17 +462,19 @@ const useChat = ({
           endUser: defaultConfiguration.endUser,
           locale: defaultConfiguration.locale,
         });
-        setMessageList((messages: any) => [
-          ...messages,
-          { type: 'typing', message: 'xxxxx' },
-        ]);
       } else {
-        console.error('Başarısız:', data);
+        console.log('An error');
+
+        Alert.alert('An error occurred while uploading the file. ');
+        console.log('An error occurred while uploading the file. ' + data);
       }
     } catch (err) {
+      console.log('catch');
       if (modules.RNFileSelector.isCancel(err)) {
+        Alert.alert('User canceled file selection ');
         console.log('Kullanıcı dosya seçimini iptal etti');
       } else {
+        Alert.alert('File upload error '+ err);
         console.error('Dosya yükleme hatası:', err);
       }
     }
@@ -513,6 +529,11 @@ const useChat = ({
   const parseAttachment = async (data: any, i: number) => {
     const parsedJsonContent = JSON.parse(data[i].jsonContent);
 
+    const storageKey = data[i]?.storagePath;
+    const messageType = data[i]?.messageType;
+    const tenantName = defaultConfiguration.tenant;
+    const baseFileUrl = `${parseUrl}/file?tenantName=${tenantName}&key=${storageKey}&storageType=0`;
+    var audioPath: any = null;
     if (parsedJsonContent?.attachments) {
       const updatedAttachments = await Promise.all(
         parsedJsonContent.attachments.map(async (attachment: any) => {
@@ -522,13 +543,49 @@ const useChat = ({
           } catch (e) {
             parsedContent = attachment.content;
           }
+
+          if (
+            attachment?.contentType === 'document/pdf' ||
+            attachment?.contentType === 'image/jpg' ||
+            attachment?.contentType === 'image/jpeg'
+          ) {
+            parsedJsonContent.text = attachment.name;
+          }
+          if (attachment?.contentType === 'audio/base64' && storageKey) {
+            try {
+              const dirs =
+                modules.RNFS.fs.dirs.DocumentDir + '/sestek_bot_audio';
+              const parts = storageKey.split('/'); 
+              const lastPart = parts[parts.length - 1]; 
+              const path = `${dirs}/${lastPart}.wav`;
+              const response = await modules.RNFS.config({
+                fileCache: true,
+                path: path, 
+              }).fetch('GET', baseFileUrl, {
+                Accept: '*/*',
+              });
+
+              if (!response || !(await modules.RNFS.fs.exists(path))) {
+                throw new Error('Failed to download audio file');
+              }
+
+              audioPath = `file://${path}`;
+            } catch (error) {
+              console.error('Error downloading and saving audio file:', error);
+              parsedContent = 'error';
+            }
+          }
+
           return {
             ...attachment,
             content: parsedContent,
+            message: audioPath,
+            messageType: messageType,
           };
         })
       );
-      const updatedJsonContent = {
+
+      return {
         ...parsedJsonContent,
         attachments: updatedAttachments,
         timestamp: new Date(data[i].dialogTime),
@@ -538,19 +595,17 @@ const useChat = ({
             : defaultConfiguration.channel,
         conversationId: sessionId,
       };
-      return updatedJsonContent;
-    } else {
-      const updatedParsedJson = {
-        ...parsedJsonContent,
-        timestamp: new Date(data[i].dialogTime),
-        channel:
-          data[i].messageType === 'VirtualAgent'
-            ? null
-            : defaultConfiguration.channel,
-        conversationId: sessionId,
-      };
-      return updatedParsedJson;
     }
+
+    return {
+      ...parsedJsonContent,
+      timestamp: new Date(data[i].dialogTime),
+      channel:
+        data[i].messageType === 'VirtualAgent'
+          ? null
+          : defaultConfiguration.channel,
+      conversationId: sessionId,
+    };
   };
 
   const getHistory = async () => {
@@ -624,6 +679,8 @@ const useChat = ({
     getHistory,
     conversationContinue,
     getHistoryBackground,
+    exceededFileSize,
+    setExceededFileSize, //
   };
 };
 

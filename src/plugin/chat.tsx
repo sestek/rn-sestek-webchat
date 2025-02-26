@@ -18,6 +18,7 @@ import {
   defaultCustomizeConfiguration,
 } from '../context/CustomizeContext';
 import { ModulesProvider } from '../context/ModulesContext';
+import { CustomActionProvider } from '../context/CustomActionContext';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
@@ -89,21 +90,21 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
     checkAudioFile();
   };
 
-  const endConversation =  () => {
-   return new Promise<boolean>((resolve, reject) => {
-    setStart(false);
-    setVisible(false);
-    modalRef.current?.sendEnd();
-    if (modules?.RNFS) {
-      let dirs = modules?.RNFS.fs.dirs;
-      let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
-      modules?.RNFS.fs
-        .unlink(folderPath)
-        .then((res: string) => console.log(res))
-        .catch((err: string) => console.log(err));
-    }
-    resolve(true)
-   })
+  const endConversation = () => {
+    return new Promise<boolean>((resolve, reject) => {
+      setStart(false);
+      setVisible(false);
+      modalRef.current?.sendEnd();
+      if (modules?.RNFS) {
+        let dirs = modules?.RNFS.fs.dirs;
+        let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
+        modules?.RNFS.fs
+          .unlink(folderPath)
+          .then((res: string) => console.log(res))
+          .catch((err: string) => console.log(err));
+      }
+      resolve(true);
+    });
   };
 
   const clickClosedConversationModalFunc = () => {
@@ -166,20 +167,22 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
               initialConfig={customizeConfigurationData}
               integrationId={defaultConfiguration?.integrationId}
             >
-              <ModalComponent
-                ref={modalRef}
-                url={url || ChatModal.defaultProps?.url!}
-                defaultConfiguration={defaultConfiguration}
-                visible={visible}
-                closeConversation={endConversation}
-                hideModal={triggerVisible}
-                sessionId={sessionId}
-                client={client}
-                closedModalManagment={{ closeModal, setCloseModal }}
-                clickClosedConversationModalFunc={
-                  clickClosedConversationModalFunc
-                }
-              />
+              <CustomActionProvider>
+                <ModalComponent
+                  ref={modalRef}
+                  url={url || ChatModal.defaultProps?.url!}
+                  defaultConfiguration={defaultConfiguration}
+                  visible={visible}
+                  closeConversation={endConversation}
+                  hideModal={triggerVisible}
+                  sessionId={sessionId}
+                  client={client}
+                  closedModalManagment={{ closeModal, setCloseModal }}
+                  clickClosedConversationModalFunc={
+                    clickClosedConversationModalFunc
+                  }
+                />
+              </CustomActionProvider>
             </CustomizeConfigurationProvider>
           </ModulesProvider>
         </LoadingProvider>

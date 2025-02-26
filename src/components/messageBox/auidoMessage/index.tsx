@@ -19,21 +19,22 @@ const AudioMessage = (props: AudioMessageProps) => {
     return null;
   }
 
-  let url = props.activity?.message;
+  let url =
+    props.activity?.message || props.activity?.attachments?.[0]?.message;
   let position = 'right';
   if (props?.activity?.attachments && props?.activity?.serviceUrl) {
     position = 'left';
+  }
+
+  if (props.activity?.attachments?.[0]?.messageType === 'Client') {
+    position = 'right';
   }
 
   const { customizeConfiguration } = useCustomizeConfiguration();
 
   return (
     <>
-      <AudioComponent
-        url={url}
-        position={position}
-
-      />
+      <AudioComponent url={url} position={position} />
       {position === 'right' && (
         <Text
           style={{

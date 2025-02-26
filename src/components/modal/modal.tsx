@@ -26,6 +26,7 @@ import { useLoading } from '../../context/LoadingContext';
 import useCheckBackground from '../../hook/useCheckBackground';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
+import FileSizeWarningModal from '../fileSizeWarningModal';
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
     const {
@@ -57,6 +58,8 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       conversationContinue,
       getHistoryBackground,
       sendEnd,
+      exceededFileSize,
+      setExceededFileSize,
     } = useChat({
       url: url,
       defaultConfiguration: defaultConfiguration,
@@ -79,7 +82,10 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
         conversationContinue && conversationContinue();
       }
     }, [background]);
-
+    
+    const closeSizeWarningModal = () => {
+      setExceededFileSize(false);
+    };
     return (
       <Modal
         animationType={'slide'}
@@ -165,21 +171,25 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                         : {},
                     ]}
                   >
-                      <FooterComponent
-                        inputData={inputData}
-                        changeInputData={changeInputData}
-                        sendMessage={sendMessage}
-                        sendAudio={sendAudio}
-                        sendAttachment={sendAttachment}
-                        scrollViewRef={scrollViewRef}
-                        isDropdownVisible={isDropdownVisible} 
-                        setDropdownVisible={setDropdownVisible} 
-                      />
+                    <FooterComponent
+                      inputData={inputData}
+                      changeInputData={changeInputData}
+                      sendMessage={sendMessage}
+                      sendAudio={sendAudio}
+                      sendAttachment={sendAttachment}
+                      scrollViewRef={scrollViewRef}
+                      isDropdownVisible={isDropdownVisible}
+                      setDropdownVisible={setDropdownVisible}
+                    />
                   </View>
                 </>
               }
             />
           </View>
+          <FileSizeWarningModal
+            visible={exceededFileSize}
+            onClose={closeSizeWarningModal}
+          />
         </KeyboardAvoidingView>
       </Modal>
     );

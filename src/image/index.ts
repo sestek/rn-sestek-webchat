@@ -17,6 +17,8 @@ const FileIcon = require('./file.png')
 const CameraIcon =require('./camera.png')
 const PhotoIcon = require('./photo.png')
 const FolderIcon = require('./folder.png')
+const WarningIcon = require('./warning.png')
+const ColsexIcon = require('./closex.png')
 
 export {
   ChatIcon,
@@ -37,5 +39,7 @@ export {
   FileIcon,
   CameraIcon,
   PhotoIcon,
-  FolderIcon
+  FolderIcon,
+  WarningIcon,
+  ColsexIcon
 };
