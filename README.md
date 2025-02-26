@@ -138,7 +138,7 @@ import {WebView} from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';// for the start storage session
 import FileViewer from 'react-native-file-viewer';
 
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 
 
@@ -237,6 +237,7 @@ const startStorageSession = () => {
     asyncStorage: AsyncStorage,
     fileViewer: FileViewer,
     launchImageLibrary: launchImageLibrary,
+    launchcamera: launchCamera
 
   }}
   ref={modalRef}
@@ -419,7 +420,9 @@ const startStorageSession = () => {
         noAppFoundMessage:'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
         noAppFoundCancel: 'İptal',
         addFile:'Dosya Ekle',
-        addPhoto:'Fotoğraf Ekle'
+        addPhoto:'Fotoğraf Ekle',
+        fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
+
       },
       en: {
         headerText: 'Knovvu',
@@ -436,7 +439,9 @@ const startStorageSession = () => {
         noAppFoundMessage:'No suitable app found to open this file type. Install anapp from the Google Play Store.',
         noAppFoundCancel: 'Cancel',
         addFile:'Add File',
-        addPhoto:'Add Photo'
+        addPhoto:'Add Photo',
+        fileErrorText: 'The file size must be smaller than 10MB.',
+
       },
     },
     dateSettings: {
