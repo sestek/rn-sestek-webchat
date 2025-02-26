@@ -174,6 +174,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       noAppFoundCancel: 'İptal',
       addFile: 'Add File',
       addPhoto: 'Add Photo',
+      addCamera:'take a photo',
       fileErrorText: 'The file size must be smaller than 10MB.',
     },
     en: {
@@ -193,6 +194,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       noAppFoundCancel: 'Cancel',
       addFile: 'Dosya Ekle',
       addPhoto: 'Fotoğraf Ekle',
+      addCamera:'Fotoğraf Çek',
       fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
     },
   },

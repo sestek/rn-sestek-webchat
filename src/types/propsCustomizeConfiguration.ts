@@ -55,6 +55,7 @@ export default interface PropsCustomizeConfiguration {
       noAppFoundCancel:string;
       addFile?:string;
       addPhoto?:string;
+      addCamera?:string;
       fileErrorText?:string;
     };
   };

@@ -421,6 +421,7 @@ const startStorageSession = () => {
         noAppFoundCancel: 'İptal',
         addFile:'Dosya Ekle',
         addPhoto:'Fotoğraf Ekle',
+        addCamera:'Fotoğraf Çek',
         fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
 
       },
@@ -440,6 +441,8 @@ const startStorageSession = () => {
         noAppFoundCancel: 'Cancel',
         addFile:'Add File',
         addPhoto:'Add Photo',
+        addCamera:'Take a photo',
+
         fileErrorText: 'The file size must be smaller than 10MB.',
 
       },

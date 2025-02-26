@@ -173,7 +173,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
     modules?.launchcamera && {
       key: 'camera',
-      label: 'Fotoğraf Çek',
+      label: texts.addCamera,
       icon: CameraIcon,
     },
   ].filter(Boolean);
