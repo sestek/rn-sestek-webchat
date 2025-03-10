@@ -186,9 +186,6 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
             styles.textInput,
             {
               borderColor: bottomInputBorderColor,
-              borderTopRightRadius: recorder ? 0 : 10,
-              borderBottomRightRadius: recorder ? 0 : 10,
-              borderRightWidth: recorder ? 0 : 1,
               backgroundColor: bottomInputBackgroundColor,
             },
           ]}

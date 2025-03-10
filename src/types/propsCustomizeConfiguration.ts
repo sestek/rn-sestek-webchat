@@ -40,19 +40,19 @@ export default interface PropsCustomizeConfiguration {
   permissionAudioCheck?: () => Promise<void>;
   language?: {
     [key: string]: {
-      headerText: string;
-      bottomInputText:string;
-      closeModalText:string;
-      closeModalYesButtonText:string;
-      closeModalNoButtonText:string;
-      filePTitle:string;
-      filePMessage:string;
-      filePNeutral:string;
-      filePNegative:string;
-      filePPositive:string;
-      noAppFoundTitle:string;
-      noAppFoundMessage:string;
-      noAppFoundCancel:string;
+      headerText?: string;
+      bottomInputText?:string;
+      closeModalText?:string;
+      closeModalYesButtonText?:string;
+      closeModalNoButtonText?:string;
+      filePTitle?:string;
+      filePMessage?:string;
+      filePNeutral?:string;
+      filePNegative?:string;
+      filePPositive?:string;
+      noAppFoundTitle?:string;
+      noAppFoundMessage?:string;
+      noAppFoundCancel?:string;
       addFile?:string;
       addPhoto?:string;
       addCamera?:string;
