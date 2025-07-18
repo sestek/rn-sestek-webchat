@@ -201,7 +201,21 @@ const permissionAudioCheck = async () => {
     }
   });
 }; // example check audio permission controller for android
-
+  const permissionCameraCheck = async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
+      const res = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera permission required',
+          message: 'This app needs camera access to take photos',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        }
+      );
+      return res === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    return true; // iOS’da zaten sormaz
+  };
 
 const customActionDataExample = {
     tel: '900000000000',
@@ -375,6 +389,8 @@ const startStorageSession = () => {
     },
     // Before Func
     permissionAudioCheck: permissionAudioCheck,
+    permissionCameraCheck: permissionCameraCheck, 
+
     //loading indicator
     indicatorColor : "#863CEB",
     //FontSettings
@@ -560,6 +576,7 @@ export default interface PropsCustomizeConfiguration {
   fontSettings?: FontSettings;
   fileIcon?: IconType;
   permissionAudioCheck?: () => Promise<void>;
+  permissionCameraCheck?: () => Promise<boolean>;
   language?: {
     [key: string]: {
       headerText: string;

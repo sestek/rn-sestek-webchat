@@ -75,7 +75,7 @@ export default function ChatbotScreen() {
 
   return (
     <ChatModal
-        url={config.URL_}
+      url={config.URL_}
       modules={{
         AudioRecorderPlayer: AudioRecorderPlayer,
         RNFS: RNFetchBlob,
@@ -95,8 +95,6 @@ export default function ChatbotScreen() {
         // clientId: '1111',
           tenant: config.TNAME_,
            projectName: config.URL_,
-        tenant: "tiklagelsinva",
-        projectName:"TiklaGelsinV3",
         locale: 'en-US',
         // fullName:'',
         endUser: endUserInfo,
@@ -104,7 +102,7 @@ export default function ChatbotScreen() {
         customActionData: JSON.stringify(customActionDataExample),
       }}
       customizeConfiguration={{
-        permissionCameraCheck: permissionCameraCheck,  // ← BURAYA EKLE
+        permissionCameraCheck: permissionCameraCheck,
 
         permissionAudioCheck: permissionAudioCheck,
         // headerCloseIcon: {
