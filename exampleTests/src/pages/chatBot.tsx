@@ -1,6 +1,6 @@
 import React, {useRef, useState, useLayoutEffect, useEffect} from 'react';
 import {Image, Pressable, PermissionsAndroid, Platform} from 'react-native';
-import {ChatModal, ChatModalProps} from '../../../src/index';
+import {ChatModal, ChatModalProps} from 'rn-sestek-webchat';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
@@ -57,9 +57,25 @@ export default function ChatbotScreen() {
       }
     });
   };
+   const permissionCameraCheck = async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
+      const res = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera permission required',
+          message: 'This app needs camera access to take photos',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        }
+      );
+      return res === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    return true; // iOS’da zaten sormaz
+  };
+
   return (
     <ChatModal
-    url={config.URL_}
+    url={"https://va.tr.knovvu.com/webchat/chathub"}
       modules={{
         AudioRecorderPlayer: AudioRecorderPlayer,
         RNFS: RNFetchBlob,
@@ -77,8 +93,8 @@ export default function ChatbotScreen() {
         sendConversationStart: true,
         channel: 'webchatmobile-sestek',
         // clientId: '1111',
-        tenant: config.TNAME_,
-        projectName:config.PNAME_,
+        tenant: "tiklagelsinva",
+        projectName:"TiklaGelsinV3",
         locale: 'en-US',
         // fullName:'',
         endUser: endUserInfo,
@@ -86,6 +102,8 @@ export default function ChatbotScreen() {
         customActionData: JSON.stringify(customActionDataExample),
       }}
       customizeConfiguration={{
+        permissionCameraCheck: permissionCameraCheck,  // ← BURAYA EKLE
+
         permissionAudioCheck: permissionAudioCheck,
         // headerCloseIcon: {
         //   type: 'component',
@@ -145,6 +163,7 @@ export default function ChatbotScreen() {
             noAppFoundCancel: 'Cancel',
             addFile:'Add File',
             addPhoto:'Add Photo',
+            addCamera:'Take a Photo',
             fileErrorText: 'The file size must be smaller than 10MB.',
           },
           tr: {
@@ -165,6 +184,7 @@ export default function ChatbotScreen() {
             noAppFoundCancel: 'İptal',
             addFile:'Dosya Ekle',
             addPhoto:'Fotoğraf Ekle',
+            addCamera:'Fotoğraf Çek',
             fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
 
           },
