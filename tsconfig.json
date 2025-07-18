@@ -5,6 +5,7 @@
       "rn-sestek-webchat": ["src/index"],
       "*": ["src/*"],
       "src/*": ["src/*"]
+      
     },
     "declaration": true,
     "allowUnreachableCode": false,

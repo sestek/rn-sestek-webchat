@@ -59,7 +59,7 @@ export default function ChatbotScreen() {
   };
   return (
     <ChatModal
-    url={config.URL_}
+        url={config.URL_}
       modules={{
         AudioRecorderPlayer: AudioRecorderPlayer,
         RNFS: RNFetchBlob,
@@ -77,8 +77,8 @@ export default function ChatbotScreen() {
         sendConversationStart: true,
         channel: 'webchatmobile-sestek',
         // clientId: '1111',
-        tenant: config.TNAME_,
-        projectName:config.PNAME_,
+          tenant: config.TNAME_,
+           projectName: config.URL_,
         locale: 'en-US',
         // fullName:'',
         endUser: endUserInfo,
