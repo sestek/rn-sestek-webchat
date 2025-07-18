@@ -1,17 +1,6 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
-  "compilerOptions": {
-    // baseUrl ile tüm path mapping’lerin kökünü belirliyoruz
-    "baseUrl": ".",
-    // rn-sestek-webchat alias’ını ../src klasörünüze yönlendiriyoruz
-    "paths": {
-      "rn-sestek-webchat": ["../src/index"],
-      "rn-sestek-webchat/*": ["../src/*"]
-    }
-  },
-  // hem exampleTests/src hem de paketinizin src klasörünü derlemeye dahil edin
-  "include": [
-    "src/**/*",
-    "../src/**/*"
-  ]
+  "paths": {
+    "react": [ "./node_modules/@types/react" ]
+  }
 }

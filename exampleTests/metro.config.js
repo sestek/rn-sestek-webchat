@@ -1,41 +1,40 @@
 const path = require('path');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const blacklist = require('metro-config/src/defaults/blacklist');
+const escape = require('escape-string-regexp');
 const pak = require('../package.json');
+
 const root = path.resolve(__dirname, '..');
 
-const moduleNames = [
-  pak.name,                              // rn-sestek-webchat
-  ...Object.keys(pak.peerDependencies || {}),
-  '@babel/runtime'                       // <-- bunu ekliyoruz
-];
+const modules = Object.keys({
+  ...pak.peerDependencies,
+});
 
 module.exports = {
   projectRoot: __dirname,
-  watchFolders: [ root ],
+  watchFolders: [root],
+
+  // We need to make sure that only one version is loaded for peerDependencies
+  // So we blacklist them at the root, and alias them to the versions in example's node_modules
   resolver: {
-    blockList: exclusionList(
-      moduleNames.map(m =>
-        new RegExp(`^${path.join(root, 'node_modules', m)}\\/.*$`)
+    blacklistRE: blacklist(
+      modules.map(
+        (m) =>
+          new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`)
       )
     ),
-    extraNodeModules: moduleNames.reduce((acc, name) => {
-      if (name === pak.name) {
-        acc[name] = path.join(root, 'src');
-      } else {
-        // önce exampleTests/node_modules, yoksa root/node_modules
-        acc[name] = path.join(
-          __dirname,
-          'node_modules',
-          name
-        );
-      }
+
+    extraNodeModules: modules.reduce((acc, name) => {
+      acc[name] = path.join(__dirname, 'node_modules', name);
       return acc;
     }, {}),
-    sourceExts: ['js','jsx','ts','tsx','json']
   },
+
   transformer: {
     getTransformOptions: async () => ({
-      transform: { experimentalImportSupport: false, inlineRequires: true },
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
     }),
   },
 };

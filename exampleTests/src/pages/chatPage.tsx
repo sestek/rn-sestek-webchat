@@ -8,7 +8,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import {ChatModal, ChatModalProps} from 'rn-sestek-webchat';
+import {ChatModal, ChatModalProps} from '../../../src/index';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFetchBlob from 'rn-fetch-blob';
