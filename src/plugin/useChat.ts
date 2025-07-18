@@ -373,35 +373,23 @@ const useChat = ({
       } else if (source === 'gallery') {
         // Galeriden resim veya video seçimi
         res = await modules.launchImageLibrary({
-          mediaType: 'photo',
+          mediaType: 'photo', // Hem fotoğraf hem de video için
           includeBase64: false,
         });
 
         if (res.assets && res.assets.length > 0) {
+          // Galeri için dosya bilgilerini al
           fileUri = res.assets[0].uri;
           fileName = res.assets[0].fileName;
           fileType = res.assets[0].type;
           selectedFileSize = res.assets[0].fileSize || 0;
-          const asset = res.assets[0];
-          const { fileName: originalName, type } = asset;
-
-          const ext =
-            originalName && originalName.includes('.')
-              ? originalName.split('.').pop()
-              : type
-              ? type.split('/')[1]
-              : 'jpg';
-
-          const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-
-          fileName = `photo_${timestamp}.${ext}`;
         } else {
           console.log('Dosya seçilmedi');
           return;
         }
       } else if (source === 'camera') {
         res = await modules.launchcamera({
-          mediaType: 'photo',
+          mediaType: 'photo', 
           includeBase64: false,
         });
         if (res.assets && res.assets.length > 0) {
@@ -413,19 +401,6 @@ const useChat = ({
           console.log('Dosya seçilmedi');
           return;
         }
-        const asset = res.assets[0];
-        const { fileName: originalName, type } = asset;
-
-        const ext =
-          originalName && originalName.includes('.')
-            ? originalName.split('.').pop()
-            : type
-            ? type.split('/')[1]
-            : 'jpg';
-
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-
-        fileName = `photo_${timestamp}.${ext}`;
       }
       if (selectedFileSize > 10 * 1024 * 1024) {
         setExceededFileSize(true); 
@@ -499,7 +474,7 @@ const useChat = ({
         Alert.alert('User canceled file selection ');
         console.log('Kullanıcı dosya seçimini iptal etti');
       } else {
-        Alert.alert('File upload error ' + err);
+        Alert.alert('File upload error '+ err);
         console.error('Dosya yükleme hatası:', err);
       }
     }
@@ -580,12 +555,12 @@ const useChat = ({
             try {
               const dirs =
                 modules.RNFS.fs.dirs.DocumentDir + '/sestek_bot_audio';
-              const parts = storageKey.split('/');
-              const lastPart = parts[parts.length - 1];
+              const parts = storageKey.split('/'); 
+              const lastPart = parts[parts.length - 1]; 
               const path = `${dirs}/${lastPart}.wav`;
               const response = await modules.RNFS.config({
                 fileCache: true,
-                path: path,
+                path: path, 
               }).fetch('GET', baseFileUrl, {
                 Accept: '*/*',
               });

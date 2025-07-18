@@ -2,7 +2,8 @@ import React, { FC, useState, useEffect } from 'react';
 import {
   TextInput,
   TouchableOpacity,
-  View,Alert
+  View,
+  PermissionsAndroid,Platform
 } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
@@ -44,7 +45,6 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     bottomInputBorderColor,
     bottomInputBackgroundColor,
     bottomInputSendButtonColor,
-    permissionCameraCheck
   } = customizeConfiguration;
 
   const Record =
@@ -59,7 +59,29 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   const [recorder] = useState<Recorder | undefined>(Record);
   const [recordStart, setRecordStart] = useState<boolean>(false);
   const [disableRecord, setDisableRecord] = useState<boolean>(false);
-
+  async function requestCameraPermission(): Promise<boolean> {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera permission required',
+          message: 'The app requires camera access.',
+          buttonPositive: 'Okay',
+          buttonNegative: 'Cancel',
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Kamera izni verildi');
+        return true;
+      } else {
+        console.log('Kamera izni reddedildi');
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  }
   useEffect(() => {
     if (globalCustomAction === 'true') {
       setEnableAttachmentIcon(true);
@@ -125,21 +147,13 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
       } else if (optionKey === 'gallery') {
         sendAttachment('gallery');
       } else if (optionKey === 'camera') {
-        if (!permissionCameraCheck) {
-          Alert.alert(
-            'Permit Required',
-            'Could you please check the permits?'
-          );
-          return;
-        }
-        const granted = await permissionCameraCheck();
-        if (granted) {
+        if (Platform.OS === 'android') {
+          const hasPermission = await requestCameraPermission();
+          if (hasPermission) {
+            sendAttachment('camera');
+          }
+        } else if (Platform.OS === 'ios') {
           sendAttachment('camera');
-        } else {
-          Alert.alert(
-            'Camera Permission Denied',
-            'Please enable camera permission in app settings.'
-          );
         }
       }
     }, 100);
@@ -191,7 +205,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
         {(modules?.RNFileSelector ||
           modules?.launchImageLibrary ||
           modules?.launchcamera) &&
-           enableAttachmentIcon && (
+          enableAttachmentIcon && (
             <TouchableOpacity
               onPress={openAttachmentMenu}
               style={[

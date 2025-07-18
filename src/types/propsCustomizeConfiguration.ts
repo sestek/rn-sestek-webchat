@@ -38,7 +38,6 @@ export default interface PropsCustomizeConfiguration {
   fontSettings?: FontSettings;
   fileIcon?: IconType;
   permissionAudioCheck?: () => Promise<void>;
-  permissionCameraCheck?: () => Promise<boolean>;
   language?: {
     [key: string]: {
       headerText?: string;
