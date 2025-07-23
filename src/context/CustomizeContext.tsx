@@ -156,7 +156,6 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     },
   },
   language: {
-   
     en: {
       headerText: 'Knovvu',
       bottomInputText: 'Please write a message',
@@ -174,7 +173,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       noAppFoundCancel: 'Cancel',
       addFile: 'Dosya Ekle',
       addPhoto: 'Fotoğraf Ekle',
-      addCamera:'Fotoğraf Çek',
+      addCamera: 'Fotoğraf Çek',
       fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
     },
     tr: {
@@ -195,7 +194,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
       noAppFoundCancel: 'İptal',
       addFile: 'Add File',
       addPhoto: 'Add Photo',
-      addCamera:'take a photo',
+      addCamera: 'take a photo',
       fileErrorText: 'The file size must be smaller than 10MB.',
     },
   },
@@ -211,6 +210,12 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     type: 'url',
     value: FileIcon,
   },
+  infoArea: false,
+  infoAreaIcon: {
+    type: 'url',
+    value: FileIcon,
+  },
+  infoInput: '',
 };
 
 const CustomizeConfigurationContext = createContext<
@@ -257,35 +262,51 @@ const CustomizeConfigurationProvider: React.FC<{
         }
 
         const json = await response.json();
+        setCustomizeConfiguration((prev) => ({
+          ...prev,
+          infoArea: json?.infoArea,
+          infoAreaIcon: json?.infoAreaIcon
+            ? {
+                type: 'url',
+                value: json.infoAreaIcon,
+              }
+            : prev.infoAreaIcon,
+          infoInput: json?.infoInput ?? prev.infoInput ?? '',
+        }));
         const chatAvatatUri = json?.agent?.avatar?.split('"')[3];
 
         const mergedConfig: PropsCustomizeConfiguration = {
           ...initialConfig,
           // headerText: json?.title ?? initialConfig.headerText,
-          bottomColor: json?.productColor ?? initialConfig.bottomColor,
-          headerColor: json?.productColor ?? initialConfig.headerColor,
-          chatBody: { type: 'color', value: 'white' },
-          chatBotMessageBoxTextColor:
-            json?.agent?.textColor ?? initialConfig.chatBotMessageBoxTextColor,
-          chatBotMessageIcon: { type: 'url', value: chatAvatatUri },
-          chatBotMessageBoxBackground:
-            json?.agent?.bgColor ?? initialConfig.chatBotMessageBoxBackground,
-          userMessageBoxTextColor:
-            json?.client?.textColor ?? initialConfig.userMessageBoxTextColor,
-          userMessageBoxBackground:
-            json?.client?.bgColor ?? initialConfig.userMessageBoxBackground,
-          chatStartButtonBackground:
-            json?.bubbleColor ?? initialConfig.chatStartButtonBackground,
-          // bottomInputText: json?.placeholder ?? initialConfig.bottomInputText,
-          chatBotMessageBoxButtonBackground:
-            json?.productColor ??
-            initialConfig.chatBotMessageBoxButtonBackground,
-          chatBotMessageBoxButtonTextColor:
-            json?.agent?.textColor ??
-            initialConfig.chatBotMessageBoxButtonTextColor,
+          // bottomColor: json?.productColor ?? initialConfig.bottomColor,
+          // headerColor: json?.productColor ?? initialConfig.headerColor,
+          // chatBody: { type: 'color', value: 'white' },
+          // chatBotMessageBoxTextColor:
+          //   json?.agent?.textColor ?? initialConfig.chatBotMessageBoxTextColor,
+          // chatBotMessageIcon: { type: 'url', value: chatAvatatUri },
+          // chatBotMessageBoxBackground:
+          //   json?.agent?.bgColor ?? initialConfig.chatBotMessageBoxBackground,
+          // userMessageBoxTextColor:
+          //   json?.client?.textColor ?? initialConfig.userMessageBoxTextColor,
+          // userMessageBoxBackground:
+          //   json?.client?.bgColor ?? initialConfig.userMessageBoxBackground,
+          // chatStartButtonBackground:
+          //   json?.bubbleColor ?? initialConfig.chatStartButtonBackground,
+          // // bottomInputText: json?.placeholder ?? initialConfig.bottomInputText,
+          // chatBotMessageBoxButtonBackground:
+          //   json?.productColor ??
+          //   initialConfig.chatBotMessageBoxButtonBackground,
+          // chatBotMessageBoxButtonTextColor:
+          //   json?.agent?.textColor ??
+          //   initialConfig.chatBotMessageBoxButtonTextColor,
+          // infoArea: json?.infoArea,
+
+          // infoAreaIcon: { type: 'url', value: json?.infoAreaIcon },
+          // infoInput: json?.infoInput ?? "",
         };
 
-        setCustomizeConfiguration(mergedConfig);
+        // setCustomizeConfiguration(mergedConfig);
+       
       } catch (error) {
         console.error('Error fetching integration config:', error);
       }

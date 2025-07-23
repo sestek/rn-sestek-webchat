@@ -27,6 +27,7 @@ import useCheckBackground from '../../hook/useCheckBackground';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
 import FileSizeWarningModal from '../fileSizeWarningModal';
+import { InfoAreaView } from '../header/InfoAreaView';
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
     const {
@@ -43,7 +44,8 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { customizeConfiguration } = useCustomizeConfiguration();
     const { modules } = useModules();
-
+    const [showInfo, setShowInfo] = useState(false);
+    const toggleInfo = () => setShowInfo((v) => !v);
     const [inputData, setInputData] = useState<string>('');
     const changeInputData = (text: string) => setInputData(text);
     const scrollViewRef = useRef<ScrollView>(null);
@@ -82,10 +84,11 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
         conversationContinue && conversationContinue();
       }
     }, [background]);
-    
+
     const closeSizeWarningModal = () => {
       setExceededFileSize(false);
     };
+    const infoBg = customizeConfiguration?.chatBody?.value ?? '#fff';
     return (
       <Modal
         animationType={'slide'}
@@ -138,6 +141,10 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
               closeConversation={closeConversation}
               hideIcon={customizeConfiguration?.headerHideIcon}
               closeIcon={customizeConfiguration?.headerCloseIcon}
+              onToggleInfo={
+                customizeConfiguration?.infoArea ? toggleInfo : undefined
+              }
+              isInfoVisible={showInfo}
             />
           </View>
           <View
@@ -149,42 +156,49 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                   : '#fff',
             }}
           >
-            <GenerateBody
-              BodyComponent={
-                <>
-                  <BodyComponent
-                    messageList={messageList}
-                    changeInputData={changeInputData}
-                    sendMessage={sendMessage}
-                    scrollViewRef={scrollViewRef}
-                    defaultConfiguration={defaultConfiguration}
-                    url={url}
-                  />
-                  <View
-                    style={[
-                      styles.footer,
-                      customizeConfiguration?.bottomColor
-                        ? {
-                            backgroundColor:
-                              customizeConfiguration?.bottomColor,
-                          }
-                        : {},
-                    ]}
-                  >
-                    <FooterComponent
-                      inputData={inputData}
+            {showInfo ? (
+              <InfoAreaView
+                markdown={customizeConfiguration?.infoInput ?? ''}
+                background={infoBg}
+              />
+            ) : (
+              <GenerateBody
+                BodyComponent={
+                  <>
+                    <BodyComponent
+                      messageList={messageList}
                       changeInputData={changeInputData}
                       sendMessage={sendMessage}
-                      sendAudio={sendAudio}
-                      sendAttachment={sendAttachment}
                       scrollViewRef={scrollViewRef}
-                      isDropdownVisible={isDropdownVisible}
-                      setDropdownVisible={setDropdownVisible}
+                      defaultConfiguration={defaultConfiguration}
+                      url={url}
                     />
-                  </View>
-                </>
-              }
-            />
+                    <View
+                      style={[
+                        styles.footer,
+                        customizeConfiguration?.bottomColor
+                          ? {
+                              backgroundColor:
+                                customizeConfiguration?.bottomColor,
+                            }
+                          : {},
+                      ]}
+                    >
+                      <FooterComponent
+                        inputData={inputData}
+                        changeInputData={changeInputData}
+                        sendMessage={sendMessage}
+                        sendAudio={sendAudio}
+                        sendAttachment={sendAttachment}
+                        scrollViewRef={scrollViewRef}
+                        isDropdownVisible={isDropdownVisible}
+                        setDropdownVisible={setDropdownVisible}
+                      />
+                    </View>
+                  </>
+                }
+              />
+            )}
           </View>
           <FileSizeWarningModal
             visible={exceededFileSize}

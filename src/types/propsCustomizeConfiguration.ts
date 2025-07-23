@@ -1,6 +1,6 @@
 export default interface PropsCustomizeConfiguration {
   headerColor?: string;
-  headerTextStyle?:any;
+  headerTextStyle?: any;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
   headerAlignmentType?: HeaderAlignmentType;
@@ -42,32 +42,35 @@ export default interface PropsCustomizeConfiguration {
   language?: {
     [key: string]: {
       headerText?: string;
-      bottomInputText?:string;
-      closeModalText?:string;
-      closeModalYesButtonText?:string;
-      closeModalNoButtonText?:string;
-      filePTitle?:string;
-      filePMessage?:string;
-      filePNeutral?:string;
-      filePNegative?:string;
-      filePPositive?:string;
-      noAppFoundTitle?:string;
-      noAppFoundMessage?:string;
-      noAppFoundCancel?:string;
-      addFile?:string;
-      addPhoto?:string;
-      addCamera?:string;
-      fileErrorText?:string;
+      bottomInputText?: string;
+      closeModalText?: string;
+      closeModalYesButtonText?: string;
+      closeModalNoButtonText?: string;
+      filePTitle?: string;
+      filePMessage?: string;
+      filePNeutral?: string;
+      filePNegative?: string;
+      filePPositive?: string;
+      noAppFoundTitle?: string;
+      noAppFoundMessage?: string;
+      noAppFoundCancel?: string;
+      addFile?: string;
+      addPhoto?: string;
+      addCamera?: string;
+      fileErrorText?: string;
     };
   };
-  dateSettings?:{
-    use?:boolean;
-    backgroundColor?:string;
-    textColor?:string;
-    borderRadius?:number;
-    format?:DateFormatType;
-  },
-  autoPlayAudio?: boolean
+  dateSettings?: {
+    use?: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    borderRadius?: number;
+    format?: DateFormatType;
+  };
+  autoPlayAudio?: boolean;
+  infoArea?: false;
+  infoAreaIcon?: IconType;
+  infoInput?: string;
 }
 
 interface BodyColorOrImageType {
@@ -75,7 +78,7 @@ interface BodyColorOrImageType {
   value: any;
 }
 
-type DateFormatType = 'short' | 'long' ;
+type DateFormatType = 'short' | 'long';
 
 type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 
@@ -85,9 +88,9 @@ export interface IconType {
 }
 
 export interface FontSettings {
-  titleFontSize?:number;
-  subtitleFontSize?:number;
-  descriptionFontSize?:number;
+  titleFontSize?: number;
+  subtitleFontSize?: number;
+  descriptionFontSize?: number;
 }
 
 interface CarouselSettings {
@@ -104,7 +107,7 @@ interface CloseModalSettings {
   use: boolean;
   textColor?: string;
   background?: string;
-  onClose?:Function;
+  onClose?: Function;
   buttons?: {
     yesButton?: {
       textColor?: string;

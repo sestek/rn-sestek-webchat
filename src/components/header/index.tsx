@@ -1,10 +1,11 @@
-import React, { type FC, useEffect } from 'react';
-import {Text, TouchableOpacity, View } from 'react-native';
+import React, { type FC, useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import type { PropsHeaderComponent } from '../../types';
 import { styles } from './style';
 import useCheckBackground from '../../hook/useCheckBackground';
 import RenderImage from '../renderImage';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
+import { Back } from '../../image';
 
 const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
@@ -15,14 +16,23 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     closeModalStatus,
     closeConversation,
     defaultConfiguration,
+    onToggleInfo,
+    isInfoVisible,
   } = props;
-
   const { customizeConfiguration, getTexts } = useCustomizeConfiguration();
   const texts = getTexts();
+  const [showInfoBadge, setShowInfoBadge] = useState<boolean>(true);
 
-  const { headerAlignmentType,headerTextStyle } = customizeConfiguration;
+  const {
+    headerAlignmentType,
+    headerTextStyle,
+    infoArea,
+    infoAreaIcon,
+  } = customizeConfiguration;
 
   const { background } = useCheckBackground();
+  const isRight = headerAlignmentType === 'textToRight';
+  const isCenter = headerAlignmentType === 'textToCenter';
 
   useEffect(() => {
     if (defaultConfiguration.getResponseData) {
@@ -44,16 +54,34 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     return (
       <View
         style={[
-          styles.headerTextContainer,
-          headerAlignmentType === 'textToLeft' && {
-            flex: 1,
-            flexDirection: 'row',
-          },
+          styles.titleWrap,
+          isRight && styles.titleWrapReverse,
+          isCenter && { flex: 1, justifyContent: 'center' },
         ]}
       >
-        <Text style={headerTextStyle}>
-          {texts.headerText}
-        </Text>
+        {infoArea && infoAreaIcon?.value ? (
+          <TouchableOpacity
+            onPress={() => {
+              if (showInfoBadge) setShowInfoBadge(false);
+              onToggleInfo();
+            }}
+            style={[
+              styles.infoIconTouch,
+              isRight && styles.infoIconTouchReverse,
+            ]}
+             hitSlop={{ top: 6, bottom: 8, left: 8, right: 7 }}
+          >
+            <RenderImage
+              type={infoAreaIcon.type}
+              value={isInfoVisible ? Back : infoAreaIcon.value}
+              style={styles.infoIcon}
+            />
+            {showInfoBadge && !isInfoVisible && (
+              <View style={styles.infoBadge} />
+            )}
+          </TouchableOpacity>
+        ) : null}
+        <Text style={headerTextStyle}>{texts.headerText}</Text>
       </View>
     );
   };
@@ -81,7 +109,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           },
         ]}
       >
-        <TouchableOpacity onPress={() => hideModal()} style={styles.center}>
+        <TouchableOpacity onPress={() => hideModal()} style={styles.iconTouch}>
           <RenderImage
             type={hideIcon?.type}
             value={hideIcon?.value}
@@ -97,18 +125,17 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
               closeConversation();
             }
           }}
-          style={styles.center}
+          style={styles.iconTouch}
         >
-            <RenderImage
-              type={closeIcon?.type}
-              value={closeIcon?.value}
-              style={
-                headerAlignmentType === 'textToRight'
-                  ? styles.imageIcon
-                  : styles.closeTextToCenterIcon
-              }
-            />
-          
+          <RenderImage
+            type={closeIcon?.type}
+            value={closeIcon?.value}
+            style={
+              headerAlignmentType === 'textToRight'
+                ? styles.imageIcon
+                : styles.imageIcon
+            }
+          />
         </TouchableOpacity>
       </View>
     </View>

@@ -1,42 +1,81 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  headerTextContainer: {
-    alignItems: 'center',
-  },
-  headerText: {
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  center: {
+  infoIconTouch: {
+    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 4,
   },
+  infoBadge: {
+    position: 'absolute',
+    top: -1, 
+    right: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#bd1717',
+  },
+  headerContainer: {
+    width: '100%',
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+
+  headerTextContainer: {
+    flexShrink: 1,
+  },
+
+  headerTextLeft: {
+    flexGrow: 1,
+    alignItems: 'flex-start',
+  },
+  headerTextCenter: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  headerTextRight: {
+    flexGrow: 1,
+    alignItems: 'flex-end',
+  },
+
+  iconsWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 16, 
+  },
+
+  iconTouch: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4, 
+  },
+
   imageIcon: {
     width: 18,
+    maxWidth: 18,
+    maxHeight: 18,
     height: 18,
-    marginRight: 15,
   },
-  hideDefaultIcon: {
-    width: 18,
-    height: 18,
-    marginRight: 15,
+
+  titleWrap: {
+    flexShrink: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  closeDefaultIcon: {
-    width: 18,
-    height: 18,
-    marginRight: 15,
+  titleWrapReverse: {
+    flexDirection: 'row-reverse',
   },
-  closeTextToCenterIcon:{
-    width: 18,
-    height: 18,
-  }
+
+  infoIconTouchReverse: {
+    marginLeft: 6,
+    marginRight: 0,
+  },
+
+  infoIcon: { width: 16, height: 16 },
 });
 
 export { styles };

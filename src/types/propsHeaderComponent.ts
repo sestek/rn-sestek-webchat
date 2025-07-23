@@ -8,4 +8,6 @@ export default interface PropsHeaderComponent {
   hideIcon?: any;
   closeModalStatus?: boolean;
   closeConversation: Function;
+  onToggleInfo?:any
+  isInfoVisible?:boolean
 }

@@ -57,7 +57,7 @@ export default function ChatbotScreen() {
       }
     });
   };
-   const permissionCameraCheck = async (): Promise<boolean> => {
+  const permissionCameraCheck = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
       const res = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -66,7 +66,7 @@ export default function ChatbotScreen() {
           message: 'This app needs camera access to take photos',
           buttonPositive: 'OK',
           buttonNegative: 'Cancel',
-        }
+        },
       );
       return res === PermissionsAndroid.RESULTS.GRANTED;
     }
@@ -86,7 +86,7 @@ export default function ChatbotScreen() {
         asyncStorage: AsyncStorage,
         fileViewer: FileViewer,
         launchImageLibrary: launchImageLibrary,
-        launchcamera: launchCamera
+        launchcamera: launchCamera,
       }}
       ref={modalRef}
       defaultConfiguration={{
@@ -100,8 +100,10 @@ export default function ChatbotScreen() {
         endUser: endUserInfo,
         getResponseData: setResponse,
         customActionData: JSON.stringify(customActionDataExample),
+       // integrationId:''
       }}
       customizeConfiguration={{
+        headerAlignmentType:'textToCenter',
         permissionCameraCheck: permissionCameraCheck,
 
         permissionAudioCheck: permissionAudioCheck,
@@ -161,9 +163,9 @@ export default function ChatbotScreen() {
             noAppFoundMessage:
               'No suitable application found to open this file type. Please download an app from the Google Play Store.',
             noAppFoundCancel: 'Cancel',
-            addFile:'Add File',
-            addPhoto:'Add Photo',
-            addCamera:'Take a Photo',
+            addFile: 'Add File',
+            addPhoto: 'Add Photo',
+            addCamera: 'Take a Photo',
             fileErrorText: 'The file size must be smaller than 10MB.',
           },
           tr: {
@@ -182,11 +184,10 @@ export default function ChatbotScreen() {
             noAppFoundMessage:
               'Bu dosya türünü açmak için uygun bir uygulama bulunamadı. Google Play Store’dan bir uygulama yükleyin.',
             noAppFoundCancel: 'İptal',
-            addFile:'Dosya Ekle',
-            addPhoto:'Fotoğraf Ekle',
-            addCamera:'Fotoğraf Çek',
+            addFile: 'Dosya Ekle',
+            addPhoto: 'Fotoğraf Ekle',
+            addCamera: 'Fotoğraf Çek',
             fileErrorText: "Dosya boyutu 10MB'dan küçük olmalıdır.",
-
           },
 
           // es: {

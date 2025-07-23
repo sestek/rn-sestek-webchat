@@ -10,7 +10,7 @@ const useRenderContent = (
   messageColor: string | undefined,
   fontSettings: FontSettings | undefined,
   textType: string,
-  WebView:any
+  WebView?:any
 ) => {
   const shouldRenderAsHTML = (text: string) => {
     const htmlTagPattern = /<\/?[a-z][\s\S]*>/i;
