@@ -177,8 +177,10 @@ const useChat = ({
           messageBody?.channelData?.CustomProperties?.textFromSr;
         messageBody.type = 'message';
         if (!textMessage) {
-          messageBody.text = '🤷‍♀️';
-          addMessageList(messageBody);
+          console.log('No text from speech recognition');
+          return
+          // messageBody.text = '🤷‍♀️';
+          // addMessageList(messageBody);
         } else {
           setMessageList((prevMessageList: any) => {
             const lastMessage = prevMessageList[prevMessageList.length - 1];
