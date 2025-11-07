@@ -2,9 +2,10 @@ import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from './src/pages/example';
 import ChatbotScreen from './src/pages/chatBot';
 import ChatPage from './src/pages/chatPage';
+import ExampleHome from './src/pages/example';
+import ExampleStack from './src/pages/ExampleStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,11 +35,7 @@ export default function App() {
           component={ChatPage}
           options={{headerShown: false}}
         />
-        <Tab.Screen
-          name="Example"
-          options={{headerShown: false}}
-          component={HomeScreen}
-        />
+        <Tab.Screen name="Example"  options={{headerShown: false}} component={ExampleStack} />
 
         <Tab.Screen
           name="Chatbot"
@@ -49,5 +46,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-
