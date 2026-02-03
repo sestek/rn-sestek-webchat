@@ -443,6 +443,9 @@ PODS:
     - React-Core
   - RNFileViewer (2.1.5):
     - React-Core
+  - RNGestureHandler (2.30.0):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - RNScreens (3.33.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -503,6 +506,7 @@ DEPENDENCIES:
   - RNAudioRecorderPlayer (from `../node_modules/react-native-audio-recorder-player`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNFileViewer (from `../node_modules/react-native-file-viewer`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -609,6 +613,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFileViewer:
     :path: "../node_modules/react-native-file-viewer"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -666,6 +672,7 @@ SPEC CHECKSUMS:
   RNAudioRecorderPlayer: 711f14e1f7634c9765e274245eeca51206c9cf0f
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNFileViewer: ce7ca3ac370e18554d35d6355cffd7c30437c592
+  RNGestureHandler: 81245216c035b8465796193a73cb743d387735bc
   RNScreens: 03acbdcf84e1bf6832ba83dbe3601eae20c55de0
   RNVectorIcons: bfb663f3f7b37340cd90120151b720641523dc84
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
