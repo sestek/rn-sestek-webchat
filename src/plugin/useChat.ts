@@ -89,22 +89,32 @@ const useChat = ({
   useEffect(() => {
     if (!client.connected) {
       initSocket();
+    } else {
+      attachClientOnMessage();
+      funcTyping();
     }
-  }, []);
+
+    return () => {
+      console.log('useChat cleanup');
+    };
+  }, [client.connected]);
 
   const initSocket = async () => {
     try {
+      // ✅ 1. Önce bağlan
       await client.connectAsync();
-      if (defaultConfiguration.sendConversationStart === true) {
-        sendConversationStart();
-      }
 
-      conversationContinue();
+      // ✅ 2. Connection kurulduktan SONRA listener'ları bağla
+      attachClientOnMessage();
+      funcTyping();
+
+      // ✅ 3. Son olarak başlangıç mesajını gönder
+      if (defaultConfiguration.sendConversationStart === true) {
+        await sendConversationStart();
+      }
     } catch (e) {
       console.error('connection error', JSON.stringify(e));
     }
-    attachClientOnMessage();
-    funcTyping();
   };
 
   const funcTyping = () => {
@@ -178,7 +188,7 @@ const useChat = ({
         messageBody.type = 'message';
         if (!textMessage) {
           console.log('No text from speech recognition');
-          return
+          return;
           // messageBody.text = '🤷‍♀️';
           // addMessageList(messageBody);
         } else {
@@ -430,7 +440,7 @@ const useChat = ({
         fileName = `photo_${timestamp}.${ext}`;
       }
       if (selectedFileSize > 10 * 1024 * 1024) {
-        setExceededFileSize(true); 
+        setExceededFileSize(true);
         console.log('Dosya boyutu 10 MB üzeri.');
         return;
       }
@@ -535,22 +545,39 @@ const useChat = ({
     defaultConfiguration.customAction = '';
   };
   const sendEnd = async () => {
-    const dataToSend = {
-      message: 'Chat ended by client!',
-      customAction: 'endOfConversation',
-      customActionData: defaultConfiguration.customActionData
-        ? defaultConfiguration.customActionData
-        : '{}',
-      clientId: defaultConfiguration.clientId,
-      tenant: defaultConfiguration.tenant,
-      channel: defaultConfiguration.channel,
-      project: defaultConfiguration.projectName,
-      conversationId: sessionId,
-      fullName: defaultConfiguration.fullName,
-      endUser: defaultConfiguration.endUser,
-    };
-    setMessageList([]);
-    client.endConversation(JSON.stringify(dataToSend));
+    try {
+      const dataToSend = {
+        message: 'Chat ended by client!',
+        customAction: 'endOfConversation',
+        customActionData: defaultConfiguration.customActionData
+          ? defaultConfiguration.customActionData
+          : '{}',
+        clientId: defaultConfiguration.clientId,
+        tenant: defaultConfiguration.tenant,
+        channel: defaultConfiguration.channel,
+        project: defaultConfiguration.projectName,
+        conversationId: sessionId,
+        fullName: defaultConfiguration.fullName,
+        endUser: defaultConfiguration.endUser,
+      };
+
+      await client.endConversation(JSON.stringify(dataToSend));
+
+      setMessageList([]);
+      sethistoryCount(0);
+
+      try {
+        if (client && typeof client.close === 'function') {
+          client.close();
+        }
+      } catch (closeError) {
+        // Connection zaten kapalı olabilir, sorun değil
+      }
+
+      console.log('Conversation ended and socket disconnected');
+    } catch (error) {
+      console.error('Error ending conversation:', error);
+    }
   };
 
   const parseAttachment = async (data: any, i: number) => {
@@ -636,24 +663,39 @@ const useChat = ({
   };
 
   const getHistory = async () => {
-    if (sessionInfo) {
-      const res = await fetch(histortURL, {
-        method: 'GET',
-      });
+    if (!sessionInfo) return;
+
+    try {
+      const res = await fetch(histortURL, { method: 'GET' });
       const data: any = await res.json();
+
       if (data && data.length > 0) {
         if (data.length > historyCount) {
           for (let i = historyCount; i < data.length; i++) {
             const message = await parseAttachment(data, i);
             addMessageList(message);
           }
+          sethistoryCount(data.length);
         } else if (historyCount > data.length) {
+          // ⚠️ History küçülmüş! Conversation reset olmuş olabilir
+          // Tüm messageList'i temizle ve baştan yükle
+          console.warn('History count decreased! Resetting messages.');
+          setMessageList([]); // ← Önce temizle
+
           for (let i = 0; i < data.length; i++) {
             const message = await parseAttachment(data, i);
             addMessageList(message);
           }
+          sethistoryCount(data.length);
+        } else {
         }
+      } else if (data && data.length === 0 && historyCount > 0) {
+        console.warn('History cleared on backend');
+        setMessageList([]);
+        sethistoryCount(0);
       }
+    } catch (error) {
+      console.error('getHistory error:', error);
     }
   };
 

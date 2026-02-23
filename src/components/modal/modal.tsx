@@ -77,13 +77,15 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { background } = useCheckBackground();
     useEffect(() => {
-      if (background) {
-        getHistoryBackground && getHistoryBackground();
-      } else {
-        getHistory && getHistory();
-        conversationContinue && conversationContinue();
+      if (visible) {
+        if (background) {
+          getHistoryBackground && getHistoryBackground();
+        } else {
+          getHistory && getHistory();
+          conversationContinue && conversationContinue();
+        }
       }
-    }, [background]);
+    }, [background, visible]);
 
     const closeSizeWarningModal = () => {
       setExceededFileSize(false);
