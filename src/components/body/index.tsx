@@ -16,6 +16,9 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     dateSettings,
   } = customizeConfiguration;
   const { scrollViewRef } = props;
+  const visibleMessages = props.messageList.filter(
+    (x: any) => x.message !== '' && x.message !== '<p></p>'
+  );
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -49,23 +52,21 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
             </View>
           )}
         </View>
-        {props.messageList
-          //  .slice(1)
-          .filter((x:any) => x.message !== '' && x.message !== '<p></p>')
-          .map((x: any, key: number) => (
-            <MessageBox
-              {...props}
-              userMessageBoxTextColor={userMessageBoxTextColor ?? ''}
-              key={key}
-              position={x.channel ? 'left' : 'right'}
-              type={x?.type || 'text'}
-              activity={x}
-              status={null}
-              renderAddCmp={undefined}
-              url={props.url}
-              defaultConfiguration={props.defaultConfiguration}
-            />
-          ))}
+        {visibleMessages.map((x: any, key: number) => (
+          <MessageBox
+            {...props}
+            userMessageBoxTextColor={userMessageBoxTextColor ?? ''}
+            key={key}
+            position={x.channel ? 'left' : 'right'}
+            type={x?.type || 'text'}
+            activity={x}
+            status={null}
+            renderAddCmp={undefined}
+            url={props.url}
+            defaultConfiguration={props.defaultConfiguration}
+            isLastMessage={key === visibleMessages.length - 1}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );

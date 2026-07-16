@@ -5,7 +5,15 @@ import { useCustomizeConfiguration } from '../../../context/CustomizeContext';
 import useRenderContent from '../../../hook/useRenderContent';
 import { useModules } from '../../../context/ModulesContext';
 
-const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
+const Index = ({
+  data,
+  onPressButton,
+  disabled = false,
+}: {
+  data: any;
+  onPressButton: any;
+  disabled?: boolean;
+}) => {
   const CARD_WIDTH = 220;
   const MARGINLEFT = 10;
   const SNAP_INTERVAL = CARD_WIDTH + (MARGINLEFT - 4.8) * 2;
@@ -166,6 +174,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                 item.buttons.map((btn: any, idx: number) => {
                   return (
                     <TouchableOpacity
+                      disabled={disabled}
                       onPress={() => {
                         onPressButton(btn?.value, btn?.title);
                       }}
@@ -185,6 +194,7 @@ const Index = ({ data, onPressButton }: { data: any; onPressButton: any }) => {
                         marginBottom:
                           item?.buttons?.length - 1 === idx ? 15 : 0,
                         maxHeight: 40,
+                        opacity: disabled ? 0.5 : 1,
                       }}
                       key={idx}
                     >

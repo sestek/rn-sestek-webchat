@@ -1,4 +1,3 @@
-
 export default interface PropsMessageBoxComponent {
   position: 'left' | 'right';
   type:
@@ -25,7 +24,7 @@ export default interface PropsMessageBoxComponent {
   notch?: boolean;
   renderAddCmp: any;
   userMessageBoxTextColor: string;
-  url:string
-  defaultConfiguration:any
-
+  url: string;
+  defaultConfiguration: any;
+  isLastMessage?: boolean;
 }

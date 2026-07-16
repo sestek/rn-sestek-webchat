@@ -47,7 +47,20 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     },
   ];
 
+  const disablePreviousButtons =
+    props.defaultConfiguration?.disablePreviousButtons !== false;
+
+  const [clicked, setClicked] = useState(false);
+  const buttonsDisabled =
+    disablePreviousButtons && (props.isLastMessage === false || clicked);
+
   const onPressButton = (value?: string, title?: string) => {
+    if (buttonsDisabled) {
+      return;
+    }
+    if (disablePreviousButtons) {
+      setClicked(true);
+    }
     props.sendMessage({ message: value, displayMessage: title });
     props.changeInputData('');
   };
@@ -182,7 +195,6 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
       return null;
     }
 
-   
     return (
       <View
         style={{
@@ -216,7 +228,11 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
           <Avatar position={messageBoxPosition} />
           <View style={[positionCls]}>
             {carouselType && cardList.length > 1 && (
-              <CarouselPage data={cardList} onPressButton={onPressButton} />
+              <CarouselPage
+                data={cardList}
+                onPressButton={onPressButton}
+                disabled={buttonsDisabled}
+              />
             )}
             <View
               style={[
@@ -244,8 +260,12 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   inlineText={true}
                 />
               )}
-               {(audioMesType === 'file/minio') && (
-               <FileMessages url={props.url} activity={props.activity} defaultConfiguration={props.defaultConfiguration}/>
+              {audioMesType === 'file/minio' && (
+                <FileMessages
+                  url={props.url}
+                  activity={props.activity}
+                  defaultConfiguration={props.defaultConfiguration}
+                />
               )}
 
               {props.activity.type === 'typing' ? <TypingMessage /> : null}
@@ -273,6 +293,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                 <OutsideButton
                   attachmentsData={attachmentsData}
                   onPressButton={onPressButton}
+                  disabled={buttonsDisabled}
                 />
               )}
           </View>
@@ -299,7 +320,8 @@ const customComparator = (
   nextProps: PropsMessageBoxComponent
 ) => {
   return (
-    JSON.stringify(nextProps.activity) === JSON.stringify(prevProps.activity)
+    JSON.stringify(nextProps.activity) === JSON.stringify(prevProps.activity) &&
+    nextProps.isLastMessage === prevProps.isLastMessage
   );
 };
 
