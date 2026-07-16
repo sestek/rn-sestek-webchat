@@ -72,11 +72,13 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
 
   const startStorageSession = async () => {
     if (!start) {
+      let resumed = false;
       if (asyncStorage) {
         const storageSessionId = await asyncStorage.getItem('sessionId');
         if (storageSessionId) {
           sessionId = storageSessionId;
           defaultConfiguration.sendConversationStart = false;
+          resumed = true;
         } else {
           buildConversation();
         }
@@ -84,6 +86,20 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
         buildConversation();
       }
       client = new SignalRClient(url || ChatModal.defaultProps?.url);
+      // Onceki oturumdan devam ediliyorsa, sunucunun urettigi conversationId
+      // ve sessionToken'i geri yukle; ContinueConversation / SendMessageAsync
+      // bunlari frame'lere ekleyecek (yeni /chathub sozlesmesi).
+      if (resumed && asyncStorage) {
+        const storedToken = await asyncStorage.getItem('sessionToken');
+        const storedConversationId =
+          await asyncStorage.getItem('conversationId');
+        if (storedToken) {
+          client.sessionToken = storedToken;
+        }
+        if (storedConversationId) {
+          client.conversationId = storedConversationId;
+        }
+      }
     }
     setStart(true);
     setVisible(true);
@@ -95,6 +111,11 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
       setStart(false);
       setVisible(false);
       modalRef.current?.sendEnd();
+      // Konusma bitti: saklanan sessionToken/conversationId artik gecersiz.
+      if (asyncStorage) {
+        asyncStorage.removeItem('sessionToken');
+        asyncStorage.removeItem('conversationId');
+      }
       if (modules?.RNFS) {
         let dirs = modules?.RNFS.fs.dirs;
         let folderPath = dirs.DocumentDir + '/sestek_bot_audio';

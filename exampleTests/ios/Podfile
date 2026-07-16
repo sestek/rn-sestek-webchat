@@ -58,5 +58,14 @@ target 'exampleTests' do
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+    # Yoga (YGValue.h) yeni Xcode/Clang ile "deprecated literal operator"
+    # uyarisi veriyor ve -Werror bunu hataya cevirip build'i patlatiyor.
+    # Bu uyariyi tum pod target'larinda kapatip build'in gecmesini sagliyoruz.
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['WARNING_CFLAGS'] = '$(inherited) -Wno-deprecated-literal-operator'
+      end
+    end
   end
 end

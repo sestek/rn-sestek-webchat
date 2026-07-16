@@ -125,7 +125,7 @@ export default function ChatPage() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={config.URL_}
+        url={'https://ahmet-demobox.web.cai.demo.sestek.com/webchat/chathub'}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -142,8 +142,8 @@ export default function ChatPage() {
           channel: 'webchatmobile-sestek',
           // clientId: '1111',
           fullName: "{name:'rabia'}",
-          tenant: config.TNAME_,
-          projectName: config.URL_,
+          tenant: 'default',
+          projectName: 'Outbound_HavaDurumu',
 
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),

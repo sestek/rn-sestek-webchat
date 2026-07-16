@@ -43,6 +43,30 @@ const useChat = ({
       defaultConfiguration?.tenant +
       '&clientId=' +
       sessionInfo;
+
+  const getNormalizedLocale = (locale?: string) => {
+    if (!locale) {
+      return 'en-US';
+    }
+
+    return locale.trim().toUpperCase() === 'EN' ? 'en-US' : locale;
+  };
+
+  // Sunucudan benimsenen conversationId + sessionToken'ı kalıcı sakla.
+  // Reconnect/continuity'de (startStorageSession) geri yüklenip
+  // ContinueConversation ile gönderiliyor.
+  const persistSession = async () => {
+    if (!modules?.asyncStorage) {
+      return;
+    }
+    if (client.conversationId) {
+      await modules.asyncStorage.setItem('conversationId', client.conversationId);
+    }
+    if (client.sessionToken) {
+      await modules.asyncStorage.setItem('sessionToken', client.sessionToken);
+    }
+  };
+
   const addMessageList = (message: any) => {
     setMessageList((messages: any) => {
       if (background) {
@@ -77,12 +101,24 @@ const useChat = ({
     });
   };
 
-  const setResponseFunc = (customAction: any, customActionData: any) => {
+  const setResponseFunc = async (customAction: any, customActionData: any) => {
     if (typeof customActionData === 'object' && customActionData?.Language) {
       changeLanguage(customActionData?.Language.toLowerCase());
+      defaultConfiguration.locale = getNormalizedLocale(
+        customActionData?.Language
+      );
     }
     if (getResponseData) {
       getResponseData({ customAction, customActionData });
+    }
+
+    if (customActionData?.Language?.toUpperCase?.() === 'EN') {
+      await sendMessage({
+        message: '',
+        bot: false,
+        allowEmptyMessage: true,
+        localeOverride: customActionData?.Language,
+      });
     }
   };
 
@@ -138,14 +174,14 @@ const useChat = ({
       if (messageBody?.channelData) {
         if (enableNdUi) {
           if (messageBody?.channelData?.CustomActionData) {
-            setResponseFunc(
+            await setResponseFunc(
               messageBody?.channelData?.CustomAction,
               messageBody?.channelData?.CustomActionData
             );
           }
         } else {
           if (messageBody?.channelData?.CustomProperties) {
-            setResponseFunc(
+            await setResponseFunc(
               messageBody?.channelData?.CustomActionData,
               messageBody?.channelData?.CustomProperties
             );
@@ -216,27 +252,38 @@ const useChat = ({
     message,
     displayMessage,
     bot = false,
+    allowEmptyMessage = false,
+    localeOverride,
   }: {
     message?: string;
     displayMessage?: string;
     bot: boolean;
+    allowEmptyMessage?: boolean;
+    localeOverride?: string;
   }) => {
-    if (message) {
+    const canSendMessage = message !== undefined && (allowEmptyMessage || !!message);
+    if (canSendMessage) {
       const displayMessageText = displayMessage ? displayMessage : message;
-      addMessageList({
-        timestamp: new Date().getTime(),
-        message: displayMessageText,
-        customAction: '',
-        customActionData: '',
-        clientId: defaultConfiguration.clientId,
-        tenant: defaultConfiguration.tenant,
-        channel: bot ? null : defaultConfiguration.channel,
-        project: defaultConfiguration.projectName,
-        conversationId: sessionId,
-        fullName: defaultConfiguration.fullName,
-        endUser: defaultConfiguration.endUser,
-        locale: defaultConfiguration.locale,
-      });
+      const normalizedLocale = getNormalizedLocale(
+        localeOverride || defaultConfiguration.locale
+      );
+
+      if (displayMessageText) {
+        addMessageList({
+          timestamp: new Date().getTime(),
+          message: displayMessageText,
+          customAction: '',
+          customActionData: '',
+          clientId: defaultConfiguration.clientId,
+          tenant: defaultConfiguration.tenant,
+          channel: bot ? null : defaultConfiguration.channel,
+          project: defaultConfiguration.projectName,
+          conversationId: sessionId,
+          fullName: defaultConfiguration.fullName,
+          endUser: defaultConfiguration.endUser,
+          locale: normalizedLocale,
+        });
+      }
 
       const sendMesObj = {
         message: message,
@@ -251,11 +298,12 @@ const useChat = ({
         conversationId: sessionId,
         fullName: defaultConfiguration.fullName,
         endUser: defaultConfiguration.endUser,
-        locale: defaultConfiguration.locale
-          ? defaultConfiguration.locale
-          : 'en-US',
+        locale: normalizedLocale,
       };
-      client.sendAsync(JSON.stringify(sendMesObj));
+      await client.sendAsync(JSON.stringify(sendMesObj));
+      // sendConversationStart=false akışında ilk mesaj örtük başlatma yapıp
+      // conversationId + sessionToken döndürebilir; oluştuysa kalıcılaştır.
+      await persistSession();
     }
   };
 
@@ -316,6 +364,8 @@ const useChat = ({
       type: 'audio/' + filename.split('.')[1],
     });
     formData.push({ name: 'user', data: sessionId });
+    // Home/SendAudio artik zorunlu sessionToken form alani bekliyor (gecersizse 401).
+    formData.push({ name: 'sessionToken', data: client.sessionToken || '' });
     formData.push({
       name: 'project',
       data: defaultConfiguration.projectName || '',
@@ -350,7 +400,7 @@ const useChat = ({
     });
     formData.push({
       name: 'locale',
-      data: defaultConfiguration.locale ? defaultConfiguration.locale : 'en-US',
+      data: getNormalizedLocale(defaultConfiguration.locale),
     });
     formData.push({
       name: 'channel',
@@ -454,6 +504,8 @@ const useChat = ({
       });
 
       formData.append('user', sessionId);
+      // Home/SendAttachment artik zorunlu sessionToken form alani bekliyor (gecersizse 401).
+      formData.append('sessionToken', client.sessionToken || '');
       formData.append('project', defaultConfiguration.projectName);
       formData.append('tenant', defaultConfiguration.tenant);
       formData.append('customAction', defaultConfiguration.customAction);
@@ -466,7 +518,7 @@ const useChat = ({
       formData.append('channel', 'webchatmobile-sestek');
       formData.append(
         'locale',
-        defaultConfiguration.locale ? defaultConfiguration.locale : 'en-US'
+        getNormalizedLocale(defaultConfiguration.locale)
       );
       formData.append('clientId', defaultConfiguration.clientId);
       formData.append('endUser', JSON.stringify(defaultConfiguration.endUser));
@@ -536,12 +588,15 @@ const useChat = ({
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
       endUser: defaultConfiguration.endUser,
       locale: defaultConfiguration.locale
-        ? defaultConfiguration.locale
+        ? getNormalizedLocale(defaultConfiguration.locale)
         : 'en-US',
     };
 
     addMessageList(startObj);
+    // StartConversation { conversationId, sessionToken, traceId } döner;
+    // SignalRClient bunu benimser, biz de kalıcılaştırırız.
     await client.startConversation(JSON.stringify(startObj));
+    await persistSession();
     defaultConfiguration.customAction = '';
   };
   const sendEnd = async () => {
@@ -732,7 +787,7 @@ const useChat = ({
       browserLanguage: 'tr', // BURASI DİNAMİK İSTENECEK
       endUser: defaultConfiguration.endUser,
       locale: defaultConfiguration.locale
-        ? defaultConfiguration.locale
+        ? getNormalizedLocale(defaultConfiguration.locale)
         : 'en-US',
     };
     await client.continueConversation(JSON.stringify(startObj));
