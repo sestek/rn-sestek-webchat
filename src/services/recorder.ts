@@ -27,7 +27,7 @@ class Recorder {
     };
     this.recordPack.init(options);
     this.recordPack.on('data', async () => {});
-    this.recordPack.start();
+    await this.recordPack.start();
   };
 
   onStopRecord = async () => {

@@ -1,4 +1,4 @@
 export interface ModalCompRef {
   messageList: any;
-  sendEnd: () => {};
+  sendEnd: () => Promise<boolean>;
 }

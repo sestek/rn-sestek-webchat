@@ -4,6 +4,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   useRef,
+  useMemo,
 } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { GeneralManager, SignalRClient } from '../services';
@@ -19,12 +20,78 @@ import {
 } from '../context/CustomizeContext';
 import { ModulesProvider } from '../context/ModulesContext';
 import { CustomActionProvider } from '../context/CustomActionContext';
+import { createNitroAudioModules } from '../adapters/nitroAudio';
+import {
+  createDocumentsPickerModule,
+  isNewDocumentsPickerApi,
+} from '../adapters/documentsPicker';
+import { createBlobUtilFileViewer } from '../adapters/blobUtilFileViewer';
+import { createAsyncStorageModule } from '../adapters/asyncStorage';
 
 let sessionId = GeneralManager.createUUID();
 let client = new SignalRClient(GeneralManager.getWebchatHost());
 
 const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
-  const { defaultConfiguration, url, modules, customizeConfiguration } = props;
+  const { defaultConfiguration, url, customizeConfiguration } = props;
+  const {
+    nitroSound,
+    AudioRecorderPlayer: providedPlayer,
+    Record: providedRecord,
+    RNFileSelector: providedPicker,
+    fileViewer: providedViewer,
+    asyncStorage: providedAsyncStorage,
+    RNFS,
+  } = props.modules || {};
+
+  const nitroAudioAdapters = useMemo(() => {
+    if (nitroSound && !providedPlayer && !providedRecord) {
+      return createNitroAudioModules(nitroSound, RNFS);
+    }
+    return null;
+  }, [nitroSound, RNFS, providedPlayer, providedRecord]);
+  const normalizedPicker = useMemo(() => {
+    if (providedPicker && isNewDocumentsPickerApi(providedPicker)) {
+      return createDocumentsPickerModule(providedPicker);
+    }
+    return null;
+  }, [providedPicker]);
+  const blobUtilViewer = useMemo(() => {
+    const canOpen =
+      RNFS?.android?.actionViewIntent || RNFS?.ios?.previewDocument;
+    if (!providedViewer && canOpen) {
+      return createBlobUtilFileViewer(RNFS);
+    }
+    return null;
+  }, [providedViewer, RNFS]);
+  // AsyncStorage v3 multiGet/multiSet/multiRemove'u kaldirdi; adapter v2
+  // kontratini geri veriyor. v2 gelirse aynen geri doner (bkz. adapters/asyncStorage).
+  const normalizedAsyncStorage = useMemo(
+    () => createAsyncStorageModule(providedAsyncStorage),
+    [providedAsyncStorage]
+  );
+
+  const modules = useMemo(() => {
+    let m = props.modules;
+    if (nitroAudioAdapters) {
+      m = { ...m, ...nitroAudioAdapters };
+    }
+    if (normalizedPicker) {
+      m = { ...m, RNFileSelector: normalizedPicker };
+    }
+    if (blobUtilViewer) {
+      m = { ...m, fileViewer: blobUtilViewer };
+    }
+    if (normalizedAsyncStorage) {
+      m = { ...m, asyncStorage: normalizedAsyncStorage };
+    }
+    return m;
+  }, [
+    props.modules,
+    nitroAudioAdapters,
+    normalizedPicker,
+    blobUtilViewer,
+    normalizedAsyncStorage,
+  ]);
 
   const customizeConfigurationData =
     customizeConfiguration || defaultCustomizeConfiguration;
@@ -38,6 +105,9 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
   const { asyncStorage } = modules;
 
   const modalRef = useRef<ModalCompRef>(null);
+  const configuredSendStart = useRef(
+    defaultConfiguration?.sendConversationStart
+  );
   const [closeModal, setCloseModal] = useState<boolean>(false);
   const [start, setStart] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
@@ -45,87 +115,126 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
   const buildConversation = async () => {
     sessionId = 'Mobil' + GeneralManager.createUUID();
     if (asyncStorage) {
-      await asyncStorage.setItem('sessionId', sessionId);
+      // Kalicilastirma en iyi caba: storage hatasi konusma baslatmayi bozmasin.
+      try {
+        await asyncStorage.setItem('sessionId', sessionId);
+        // YENI konusma: onceki konusmanin kimligi kalmamali. Kalirsa uygulama
+        // kill edildikten sonra startStorageSession yeni sessionId ile ESKI
+        // conversation'i devam ettirmeye calisir ve iki konusmanin mesajlari
+        // birbirine karisir.
+        await asyncStorage.multiRemove(['conversationId', 'sessionToken']);
+      } catch (e) {
+        console.warn('sessionId could not be persisted', e);
+      }
     }
   };
 
-  const checkAudioFile = () => {
+  // Await edilebilir: temiz kurulusta getHistory'nin ses indirmesi klasor
+  // henuz yokken calisip sessizce bos dosya uretiyordu.
+  const checkAudioFile = async () => {
     if (modules?.RNFS) {
-      let dirs = modules?.RNFS.fs.dirs;
-      let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
-      modules?.RNFS.fs
-        .mkdir(folderPath)
-        .then((res: string) => console.log(res))
-        .catch((err: string) => console.log(err));
+      const folderPath = modules.RNFS.fs.dirs.DocumentDir + '/sestek_bot_audio';
+      try {
+        await GeneralManager.ensureDir(modules.RNFS, folderPath);
+      } catch (err) {
+        console.warn('audio directory could not be created', err);
+      }
     }
   };
 
   const startConversation = async () => {
     if (!start) {
-      buildConversation();
+      // Konusma baslatma davranisini yapilandirilmis haline dondur:
+      // startStorageSession bir onceki oturumu devam ettirdiyse bunu false'a
+      // cekmis olabilir. Oyle kalirsa yeni konusmada startOfConversation hic
+      // gonderilmez; ekranda sadece history goruntulenir, bot karsilamaz.
+      defaultConfiguration.sendConversationStart = configuredSendStart.current;
+      await buildConversation();
       client = new SignalRClient(url || ChatModal.defaultProps?.url);
     }
+    await checkAudioFile();
     setStart(true);
     setVisible(true);
-    checkAudioFile();
   };
 
   const startStorageSession = async () => {
+    let resumed = false;
     if (!start) {
-      let resumed = false;
+      let many = null;
       if (asyncStorage) {
-        const storageSessionId = await asyncStorage.getItem('sessionId');
-        if (storageSessionId) {
-          sessionId = storageSessionId;
-          defaultConfiguration.sendConversationStart = false;
-          resumed = true;
-        } else {
-          buildConversation();
+        try {
+          many = await asyncStorage.multiGet([
+            'sessionId',
+            'sessionToken',
+            'conversationId',
+          ]);
+        } catch (e) {
+          // Okunamayan storage = devam ettirilecek oturum yok; yeni konusma ac.
+          console.warn('stored session could not be read', e);
         }
-      } else {
-        buildConversation();
       }
+      const stored = many ? Object.fromEntries(many) : null;
+
+      resumed = Boolean(
+        stored?.sessionId && stored?.sessionToken && stored?.conversationId
+      );
+
+      if (resumed) {
+        sessionId = stored!.sessionId!;
+        defaultConfiguration.sendConversationStart = false;
+      } else {
+        defaultConfiguration.sendConversationStart =
+          configuredSendStart.current;
+        await buildConversation();
+      }
+
       client = new SignalRClient(url || ChatModal.defaultProps?.url);
-      // Onceki oturumdan devam ediliyorsa, sunucunun urettigi conversationId
-      // ve sessionToken'i geri yukle; ContinueConversation / SendMessageAsync
-      // bunlari frame'lere ekleyecek (yeni /chathub sozlesmesi).
-      if (resumed && asyncStorage) {
-        const storedToken = await asyncStorage.getItem('sessionToken');
-        const storedConversationId =
-          await asyncStorage.getItem('conversationId');
-        if (storedToken) {
-          client.sessionToken = storedToken;
-        }
-        if (storedConversationId) {
-          client.conversationId = storedConversationId;
-        }
+
+      if (resumed) {
+        client.sessionToken = stored!.sessionToken!;
+        client.conversationId = stored!.conversationId!;
       }
     }
+    await checkAudioFile();
     setStart(true);
     setVisible(true);
-    checkAudioFile();
+    return resumed;
   };
 
-  const endConversation = () => {
-    return new Promise<boolean>((resolve, reject) => {
-      setStart(false);
-      setVisible(false);
-      modalRef.current?.sendEnd();
-      // Konusma bitti: saklanan sessionToken/conversationId artik gecersiz.
-      if (asyncStorage) {
-        asyncStorage.removeItem('sessionToken');
-        asyncStorage.removeItem('conversationId');
+  const endConversation = async () => {
+    let sent = false;
+    try {
+      sent = (await modalRef.current?.sendEnd()) === true;
+    } catch {
+      sent = false;
+    }
+
+    setStart(false);
+    setVisible(false);
+
+    if (sent && asyncStorage) {
+      try {
+        await asyncStorage.multiRemove([
+          'sessionToken',
+          'conversationId',
+          'sessionId',
+        ]);
+      } catch (e) {
+        console.warn('stored session could not be cleared', e);
       }
-      if (modules?.RNFS) {
-        let dirs = modules?.RNFS.fs.dirs;
-        let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
-        modules?.RNFS.fs
-          .unlink(folderPath)
-          .then((res: string) => console.log(res))
-          .catch((err: string) => console.log(err));
-      }
-      resolve(true);
-    });
+    }
+
+    if (sent && modules?.RNFS) {
+      let dirs = modules?.RNFS.fs.dirs;
+      let folderPath = dirs.DocumentDir + '/sestek_bot_audio';
+      modules?.RNFS.fs
+        .unlink(folderPath)
+        .catch((err: string) =>
+          console.warn('audio cache could not be cleared', err)
+        );
+    }
+
+    return sent;
   };
 
   const clickClosedConversationModalFunc = () => {
@@ -143,14 +252,10 @@ const ChatModal = forwardRef<ChatModalProps, PropsChatModal>((props, ref) => {
     startConversation: () => {
       startConversation();
     },
-    endConversation: () => {
-      endConversation();
-    },
+    endConversation,
     conversationStatus: start,
     messageList: modalRef.current?.messageList,
-    startStorageSession: () => {
-      startStorageSession();
-    },
+    startStorageSession,
   }));
   return (
     <React.Fragment>

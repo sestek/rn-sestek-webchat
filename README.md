@@ -113,7 +113,104 @@ customActionData: "{\"channel\":\"xxx\",\"phoneNumber\":\"xxx xxx xx xx\",\"cust
 
 ---
 
+## Modules — required vs optional, and what changes on the New Architecture
+
+The SDK contains no native code. Every native capability is injected through the
+`modules` prop, so your app decides which packages it depends on.
+
+**`modules` itself is required** (pass at least `{}`). **Every entry inside it is
+optional** — an entry switches a feature on; leaving it out only removes that
+feature, it never breaks the chat.
+
+Prop names are the same on both architectures — only the package you pass
+changes. The SDK detects which generation it received and adapts internally.
+
+| `modules` entry | Needed for | Old architecture | New Architecture (RN 0.76+) |
+| --- | --- | --- | --- |
+| `RNFS` | Voice messages, file download, audio in history | `rn-fetch-blob` | `react-native-blob-util` |
+| `AudioRecorderPlayer` + `Record` | Recording / playing voice messages | `react-native-audio-recorder-player` + `react-native-audio-record` | replaced by `nitroSound` |
+| `nitroSound` | Same, as a single package | — | `react-native-nitro-sound` |
+| `RNFileSelector` | Sending files | `react-native-document-picker` | `@react-native-documents/picker` |
+| `launchImageLibrary` / `launchcamera` | Sending photos from gallery / camera | `react-native-image-picker` | `react-native-image-picker` |
+| `fileViewer` | Opening a downloaded file | `react-native-file-viewer` | not needed — the SDK opens files through `RNFS` |
+| `asyncStorage` | Resuming a conversation after background / app kill | `@react-native-async-storage/async-storage` (v2) | same package, v2 **or** v3 |
+| `RNWebView` | HTML content, iframes, map cards | `react-native-webview` | `react-native-webview` |
+| `SafeAreaContext` | Status-bar / navigation-bar insets inside the chat modal | not needed | `react-native-safe-area-context` (recommended with edge-to-edge) |
+| `RNSlider` | — | kept for backward compatibility, no longer used | same |
+
+What you lose by omitting an entry:
+
+- no `RNFileSelector` / `launchImageLibrary` / `launchcamera` → the attachment button is not shown
+- no audio module, or no `RNFS` → the microphone button is not shown and voice messages are skipped
+- no `asyncStorage` → the conversation is not restored after the app is killed
+- no `SafeAreaContext` → the layout renders as before, without safe-area insets
+
+### Old architecture — keep your current packages
+
+Nothing to change. Existing integrations keep working as-is.
+
+```js
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import AudioRecord from 'react-native-audio-record';
+import RNFetchBlob from 'rn-fetch-blob';
+import DocumentPicker from 'react-native-document-picker';
+import FileViewer from 'react-native-file-viewer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+modules={{
+  AudioRecorderPlayer: AudioRecorderPlayer,
+  Record: AudioRecord,
+  RNFS: RNFetchBlob,
+  RNFileSelector: DocumentPicker,
+  fileViewer: FileViewer,
+  asyncStorage: AsyncStorage,
+  RNWebView: WebView,
+  launchImageLibrary: launchImageLibrary,
+  launchcamera: launchCamera,
+}}
+```
+
+### New Architecture — New-Arch-compatible packages
+
+Three slots change (`nitroSound` replaces the two audio modules,
+`@react-native-documents/picker` replaces the document picker, `fileViewer` is no
+longer needed) and `SafeAreaContext` is added.
+
+```js
+import * as NitroSound from 'react-native-nitro-sound';
+import * as DocumentsPicker from '@react-native-documents/picker';
+import * as SafeAreaContext from 'react-native-safe-area-context';
+import RNFetchBlob from 'react-native-blob-util';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+modules={{
+  nitroSound: NitroSound,          // AudioRecorderPlayer + Record yerine
+  RNFileSelector: DocumentsPicker, // aynı slot, yeni paket
+  SafeAreaContext: SafeAreaContext,
+  RNFS: RNFetchBlob,
+  asyncStorage: AsyncStorage,
+  RNWebView: WebView,
+}}
+```
+
+---
+
 ## Usage
+
+### Quick-reply buttons — `defaultConfiguration.disablePreviousButtons`
+
+Controls what happens to a message's buttons once the user has answered.
+
+| Value | Behaviour |
+| --- | --- |
+| `true` (default) | After a button is tapped — or a newer message arrives — that message's buttons stay visible but become non-clickable (dimmed). Only the latest message's buttons remain active. |
+| `false` | Every message's buttons stay clickable, the behaviour of earlier versions. |
+
+```js
+defaultConfiguration={{
+  disablePreviousButtons: false, // eski davranış
+}}
+```
 
 ### If you want to restart an existing session you need to follow these steps (background, screen lock, kill)
 
@@ -251,7 +348,16 @@ const startStorageSession = () => {
     asyncStorage: AsyncStorage,
     fileViewer: FileViewer,
     launchImageLibrary: launchImageLibrary,
-    launchcamera: launchCamera
+    launchcamera: launchCamera,
+    // Android edge-to-edge (RN 0.85 / New Architecture):
+    // import * as SafeAreaContext from 'react-native-safe-area-context';
+    // The chat modal is a native <Modal> — a separate window — so it inherits
+    // neither the app's SafeAreaProvider context nor the Activity's
+    // adjustResize setting. Passing the module lets the SDK mount its own
+    // provider inside the modal and apply the status-bar inset to the header
+    // and the navigation-bar inset to the footer. Optional: omit it and the
+    // layout stays as before.
+    SafeAreaContext: SafeAreaContext
 
   }}
   ref={modalRef}

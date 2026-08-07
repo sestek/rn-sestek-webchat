@@ -8,6 +8,8 @@ export default interface PropsCustomizeConfiguration {
   bottomInputText?: string;
   bottomInputBackgroundColor?: string;
   bottomInputBorderColor?: string;
+  bottomInputTestID?: string;
+  bottomInputAccessibilityLabel?: string;
   bottomVoiceIcon?: IconType;
   bottomVoiceStopIcon?: IconType;
   bottomVoiceDisabledIcon?: IconType;
@@ -85,6 +87,8 @@ type HeaderAlignmentType = 'textToLeft' | 'textToRight' | 'textToCenter';
 export interface IconType {
   type: 'url' | 'component' | undefined;
   value: string | React.ReactElement | React.ReactNode;
+  testID?: string;
+  accessibilityLabel?: string;
 }
 
 export interface FontSettings {
@@ -108,16 +112,22 @@ interface CloseModalSettings {
   textColor?: string;
   background?: string;
   onClose?: Function;
+  testID?: string;
+  accessibilityLabel?: string;
   buttons?: {
     yesButton?: {
       textColor?: string;
       background?: string;
       borderColor?: string;
+      testID?: string;
+      accessibilityLabel?: string;
     };
     noButton?: {
       textColor?: string;
       background?: string;
       borderColor?: string;
+      testID?: string;
+      accessibilityLabel?: string;
     };
   };
 }

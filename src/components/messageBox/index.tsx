@@ -120,7 +120,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
               ]);
             },
             (error) => {
-              console.log(error);
+              console.warn('image size could not be read', error);
             }
           );
         });
@@ -154,7 +154,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
                   ]);
                 },
                 (error) => {
-                  console.log(error);
+                  console.warn('image size could not be read', error);
                 }
               );
             }, key * 400);

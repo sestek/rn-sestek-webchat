@@ -5,17 +5,25 @@ class SignalRClient {
   connected: boolean;
   newUrl?: string;
   connection: any;
+  connecting?: Promise<void>;
   onMessageFunc!: (d: any, m: any) => void;
   onTyping?: (d: any, m: any) => void;
-  // Yeni /chathub sözleşmesi: sunucu conversationId'yi kendisi üretir ve
-  // her frame'in sessionToken taşıması gerekir. Bu iki değer, bağlantı
-  // örneği boyunca (reconnect dahil) tek doğruluk kaynağıdır.
   conversationId?: string;
   sessionToken?: string;
+  connectionGeneration: number;
+  attachedGeneration?: number;
+  onReattachNeeded?: () => void;
+  // Kapatmayi biz mi tetikledik? stop() cagrisi ilgili baglantinin onclose'unu
+  // atesliyor; bu bayrak olmadan onclose yeni bir reconnect turu baslatiyor ve
+  // dongu kendini besliyordu (loglarda 17 ms icinde uc "Connection disconnected").
+  intentionalClose: boolean = false;
+  // reconnectAsync'e yeniden giris kilidi.
+  reconnecting?: Promise<void>;
 
   constructor(url?: string) {
     this.connected = false;
     this.newUrl = url;
+    this.connectionGeneration = 0;
     this.onMessageFunc;
     this.connection;
   }
@@ -40,6 +48,9 @@ class SignalRClient {
       }
       if (data.sessionToken) {
         this.sessionToken = data.sessionToken;
+      }
+      if (this.conversationId) {
+        this.attachedGeneration = this.connectionGeneration;
       }
     }
     return data;
@@ -67,6 +78,27 @@ class SignalRClient {
   };
 
   buildConnection = async () => {
+    this.connectionGeneration += 1;
+
+    // Onceki baglantiyi TAMAMEN sok. Eskiden eski HubConnection nesnesi
+    // handler'lariyla hayatta kaliyordu: hepsi ayni this.onMessageFunc'i
+    // cagirdigi icin her mesaj birden fazla kez isleniyordu ve tek bir
+    // EndConversation sunucuya iki kez ulasiyordu.
+    const stale = this.connection;
+    if (stale) {
+      try {
+        stale.off('ReceiveMessage');
+        stale.off('OnTyping');
+        stale.off('ChatMessageStatusChangeEvent');
+      } catch {}
+      try {
+        this.intentionalClose = true;
+        await stale.stop();
+      } catch {} finally {
+        this.intentionalClose = false;
+      }
+    }
+
     this.connection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Error)
       .withAutomaticReconnect()
@@ -76,42 +108,64 @@ class SignalRClient {
       })
       .build();
 
-    this.connection.onerror = () => {
-      this.reconnectAsync();
-    };
+    // NOT: HubConnection'da `onerror` diye bir API yok (close() gibi). Eskiden
+    // buraya bir alan atanip duruyordu, hicbir zaman cagrilmadi -- kaldirildi.
 
+    this.connection.onreconnected(() => {
+      this.connectionGeneration += 1;
+      this.connected = true;
+      if (this.conversationId) {
+        this.onReattachNeeded?.();
+      }
+    });
+
+    const owned = this.connection;
     this.connection.onclose(async () => {
-      await this.reconnectAsync().then(() => {});
+      // Bizim tetikledigimiz kapatmalarda (stop/close/buildConnection) yeniden
+      // baglanma. Ayrica bu handler yalnizca AKTIF baglantiya aitse is yapsin:
+      // eski bir nesnenin gecikmis onclose'u yeni baglantiyi dusurmemeli.
+      if (this.intentionalClose || this.connection !== owned) {
+        return;
+      }
+      this.connected = false;
+      await this.reconnectAsync();
     });
   };
 
   connectAsync = async () => {
-    if (
-      this.connection === undefined ||
-      this.connection?._connectionState === 'Disconnected'
-    ) {
-      await this.buildConnection();
+    if (this.connecting) {
+      return await this.connecting;
     }
-    // 'connected' bayragini start() COZULDUKTEN sonra isaretle; aksi halde
-    // baglanti hala 'Connecting' iken invoke calisip "not in Connected State"
-    // hatasi (unhandled rejection) uretir.
-    return await this.connection
-      .start({
-        withCredentials: false,
-      })
-      .then(() => {
-        this.connected = true;
-      })
-      .catch(() => {
-        this.connected = false;
-        this.reconnectAsync();
-      });
-  };
 
-  // invoke/send oncesi baglantinin gercekten 'Connected' olmasini garanti et.
-  // 'Connecting'/'Reconnecting' sirasinda start() bitene kadar bekler.
+    this.connecting = (async () => {
+      if (
+        this.connection === undefined ||
+        this.connection?._connectionState === 'Disconnected'
+      ) {
+        await this.buildConnection();
+      }
+      try {
+        await this.connection.start({ withCredentials: false });
+        this.connected = true;
+        if (this.conversationId) {
+          this.onReattachNeeded?.();
+        }
+      } catch (e) {
+        this.connected = false;
+        console.error('connectAsync error', e);
+      }
+    })();
+
+    try {
+      return await this.connecting;
+    } finally {
+      this.connecting = undefined;
+    }
+  };
   ensureConnected = async () => {
-    if (
+    if (this.connecting) {
+      await this.connecting;
+    } else if (
       this.connection === undefined ||
       this.connection?.state === 'Disconnected' ||
       this.connection?._connectionState === 'Disconnected'
@@ -133,21 +187,20 @@ class SignalRClient {
   sendAsync = async (payload?: any) => {
     try {
       await this.ensureConnected();
-      // SendMessageAsync artık Task<string> dönüyor. sendConversationStart=false
-      // akışında örtük başlatma yapıp { conversationId, sessionToken } dönebilir.
       const frame = this.applySession(payload);
       const result = await this.connection.invoke('SendMessageAsync', frame);
       return this.adoptSession(result);
     } catch (e) {
       // Geçersiz/eksik sessionToken veya kopuk bağlantı -> tekrar bağlanmayı tetikle.
       this.connected = false;
-      console.error('SendMessageAsync error', JSON.stringify(e));
+      console.error('SendMessageAsync error', e);
       return null;
     }
   };
 
   ontyping = async (func: (d: any, m: any) => void) => {
     this.onTyping = func;
+    this.connection.off('OnTyping');
     await this.connection.on('OnTyping', (...args: any[]) => {
       // En guncel handler'i kullan; tanimsizsa cagirma (reconnect yarisi).
       if (typeof this.onTyping === 'function') {
@@ -158,6 +211,7 @@ class SignalRClient {
 
   onmessage = async (func: (d: any, m: any) => void) => {
     this.onMessageFunc = func;
+    this.connection.off('ReceiveMessage');
     await this.connection.on('ReceiveMessage', (...args: any[]) => {
       // En guncel handler'i kullan; tanimsizsa cagirma (reconnect yarisi).
       if (typeof this.onMessageFunc === 'function') {
@@ -171,28 +225,52 @@ class SignalRClient {
   };
 
   reconnectAsync = async () => {
-    await this.buildConnection();
-    await this.connectAsync();
-    // Handler'lari yalnizca daha once set edildiyse yeniden bagla; aksi halde
-    // 'ReceiveMessage' icin undefined callback kaydedilir ve mesaj gelince
-    // "Cannot read property 'apply' of undefined" hatasi olusur.
-    if (typeof this.onMessageFunc === 'function') {
-      await this.onmessage(this.onMessageFunc);
+    // Yeniden giris kilidi: previous.stop() ilgili baglantinin onclose'unu
+    // atesliyor, o da buraya geri donuyordu. Kilit olmadan her kopusta birden
+    // fazla baglanti aciliyor ve hepsi ayni handler'lari besliyordu.
+    if (this.reconnecting) {
+      return this.reconnecting;
     }
-    if (typeof this.onTyping === 'function') {
-      await this.ontyping(this.onTyping);
+
+    this.reconnecting = (async () => {
+      if (this.connecting) {
+        await this.connecting;
+      } else {
+        const previous = this.connection;
+        this.connection = undefined;
+        if (previous?.stop) {
+          try {
+            this.intentionalClose = true;
+            await previous.stop();
+          } catch {
+          } finally {
+            this.intentionalClose = false;
+          }
+        }
+        await this.connectAsync();
+      }
+      if (typeof this.onMessageFunc === 'function') {
+        await this.onmessage(this.onMessageFunc);
+      }
+      if (typeof this.onTyping === 'function') {
+        await this.ontyping(this.onTyping);
+      }
+    })();
+
+    try {
+      return await this.reconnecting;
+    } finally {
+      this.reconnecting = undefined;
     }
   };
 
   startConversation = async (payload?: any) => {
     try {
       await this.ensureConnected();
-      // StartConversation artık JSON döner: { conversationId, sessionToken, traceId }.
-      // İstemcinin gönderdiği conversationId yok sayılır; dönen id'yi benimseriz.
       const result = await this.connection.invoke('StartConversation', payload);
       return this.adoptSession(result);
     } catch (e) {
-      console.error('StartConversation error', JSON.stringify(e));
+      console.error('StartConversation error', e);
       return null;
     }
   };
@@ -202,9 +280,14 @@ class SignalRClient {
       await this.ensureConnected();
       // ContinueConversation mesaj JSON'undaki sessionToken doğrulanır.
       const frame = this.applySession(payload);
-      return await this.connection.invoke('ContinueConversation', frame);
+      const result = await this.connection.invoke(
+        'ContinueConversation',
+        frame
+      );
+      this.attachedGeneration = this.connectionGeneration;
+      return this.adoptSession(result);
     } catch (e) {
-      console.error('ContinueConversation error', JSON.stringify(e));
+      console.error('ContinueConversation error', e);
       return null;
     }
   };
@@ -214,23 +297,55 @@ class SignalRClient {
       await this.ensureConnected();
       // EndConversation mesaj JSON'undaki sessionToken doğrulanır.
       const frame = this.applySession(payload);
-      return await this.connection.invoke('EndConversation', frame);
+      await this.connection.invoke('EndConversation', frame);
+      return true;
     } catch (e) {
-      console.error('EndConversation error', JSON.stringify(e));
-      return null;
+      console.error('EndConversation error', e);
+      return false;
     }
   };
+
+  needsReattach = () =>
+    !!this.conversationId &&
+    this.attachedGeneration !== this.connectionGeneration;
 
   messageStatusChange = async (func: () => void) => {
     await this.connection.on('ChatMessageStatusChangeEvent', func);
   };
 
-  close() {
-    // Konuşma bittiğinde oturum bilgisini temizle ki bir sonraki
-    // StartConversation tertemiz başlasın.
+  // DIKKAT: @microsoft/signalr'in HubConnection'inda close() YOK; yalnizca
+  // start() / stop() / onclose() var. Eskiden burada connection.close()
+  // cagriliyordu ve her End Conversation'da sessizce TypeError firlatiyordu:
+  // soket acik kaliyor, connected true kaliyordu. Sonraki acilista
+  // useChat'in [client.connected] effect'i "zaten bagli" sanip initSocket'i
+  // atliyor, dolayisiyla startOfConversation hic gonderilmiyordu -> ekranda
+  // sadece history goruluyor, yeni konusma baslamiyordu.
+  async close() {
     this.conversationId = undefined;
     this.sessionToken = undefined;
-    this.connection.close();
+    this.attachedGeneration = undefined;
+    this.connecting = undefined;
+
+    const previous = this.connection;
+    // Once state'i temizle: onclose handler'i reconnectAsync'i tetikliyor,
+    // stop() sirasinda kendimizi yeniden baglamayalim.
+    this.connection = undefined;
+    this.connected = false;
+    this.reconnecting = undefined;
+
+    if (previous?.stop) {
+      try {
+        this.intentionalClose = true;
+        previous.off('ReceiveMessage');
+        previous.off('OnTyping');
+        previous.off('ChatMessageStatusChangeEvent');
+        await previous.stop();
+      } catch (e) {
+        console.warn('SignalR connection could not be stopped cleanly', e);
+      } finally {
+        this.intentionalClose = false;
+      }
+    }
   }
 }
 

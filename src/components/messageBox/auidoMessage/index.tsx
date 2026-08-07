@@ -21,6 +21,9 @@ const AudioMessage = (props: AudioMessageProps) => {
 
   let url =
     props.activity?.message || props.activity?.attachments?.[0]?.message;
+  // History'den gelen ses ekleri tembel indiriliyor: parseAttachment sadece
+  // hedef yolu ve indiriciyi veriyor, dosya ilk oynatma/sure olcumunde iniyor.
+  const resolveAudio = props.activity?.attachments?.[0]?.resolveAudio;
   let position = 'right';
   if (props?.activity?.attachments && props?.activity?.serviceUrl) {
     position = 'left';
@@ -34,7 +37,11 @@ const AudioMessage = (props: AudioMessageProps) => {
 
   return (
     <>
-      <AudioComponent url={url} position={position} />
+      <AudioComponent
+        url={url}
+        position={position}
+        resolveAudio={resolveAudio}
+      />
       {position === 'right' && (
         <Text
           style={{

@@ -16,9 +16,14 @@ import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
-import config from '../config';
+import {
+  CHAT_CONTEXT,
+  CHAT_HUB_URL,
+  CUSTOM_ACTION_DATA,
+} from '../chat/chatConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FileViewer from 'react-native-file-viewer';
+import * as SafeAreaContext from 'react-native-safe-area-context';
 
 export default function ChatPage() {
   const modalRef = useRef<ChatModalProps>(null);
@@ -77,9 +82,7 @@ export default function ChatPage() {
     });
   };
 
-  const customActionDataExample = {
-    user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
-  };
+  const customActionDataExample = CUSTOM_ACTION_DATA;
 
   const startStorageSession = () => {
     modalRef.current?.startStorageSession();
@@ -125,7 +128,7 @@ export default function ChatPage() {
       <FlashMessage position="top" />
       {/* @ts-expect-error Server Component */}
       <ChatModal
-        url={config.URL_}
+        url={CHAT_HUB_URL}
         modules={{
           AudioRecorderPlayer: AudioRecorderPlayer,
           RNFS: RNFetchBlob,
@@ -135,15 +138,16 @@ export default function ChatPage() {
           RNFileSelector: DocumentPicker,
           asyncStorage: AsyncStorage,
           fileViewer: FileViewer,
+          SafeAreaContext: SafeAreaContext,
         }}
         ref={modalRef}
         defaultConfiguration={{
           sendConversationStart: true,
-          channel: 'webchatmobile-sestek',
-          // clientId: '1111',
-          fullName: "{name:'rabia'}",
-          tenant: 'demo',
-          projectName: 'TestMobile',
+          channel: CHAT_CONTEXT.channel,
+          clientId: CHAT_CONTEXT.clientId,
+          fullName: CHAT_CONTEXT.fullName,
+          tenant: CHAT_CONTEXT.tenant,
+          projectName: CHAT_CONTEXT.projectName,
           //disablePreviousButtons: false,
           getResponseData: setResponse,
           customActionData: JSON.stringify(customActionDataExample),

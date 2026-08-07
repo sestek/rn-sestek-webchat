@@ -11,7 +11,7 @@ export interface InProps {
 }
 
 const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
-  (props, ref) => {
+  (props) => {
     const {
       closeModal,
       setCloseModal,
@@ -22,12 +22,10 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
     const texts = getTexts();
 
     const handleClose = () => {
-      closeConversation().then((data:boolean)=>{
-        if(data){
-          if (customizeConfiguration?.closeModalSettings?.onClose) {
-            customizeConfiguration.closeModalSettings.onClose();
-          }
-          setCloseModal(false);
+      closeConversation().then((data: boolean) => {
+        setCloseModal(false);
+        if (data && customizeConfiguration?.closeModalSettings?.onClose) {
+          customizeConfiguration.closeModalSettings.onClose();
         }
       });
     };
@@ -35,7 +33,11 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
     return (
       <Modal animationType="slide" transparent={true} visible={closeModal}>
         <View style={styles(closeModalSettings)?.centeredView}>
-          <View style={styles(closeModalSettings)?.modalView}>
+          <View
+            style={styles(closeModalSettings)?.modalView}
+            testID={closeModalSettings?.testID}
+            accessibilityLabel={closeModalSettings?.accessibilityLabel}
+          >
             <Text
               style={[
                 styles(closeModalSettings)?.modalText,
@@ -50,6 +52,11 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                 setCloseModal(false);
               }}
                 style={styles(closeModalSettings)?.noButton}
+                testID={closeModalSettings?.buttons?.noButton?.testID}
+                accessibilityLabel={
+                  closeModalSettings?.buttons?.noButton?.accessibilityLabel
+                }
+                accessibilityRole="button"
               >
                 <Text
                   style={[
@@ -65,6 +72,11 @@ const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
                   handleClose();
                 }}
                 style={styles(closeModalSettings)?.yesButton}
+                testID={closeModalSettings?.buttons?.yesButton?.testID}
+                accessibilityLabel={
+                  closeModalSettings?.buttons?.yesButton?.accessibilityLabel
+                }
+                accessibilityRole="button"
               >
                 <Text
                   style={[

@@ -1,9 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import {
-  TextInput,
-  TouchableOpacity,
-  View,Alert
-} from 'react-native';
+import { TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import type { PropsFooterComponent } from 'src/types';
 import { styles } from './style';
 import { Recorder } from '../../services';
@@ -44,7 +40,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     bottomInputBorderColor,
     bottomInputBackgroundColor,
     bottomInputSendButtonColor,
-    permissionCameraCheck
+    permissionCameraCheck,
+    bottomInputTestID,
+    bottomInputAccessibilityLabel,
   } = customizeConfiguration;
 
   const Record =
@@ -74,19 +72,37 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
     if (recordStart) {
       setDisableRecord(true);
-      var result = await recorder?.onStopRecord();
-      const dirFile = result?.url?.split('/');
-      if (dirFile) {
-        sendAudio &&
-          sendAudio(result?.url, dirFile[dirFile.length - 1], result?.data);
-        setTimeout(() => {
+      try {
+        const result = await recorder?.onStopRecord();
+        const dirFile = result?.url?.split('/');
+        if (dirFile) {
+          if (sendAudio) {
+            await sendAudio(
+              result?.url,
+              dirFile[dirFile.length - 1],
+              result?.data
+            );
+          }
+          setTimeout(() => {
+            setDisableRecord(false);
+          }, 3500);
+        } else {
           setDisableRecord(false);
-        }, 3500);
+        }
+      } catch (error) {
+        console.error('Error stopping recording:', error);
+        setDisableRecord(false);
       }
+      setRecordStart(false);
     } else {
-      recorder?.onStartRecord();
+      setRecordStart(true);
+      try {
+        await recorder?.onStartRecord();
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        setRecordStart(false);
+      }
     }
-    setRecordStart((old) => !old);
   };
 
   const clickSendButton = () => {
@@ -119,17 +135,14 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
 
   const handleSelect = async (optionKey: string) => {
     setDropdownVisible(false);
-    setTimeout(async() => {
+    setTimeout(async () => {
       if (optionKey === 'document') {
         sendAttachment('document');
       } else if (optionKey === 'gallery') {
         sendAttachment('gallery');
       } else if (optionKey === 'camera') {
         if (!permissionCameraCheck) {
-          Alert.alert(
-            'Permit Required',
-            'Could you please check the permits?'
-          );
+          Alert.alert('Permit Required', 'Could you please check the permits?');
           return;
         }
         const granted = await permissionCameraCheck();
@@ -187,11 +200,13 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           placeholder={texts.bottomInputText}
           placeholderTextColor="grey"
           keyboardType="default"
+          testID={bottomInputTestID}
+          accessibilityLabel={bottomInputAccessibilityLabel}
         />
         {(modules?.RNFileSelector ||
           modules?.launchImageLibrary ||
           modules?.launchcamera) &&
-           enableAttachmentIcon && (
+          enableAttachmentIcon && (
             <TouchableOpacity
               onPress={openAttachmentMenu}
               style={[
@@ -201,6 +216,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
                   backgroundColor: bottomInputBackgroundColor,
                 },
               ]}
+              testID={bottomAttachmentIcon?.testID}
+              accessibilityLabel={bottomAttachmentIcon?.accessibilityLabel}
+              accessibilityRole="button"
             >
               <RenderImage
                 type={bottomAttachmentIcon?.type}
@@ -214,6 +232,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           <TouchableOpacity
             onPress={() => touchRecord()}
             style={styles.iconContainer}
+            testID={bottomVoiceIcon?.testID}
+            accessibilityLabel={bottomVoiceIcon?.accessibilityLabel}
+            accessibilityRole="button"
           >
             {recordStart ? (
               <RenderImage
@@ -244,6 +265,9 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
           styles.sendButton,
           { backgroundColor: bottomInputSendButtonColor },
         ]}
+        testID={bottomSendIcon?.testID}
+        accessibilityLabel={bottomSendIcon?.accessibilityLabel}
+        accessibilityRole="button"
       >
         <RenderImage
           type={bottomSendIcon?.type}

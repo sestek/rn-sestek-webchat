@@ -64,7 +64,6 @@ export default function FileMessages(props: any) {
     const contentKey = attachment.contentUrl;
     const cleanBaseURL = props.url.replace('/chathub', '');
     const url = `${cleanBaseURL}/file?tenantName=${props.defaultConfiguration.tenant}&key=${contentKey}&storageType=2`;
-
     const { config, fs } = modules.RNFS;
     const fileDir = fs.dirs.DocumentDir;
 
@@ -72,23 +71,20 @@ export default function FileMessages(props: any) {
       const fileName = attachment.name || 'downloaded-file';
       const filePath = `${fileDir}/${fileName}`;
 
-      const downloadResponse = await config({
-        fileCache: true,
-        path: filePath,
-      }).fetch('GET', url, {
+      const downloadResponse = await config({}).fetch('GET', url, {
         'accept': '*/*',
         'accept-language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
         'user-agent': 'Mozilla/5.0',
       });
 
       if (downloadResponse.info().status === 200) {
+        const base64Data = await downloadResponse.base64();
+        await fs.writeFile(filePath, base64Data, 'base64');
         modules.fileViewer
           .open(filePath)
-          .then(() => {
-            console.log('Dosya başarıyla açıldı');
-          })
+          .then(() => {})
           .catch((error: any) => {
-            console.log('Dosya açma hatası:', error);
+            console.warn('file could not be opened', error);
             if (
               error.message.includes('No app associated with this mime type')
             ) {
@@ -98,7 +94,6 @@ export default function FileMessages(props: any) {
                 [
                   {
                     text: texts.noAppFoundCancel,
-                    onPress: () => console.log('İptal tıklandı'),
                   },
                   {
                     text: 'Google Play',
@@ -133,7 +128,6 @@ export default function FileMessages(props: any) {
 
     return `${shortenedName}${extensionPart}`;
   };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity

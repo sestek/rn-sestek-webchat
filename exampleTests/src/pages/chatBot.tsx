@@ -6,13 +6,19 @@ import {Slider} from '@miblanchard/react-native-slider';
 import {WebView} from 'react-native-webview';
 import AudioRecord from 'react-native-audio-record';
 import DocumentPicker from 'react-native-document-picker';
-import config from '../config';
+import {
+  CHAT_CONTEXT,
+  CHAT_HUB_URL,
+  CUSTOM_ACTION_DATA,
+  END_USER,
+} from '../chat/chatConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation, useRoute, useIsFocused} from '@react-navigation/native'; // Import useNavigation for navigation
 import {CloseIcon, MinusIcon} from '../../../src/image';
 import RNFetchBlob from 'rn-fetch-blob';
 import FileViewer from 'react-native-file-viewer';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as SafeAreaContext from 'react-native-safe-area-context';
 export default function ChatbotScreen() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -32,16 +38,9 @@ export default function ChatbotScreen() {
     // console.log('value', value);
   };
 
-  const customActionDataExample = {
-    user_id: 'e32c9a7f-63e7-4886-84e8-6fb8f5ef976d',
-  };
+  const customActionDataExample = CUSTOM_ACTION_DATA;
 
-  const endUserInfo = {
-    name: 'sestek user',
-    phone: '+905555555555',
-    email: 'sestek@doe.com',
-    twitter: '@sestek',
-  };
+  const endUserInfo = END_USER;
   const permissionAudioCheck = async () => {
     return new Promise<void>((resolve, reject) => {
       if (Platform.OS === 'android') {
@@ -75,7 +74,7 @@ export default function ChatbotScreen() {
 
   return (
     <ChatModal
-      url={config.URL_}
+      url={CHAT_HUB_URL}
       modules={{
         AudioRecorderPlayer: AudioRecorderPlayer,
         RNFS: RNFetchBlob,
@@ -87,23 +86,23 @@ export default function ChatbotScreen() {
         fileViewer: FileViewer,
         launchImageLibrary: launchImageLibrary,
         launchcamera: launchCamera,
+        SafeAreaContext: SafeAreaContext,
       }}
       ref={modalRef}
       defaultConfiguration={{
         sendConversationStart: true,
-        channel: 'webchatmobile-sestek',
-        // clientId: '1111',
-          tenant: config.TNAME_,
-           projectName: config.URL_,
-        locale: 'en-US',
-        // fullName:'',
+        channel: CHAT_CONTEXT.channel,
+        clientId: CHAT_CONTEXT.clientId,
+        tenant: CHAT_CONTEXT.tenant,
+        projectName: CHAT_CONTEXT.projectName,
+        locale: CHAT_CONTEXT.locale,
         endUser: endUserInfo,
         getResponseData: setResponse,
         customActionData: JSON.stringify(customActionDataExample),
-       // integrationId:''
+        // integrationId:''
       }}
       customizeConfiguration={{
-        headerAlignmentType:'textToCenter',
+        headerAlignmentType: 'textToCenter',
         permissionCameraCheck: permissionCameraCheck,
 
         permissionAudioCheck: permissionAudioCheck,

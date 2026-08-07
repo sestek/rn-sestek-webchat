@@ -109,7 +109,13 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
           },
         ]}
       >
-        <TouchableOpacity onPress={() => hideModal()} style={styles.iconTouch}>
+        <TouchableOpacity
+          onPress={() => hideModal()}
+          style={styles.iconTouch}
+          testID={hideIcon?.testID}
+          accessibilityLabel={hideIcon?.accessibilityLabel}
+          accessibilityRole="button"
+        >
           <RenderImage
             type={hideIcon?.type}
             value={hideIcon?.value}
@@ -126,6 +132,9 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
             }
           }}
           style={styles.iconTouch}
+          testID={closeIcon?.testID}
+          accessibilityLabel={closeIcon?.accessibilityLabel}
+          accessibilityRole="button"
         >
           <RenderImage
             type={closeIcon?.type}

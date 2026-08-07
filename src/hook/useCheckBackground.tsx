@@ -11,7 +11,22 @@ const useCheckBackground = () => {
         setbackground(false);
       }
     };
-    AppState?.addEventListener('change', handleChange);
+    // Cleanup SART: eskiden dinleyici hic kaldirilmiyordu. Her mount bir
+    // dinleyici birakiyor, uygulama arka plana her alindiginda hepsi birden
+    // tetikleniyor ve buna bagli isler (history yenileme) katlanarak artiyordu.
+    //
+    // Iki RN nesli de destekleniyor: RN >= 0.65 addEventListener'dan
+    // { remove() } donuyor, oncesinde removeEventListener kullaniliyordu.
+    // (SDK RN 0.63 tiplerine karsi derlendigi icin cast gerekiyor.)
+    const appState: any = AppState;
+    const subscription: any = appState.addEventListener('change', handleChange);
+    return () => {
+      if (subscription?.remove) {
+        subscription.remove();
+      } else if (appState.removeEventListener) {
+        appState.removeEventListener('change', handleChange);
+      }
+    };
   }, []);
 
   return {

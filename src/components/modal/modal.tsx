@@ -4,6 +4,7 @@ import React, {
   useImperativeHandle,
   useEffect,
   useRef,
+  useMemo,
 } from 'react';
 import {
   Modal,
@@ -12,8 +13,10 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+
 import { useChat } from '../../plugin/useChat';
 import type { PropsModalComponent } from '../../types';
+
 import BodyComponent from '../body';
 import FooterComponent from '../footer';
 import HeaderComponent from '../header';
@@ -28,6 +31,13 @@ import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
 import FileSizeWarningModal from '../fileSizeWarningModal';
 import { InfoAreaView } from '../header/InfoAreaView';
+
+// modules.SafeAreaContext verilmediginde kullanilan yedek: guvenli alan
+// hesabi yapmaz, yalnizca cocuklarini cizer (`edges` yok sayilir).
+const PassthroughView = ({ children, style }: any) => (
+  <View style={style}>{children}</View>
+);
+
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
     const {
@@ -44,169 +54,203 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { customizeConfiguration } = useCustomizeConfiguration();
     const { modules } = useModules();
-    const [showInfo, setShowInfo] = useState(false);
-    const toggleInfo = () => setShowInfo((v) => !v);
-    const [inputData, setInputData] = useState<string>('');
-    const changeInputData = (text: string) => setInputData(text);
-    const scrollViewRef = useRef<ScrollView>(null);
+    const { SafeAreaContext } = modules || {};
+
+    // modules.SafeAreaContext OPSIYONEL. Verilmezse inset uygulanmaz ve duz
+    // View'e dusulur; verilirse header/footer guvenli alan payini alir.
+    // (Burada bir sure `return null` vardi: bu prop'u gecmeyen mevcut
+    // entegrasyonlarda sohbet HIC render edilmiyordu.)
+    const SafeAreaProvider =
+      SafeAreaContext?.SafeAreaProvider ?? PassthroughView;
+    const SafeAreaView = SafeAreaContext?.SafeAreaView ?? PassthroughView;
+
     const { loading } = useLoading();
+    const { background } = useCheckBackground();
+
+    const [showInfo, setShowInfo] = useState(false);
+    const [inputData, setInputData] = useState('');
     const [isDropdownVisible, setDropdownVisible] = useState(false);
+
+    const scrollViewRef = useRef<ScrollView>(null);
+
+    const toggleInfo = () => setShowInfo((v) => !v);
+    const changeInputData = (text: string) => setInputData(text);
+
     const {
       messageList,
       sendMessage,
       sendAudio,
       sendAttachment,
       getHistory,
-      conversationContinue,
-      getHistoryBackground,
+      continueIfNeeded,
       sendEnd,
       exceededFileSize,
       setExceededFileSize,
     } = useChat({
-      url: url,
-      defaultConfiguration: defaultConfiguration,
-      sessionId: sessionId,
-      client: client,
+      url,
+      defaultConfiguration,
+      sessionId,
+      client,
       rnfs: modules?.RNFS,
     });
 
-    useImperativeHandle(ref, () => ({
-      messageList: messageList,
-      sendEnd: sendEnd,
-    }));
+    useImperativeHandle(
+      ref,
+      () => ({
+        messageList,
+        sendEnd,
+      }),
+      [messageList, sendEnd]
+    );
 
-    const { background } = useCheckBackground();
+    const handlersRef = useRef({ getHistory, continueIfNeeded });
+    handlersRef.current = { getHistory, continueIfNeeded };
+
+    // Sohbet gorunur oldugunda ve uygulama arka plandan ONE dondugunde
+    // history ile senkronlan; arka plandayken bir sey yapma.
     useEffect(() => {
-      if (visible) {
-        if (background) {
-          getHistoryBackground && getHistoryBackground();
-        } else {
-          getHistory && getHistory();
-          conversationContinue && conversationContinue();
-        }
+      if (!visible || background) {
+        return;
       }
-    }, [background, visible]);
+
+      handlersRef.current.getHistory?.();
+      handlersRef.current.continueIfNeeded?.();
+    }, [visible, background]);
 
     const closeSizeWarningModal = () => {
       setExceededFileSize(false);
     };
+
+    const isAndroid = Platform.OS === 'android';
+
+    const isVisible = visible && Object.keys(customizeConfiguration).length > 0;
+
+    const headerStyle = useMemo(
+      () =>
+        customizeConfiguration?.headerColor
+          ? { backgroundColor: customizeConfiguration.headerColor }
+          : undefined,
+      [customizeConfiguration?.headerColor]
+    );
+
+    const footerStyle = useMemo(
+      () =>
+        customizeConfiguration?.bottomColor
+          ? { backgroundColor: customizeConfiguration.bottomColor }
+          : undefined,
+      [customizeConfiguration?.bottomColor]
+    );
+
+    const bodyBackgroundStyle = useMemo(
+      () => ({
+        backgroundColor:
+          customizeConfiguration?.chatBody?.type === 'color'
+            ? customizeConfiguration.chatBody.value
+            : '#fff',
+      }),
+      [
+        customizeConfiguration?.chatBody?.type,
+        customizeConfiguration?.chatBody?.value,
+      ]
+    );
+
     const infoBg = customizeConfiguration?.chatBody?.value ?? '#fff';
+
     return (
       <Modal
-        animationType={'slide'}
-        transparent={true}
-        visible={visible && Object.keys(customizeConfiguration).length > 0}
-        onRequestClose={() => {
-          hideModal && hideModal();
-        }}
+        animationType="slide"
+        transparent
+        visible={isVisible}
+        onRequestClose={() => hideModal?.()}
       >
-        {loading && (
-          <>
+        <SafeAreaProvider>
+          {loading && (
             <LoadingModal
               indicatorColor={customizeConfiguration?.indicatorColor ?? 'black'}
             />
-          </>
-        )}
+          )}
 
-        {customizeConfiguration?.closeModalSettings?.use && (
-          <CloseModal
-            closeModal={closedModalManagment?.closeModal}
-            setCloseModal={closedModalManagment?.setCloseModal}
-            closeConversation={closeConversation}
-            closeModalSettings={customizeConfiguration?.closeModalSettings}
-            getResponseData={defaultConfiguration?.getResponseData}
-          />
-        )}
-
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          pointerEvents="box-none"
-        >
-          <View
-            style={[
-              styles.header,
-              customizeConfiguration?.headerColor
-                ? { backgroundColor: customizeConfiguration?.headerColor }
-                : {},
-            ]}
-          >
-            <HeaderComponent
-              hideModal={hideModal}
-              clickClosedConversationModalFunc={
-                clickClosedConversationModalFunc
-              }
-              defaultConfiguration={defaultConfiguration}
-              closeModalStatus={
-                customizeConfiguration?.closeModalSettings?.use ? true : false
-              }
+          {customizeConfiguration?.closeModalSettings?.use && (
+            <CloseModal
+              closeModal={closedModalManagment?.closeModal}
+              setCloseModal={closedModalManagment?.setCloseModal}
               closeConversation={closeConversation}
-              hideIcon={customizeConfiguration?.headerHideIcon}
-              closeIcon={customizeConfiguration?.headerCloseIcon}
-              onToggleInfo={
-                customizeConfiguration?.infoArea ? toggleInfo : undefined
-              }
-              isInfoVisible={showInfo}
+              closeModalSettings={customizeConfiguration.closeModalSettings}
+              getResponseData={defaultConfiguration?.getResponseData}
             />
-          </View>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor:
-                customizeConfiguration?.chatBody?.type == 'color'
-                  ? customizeConfiguration?.chatBody?.value
-                  : '#fff',
-            }}
+          )}
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            pointerEvents="box-none"
           >
-            {showInfo ? (
-              <InfoAreaView
-                markdown={customizeConfiguration?.infoInput ?? ''}
-                background={infoBg}
-              />
-            ) : (
-              <GenerateBody
-                BodyComponent={
-                  <>
-                    <BodyComponent
-                      messageList={messageList}
-                      changeInputData={changeInputData}
-                      sendMessage={sendMessage}
-                      scrollViewRef={scrollViewRef}
-                      defaultConfiguration={defaultConfiguration}
-                      url={url}
-                    />
-                    <View
-                      style={[
-                        styles.footer,
-                        customizeConfiguration?.bottomColor
-                          ? {
-                              backgroundColor:
-                                customizeConfiguration?.bottomColor,
-                            }
-                          : {},
-                      ]}
-                    >
-                      <FooterComponent
-                        inputData={inputData}
+            <SafeAreaView edges={isAndroid ? ['top'] : []} style={headerStyle}>
+              <View style={[styles.header, headerStyle]}>
+                <HeaderComponent
+                  hideModal={hideModal}
+                  clickClosedConversationModalFunc={
+                    clickClosedConversationModalFunc
+                  }
+                  defaultConfiguration={defaultConfiguration}
+                  closeModalStatus={
+                    !!customizeConfiguration?.closeModalSettings?.use
+                  }
+                  closeConversation={closeConversation}
+                  hideIcon={customizeConfiguration?.headerHideIcon}
+                  closeIcon={customizeConfiguration?.headerCloseIcon}
+                  onToggleInfo={
+                    customizeConfiguration?.infoArea ? toggleInfo : undefined
+                  }
+                  isInfoVisible={showInfo}
+                />
+              </View>
+            </SafeAreaView>
+
+            <View style={[{ flex: 1 }, bodyBackgroundStyle]}>
+              {showInfo ? (
+                <InfoAreaView
+                  markdown={customizeConfiguration?.infoInput ?? ''}
+                  background={infoBg}
+                />
+              ) : (
+                <GenerateBody
+                  BodyComponent={
+                    <>
+                      <BodyComponent
+                        messageList={messageList}
                         changeInputData={changeInputData}
                         sendMessage={sendMessage}
-                        sendAudio={sendAudio}
-                        sendAttachment={sendAttachment}
                         scrollViewRef={scrollViewRef}
-                        isDropdownVisible={isDropdownVisible}
-                        setDropdownVisible={setDropdownVisible}
+                        defaultConfiguration={defaultConfiguration}
+                        url={url}
                       />
-                    </View>
-                  </>
-                }
-              />
-            )}
-          </View>
-          <FileSizeWarningModal
-            visible={exceededFileSize}
-            onClose={closeSizeWarningModal}
-          />
-        </KeyboardAvoidingView>
+
+                      <SafeAreaView>
+                        <View style={[styles.footer, footerStyle]}>
+                          <FooterComponent
+                            inputData={inputData}
+                            changeInputData={changeInputData}
+                            sendMessage={sendMessage}
+                            sendAudio={sendAudio}
+                            sendAttachment={sendAttachment}
+                            scrollViewRef={scrollViewRef}
+                            isDropdownVisible={isDropdownVisible}
+                            setDropdownVisible={setDropdownVisible}
+                          />
+                        </View>
+                      </SafeAreaView>
+                    </>
+                  }
+                />
+              )}
+            </View>
+
+            <FileSizeWarningModal
+              visible={exceededFileSize}
+              onClose={closeSizeWarningModal}
+            />
+          </KeyboardAvoidingView>
+        </SafeAreaProvider>
       </Modal>
     );
   }

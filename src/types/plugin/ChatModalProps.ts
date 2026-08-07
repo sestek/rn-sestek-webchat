@@ -1,8 +1,8 @@
 export interface ChatModalProps {
   triggerVisible: () => void;
   startConversation: () => void;
-  endConversation: () => void;
+  endConversation: () => Promise<boolean>;
   conversationStatus: boolean;
   messageList: any;
-  startStorageSession: () => void;
+  startStorageSession: () => Promise<boolean>;
 }

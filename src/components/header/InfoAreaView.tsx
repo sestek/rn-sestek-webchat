@@ -2,7 +2,7 @@ import { useModules } from '../../context/ModulesContext';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import useRenderContent from '../../hook/useRenderContent';
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 
 interface InfoAreaViewProps {
   markdown: string;

@@ -273,40 +273,6 @@ const CustomizeConfigurationProvider: React.FC<{
             : prev.infoAreaIcon,
           infoInput: json?.infoInput ?? prev.infoInput ?? '',
         }));
-        const chatAvatatUri = json?.agent?.avatar?.split('"')[3];
-
-        const mergedConfig: PropsCustomizeConfiguration = {
-          ...initialConfig,
-          // headerText: json?.title ?? initialConfig.headerText,
-          // bottomColor: json?.productColor ?? initialConfig.bottomColor,
-          // headerColor: json?.productColor ?? initialConfig.headerColor,
-          // chatBody: { type: 'color', value: 'white' },
-          // chatBotMessageBoxTextColor:
-          //   json?.agent?.textColor ?? initialConfig.chatBotMessageBoxTextColor,
-          // chatBotMessageIcon: { type: 'url', value: chatAvatatUri },
-          // chatBotMessageBoxBackground:
-          //   json?.agent?.bgColor ?? initialConfig.chatBotMessageBoxBackground,
-          // userMessageBoxTextColor:
-          //   json?.client?.textColor ?? initialConfig.userMessageBoxTextColor,
-          // userMessageBoxBackground:
-          //   json?.client?.bgColor ?? initialConfig.userMessageBoxBackground,
-          // chatStartButtonBackground:
-          //   json?.bubbleColor ?? initialConfig.chatStartButtonBackground,
-          // // bottomInputText: json?.placeholder ?? initialConfig.bottomInputText,
-          // chatBotMessageBoxButtonBackground:
-          //   json?.productColor ??
-          //   initialConfig.chatBotMessageBoxButtonBackground,
-          // chatBotMessageBoxButtonTextColor:
-          //   json?.agent?.textColor ??
-          //   initialConfig.chatBotMessageBoxButtonTextColor,
-          // infoArea: json?.infoArea,
-
-          // infoAreaIcon: { type: 'url', value: json?.infoAreaIcon },
-          // infoInput: json?.infoInput ?? "",
-        };
-
-        // setCustomizeConfiguration(mergedConfig);
-       
       } catch (error) {
         console.error('Error fetching integration config:', error);
       }

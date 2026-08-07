@@ -57,11 +57,20 @@ export default class GeneralManager {
         return defaultIcon;
     }
   }
+  static ensureDir = async (rnfs: any, path: string): Promise<void> => {
+    const exists = await rnfs.fs.isDir(path);
+    if (!exists) {
+      await rnfs.fs.mkdir(path);
+    }
+  };
 
-  static getCurrentDate(locale: string, format: 'short' | 'long' | undefined): string {
+  static getCurrentDate(
+    locale: string,
+    format: 'short' | 'long' | undefined
+  ): string {
     const date = new Date();
 
-    var localSet = locale ? locale : 'en'
+    var localSet = locale ? locale : 'en';
 
     if (format === 'short') {
       return date.toLocaleDateString(localSet, {

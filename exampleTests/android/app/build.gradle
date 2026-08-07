@@ -120,4 +120,26 @@ dependencies {
     }
 }
 
+// Bazi native modullerin transitively cektigi guncel AndroidX surumleri
+// (androidx.core 1.16, appcompat 1.7 ...) compileSdk 34/35 + AGP 8.6 istiyor.
+// Bu proje compileSdk 33 / AGP 7.4.2 uzerinde oldugu icin, AndroidX surumlerini
+// 33 ile uyumlu surumlere sabitliyoruz.
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.10.1'
+        force 'androidx.core:core-ktx:1.10.1'
+        force 'androidx.appcompat:appcompat:1.6.1'
+        force 'androidx.appcompat:appcompat-resources:1.6.1'
+        force 'androidx.annotation:annotation-experimental:1.3.1'
+
+        // Kotlin 1.8'den itibaren jdk7/jdk8 artifact'lari ana kotlin-stdlib
+        // icine tasindi. Eski 1.7.22 jdk7/jdk8 ile yeni 1.8.10 stdlib bir arada
+        // olunca "Duplicate class kotlin.io.path..." hatasi cikiyor. Hepsini
+        // 1.8.10'a hizalayip cakismayi kaldiriyoruz.
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.10'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10'
+    }
+}
+
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

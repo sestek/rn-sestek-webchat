@@ -30,7 +30,24 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     Array.from({ length: 50 }, () => 10 + Math.random() * 20)
   )[0];
 
-  const previousUrlRef = useRef<string | null>(null); 
+  const previousUrlRef = useRef<string | null>(null);
+  // Tembel indirilen ses bir kez indirildi mi? (indirme tekrarini onler)
+  const resolvedRef = useRef<boolean>(false);
+  const [preparing, setPreparing] = useState<boolean>(false);
+
+  // Android'de nitro-sound stopPlayer'i hazir olmayan bir MediaPlayer uzerinde
+  // IllegalStateException ile reject ediyor (iOS'ta sessizce basarili olur).
+  // Bu cagrilarin hepsi "her ihtimale karsi durdur" niteliginde, sonucu onemsiz.
+  const safeStopPlayer = () => {
+    try {
+      Promise.resolve(recorder.audioRecorderPlayer.stopPlayer()).catch(
+        () => {}
+      );
+    } catch {}
+    try {
+      recorder.audioRecorderPlayer.removePlayBackListener();
+    } catch {}
+  };
 
   const AuidoProp = customizeConfiguration?.audioSliderSettings;
   const defaultPlayImage = {
@@ -74,8 +91,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
 
   useEffect(() => {
     if (previousUrlRef.current !== props.url) {
-      recorder.audioRecorderPlayer.stopPlayer();
-      recorder.audioRecorderPlayer.removePlayBackListener();
+      safeStopPlayer();
 
       setUrlChanged(true);
     } else {
@@ -97,6 +113,13 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   };
 
   useEffect(() => {
+    // History'den gelen sesler (resolveAudio verilmis) mount'ta INDIRILMEZ.
+    // Sure olcumu icin dosyayi acmak indirmeyi tetiklerdi; kullanici hicbir
+    // zaman dinlemeyecegi onlarca dosya icin gecmisin yuklenmesini bekliyordu.
+    // Sure, ilk oynatmada playback listener'dan zaten geliyor.
+    if (props.resolveAudio) {
+      return;
+    }
     getDuration();
   }, []);
 
@@ -106,19 +129,52 @@ const AudioComponent: FC<PropsAudio> = (props) => {
       props.url &&
       customizeConfiguration?.autoPlayAudio
     ) {
-      recorder.audioRecorderPlayer.removePlayBackListener();
-      recorder.audioRecorderPlayer.stopPlayer();
+      safeStopPlayer();
       onPlayPlayer();
     }
   }, [props.url]);
 
+  // Tembel indirme: dosya diskte yoksa indirir, varsa hemen doner.
+  // Basarisizlikta false doner ki cagiran startPlayer'i hic denemesin.
+  const ensureAudioReady = async (): Promise<boolean> => {
+    if (!props.resolveAudio) {
+      return !!props.url;
+    }
+    if (resolvedRef.current) {
+      return true;
+    }
+    try {
+      setPreparing(true);
+      await props.resolveAudio();
+      resolvedRef.current = true;
+      return true;
+    } catch (e) {
+      console.warn('audio could not be downloaded:', props.url, e);
+      return false;
+    } finally {
+      setPreparing(false);
+    }
+  };
+
   const getDuration = async () => {
-    await recorder.audioRecorderPlayer.startPlayer(props.url);
+    // Indirme basarisiz oldugunda url null geliyor; startPlayer(null) native
+    // tarafta "Value is null, expected a String" firlatir.
+    if (!props.url) {
+      return;
+    }
+    // Bozuk/eksik indirilen ses dosyalari startPlayer'i reject ettiriyor
+    // (orn. OSStatus 2003334207 = desteklenmeyen dosya turu). Yakalamazsak
+    // "Uncaught (in promise)" olarak patlar ve dev'de kirmizi ekran acar.
+    try {
+      await recorder.audioRecorderPlayer.startPlayer(props.url);
+    } catch (e) {
+      console.warn('audio could not be opened:', props.url, e);
+      return;
+    }
     recorder.audioRecorderPlayer.addPlayBackListener((e: any) => {
       setDuration(e.duration);
       setCurrentTime(e.duration);
-      recorder.audioRecorderPlayer.stopPlayer();
-      recorder.audioRecorderPlayer.removePlayBackListener();
+      safeStopPlayer();
       setStart(false);
       return;
     });
@@ -126,24 +182,37 @@ const AudioComponent: FC<PropsAudio> = (props) => {
 
   useEffect(() => {
     if (currentTime === duration && currentTime !== 0) {
-      recorder.audioRecorderPlayer.stopPlayer();
-      recorder.audioRecorderPlayer.removePlayBackListener();
+      safeStopPlayer();
       setCurrentTime(duration);
       setStart(false);
     }
   }, [currentTime, duration]);
 
   const onPlayPlayer = async () => {
-    if (currentTime < duration && currentTime > 0) {
-      if (urlChanged) {
+    if (!props.url) {
+      return;
+    }
+    // Dosya henuz inmediyse burada iner (ilk oynatma).
+    if (!(await ensureAudioReady())) {
+      setStart(false);
+      return;
+    }
+    try {
+      if (currentTime < duration && currentTime > 0) {
+        if (urlChanged) {
+          setCurrentTime(0);
+          await recorder.audioRecorderPlayer.startPlayer(props.url);
+        } else {
+          await recorder.audioRecorderPlayer.resumePlayer();
+        }
+      } else {
         setCurrentTime(0);
         await recorder.audioRecorderPlayer.startPlayer(props.url);
-      } else {
-        await recorder.audioRecorderPlayer.resumePlayer();
       }
-    } else {
-      setCurrentTime(0);
-      await recorder.audioRecorderPlayer.startPlayer(props.url);
+    } catch (e) {
+      console.warn('audio could not be played:', props.url, e);
+      setStart(false);
+      return;
     }
 
     recorder.audioRecorderPlayer.addPlayBackListener((e: any) => {
@@ -159,8 +228,7 @@ const AudioComponent: FC<PropsAudio> = (props) => {
   };
 
   const onPausePlayer = async () => {
-    recorder.audioRecorderPlayer.removePlayBackListener();
-    await recorder.audioRecorderPlayer.stopPlayer();
+    safeStopPlayer();
     setStart(false);
   };
 
@@ -199,7 +267,10 @@ const AudioComponent: FC<PropsAudio> = (props) => {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => (!start ? onPlayPlayer() : onPausePlayer())}
-        style={{ marginRight: 10 }}
+        // Indirme surerken tekrar basilmasin: ikinci istek ayni dosyayi
+        // yeniden indirmeye calisirdi.
+        disabled={preparing}
+        style={{ marginRight: 10, opacity: preparing ? 0.5 : 1 }}
       >
         {renderSliderImage()}
       </TouchableOpacity>

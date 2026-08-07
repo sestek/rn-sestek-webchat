@@ -1,6 +1,6 @@
 {
   "name": "rn-sestek-webchat",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "React Native Sestek Webchat Plugin",
   "module": "src/index",
   "react-native": "src/index",
@@ -84,6 +84,8 @@
     "preset": "react-native",
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
+      "<rootDir>/exampleTests/",
+      "<rootDir>/exampleNewArch/",
       "<rootDir>/lib/"
     ]
   },

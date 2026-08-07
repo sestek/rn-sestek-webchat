@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground, Text } from 'react-native';
+import { ImageBackground } from 'react-native';
 import { styles } from '../modal/style';
 import { GenerateBodyComponent } from '../../types/components/GenerateBodyComponent';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
