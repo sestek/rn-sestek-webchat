@@ -8,44 +8,97 @@ import RenderHTML, {
 import Markdown from '../plugin/markdown';
 import { FontSettings } from '../types/propsCustomizeConfiguration';
 
+const NAMED_ENTITIES: Record<string, string> = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&apos;': "'",
+  '&nbsp;': ' ',
+  '&copy;': '©',
+  '&reg;': '®',
+  '&trade;': '™',
+  '&euro;': '€',
+  '&pound;': '£',
+  '&yen;': '¥',
+  '&cent;': '¢',
+  '&hearts;': '♥',
+  '&diams;': '♦',
+  '&clubs;': '♣',
+  '&spades;': '♠',
+};
+
+const NAMED_ENTITY_PATTERN = new RegExp(
+  Object.keys(NAMED_ENTITIES).join('|'),
+  'g'
+);
+const HEX_ENTITY_PATTERN = /&#x([0-9A-Fa-f]+);/g;
+const DEC_ENTITY_PATTERN = /&#(\d+);/g;
+const HTML_TAG_PATTERN = /<\/?[a-z][\s\S]*>/i;
+
 const decodeHTMLEntities = (text: string): string => {
   if (!text) return text;
 
-  let decoded = text.replace(/&#x([0-9A-Fa-f]+);/g, (_, hex) => {
-    const codePoint = parseInt(hex, 16);
-    return String.fromCodePoint(codePoint);
-  });
+  if (text.indexOf('&') === -1) return text;
 
-  decoded = decoded.replace(/&#(\d+);/g, (_, dec) => {
-    const codePoint = parseInt(dec, 10);
-    return String.fromCodePoint(codePoint);
-  });
+  return text
+    .replace(HEX_ENTITY_PATTERN, (_, hex) =>
+      String.fromCodePoint(parseInt(hex, 16))
+    )
+    .replace(DEC_ENTITY_PATTERN, (_, dec) =>
+      String.fromCodePoint(parseInt(dec, 10))
+    )
+    .replace(NAMED_ENTITY_PATTERN, (match) => NAMED_ENTITIES[match] ?? match);
+};
 
-  const namedEntities: Record<string, string> = {
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&apos;': "'",
-    '&nbsp;': ' ',
-    '&copy;': '©',
-    '&reg;': '®',
-    '&trade;': '™',
-    '&euro;': '€',
-    '&pound;': '£',
-    '&yen;': '¥',
-    '&cent;': '¢',
-    '&hearts;': '♥',
-    '&diams;': '♦',
-    '&clubs;': '♣',
-    '&spades;': '♠',
+const shouldRenderAsHTML = (text: string) => HTML_TAG_PATTERN.test(text);
+
+const CUSTOM_HTML_ELEMENT_MODELS = {
+  iframe: HTMLElementModel.fromCustomModel({
+    tagName: 'iframe',
+    contentModel: HTMLContentModel.block,
+    mixedUAStyles: {
+      width: '100%',
+      height: '200px',
+    },
+  }),
+};
+
+const tagsStylesCache = new Map<string, any>();
+
+const getTagsStyles = (fontSize: number, color: string) => {
+  const key = `${fontSize}|${color}`;
+  const cached = tagsStylesCache.get(key);
+  if (cached) return cached;
+
+  const commonStyles = {
+    fontSize,
+    color,
+    marginTop: 10,
+    marginBottom: 10,
   };
 
-  Object.entries(namedEntities).forEach(([entity, char]) => {
-    decoded = decoded.replace(new RegExp(entity, 'g'), char);
-  });
+  const tagsStyles = {
+    p: commonStyles,
+    h1: commonStyles,
+    h2: commonStyles,
+    h3: commonStyles,
+    h4: commonStyles,
+    h5: commonStyles,
+    h6: commonStyles,
+    b: { fontSize },
+    i: commonStyles,
+    a: { fontSize, color: 'blue' },
+    span: commonStyles,
+    div: commonStyles,
+    ul: commonStyles,
+    li: commonStyles,
+    br: commonStyles,
+    em: { fontSize },
+  };
 
-  return decoded;
+  tagsStylesCache.set(key, tagsStyles);
+  return tagsStyles;
 };
 
 const useRenderContent = (
@@ -57,69 +110,21 @@ const useRenderContent = (
 ) => {
   const decodedText = decodeHTMLEntities(text);
 
-  const shouldRenderAsHTML = (text: string) => {
-    const htmlTagPattern = /<\/?[a-z][\s\S]*>/i;
-    return htmlTagPattern.test(text);
-  };
-
-  const renderMarkdown = (text: string, textType: string) => {
+  const renderMarkdown = (markdownText: string, type: string) => {
     return (
-      <Markdown
-        color={messageColor}
-        fontSettings={fontSettings}
-        textType={textType}
-      >
-        {text}
+      <Markdown color={messageColor} fontSettings={fontSettings} textType={type}>
+        {markdownText}
       </Markdown>
     );
   };
 
-  const renderHTMLContent = (html: string, textType: string) => {
+  const renderHTMLContent = (html: string, type: string) => {
     let fontSize = fontSettings?.descriptionFontSize || 13;
-    if (textType === 'title') fontSize = fontSettings?.titleFontSize || 18;
-    if (textType === 'subtitle')
-      fontSize = fontSettings?.subtitleFontSize || 16;
+    if (type === 'title') fontSize = fontSettings?.titleFontSize || 18;
+    if (type === 'subtitle') fontSize = fontSettings?.subtitleFontSize || 16;
 
-    const commonStyles = {
-      fontSize: fontSize,
-      color: messageColor || 'inherit',
-      marginTop: 10,
-      marginBottom: 10,
-    };
-
-    const tagsStyles = {
-      p: commonStyles,
-      h1: commonStyles,
-      h2: commonStyles,
-      h3: commonStyles,
-      h4: commonStyles,
-      h5: commonStyles,
-      h6: commonStyles,
-      b: { fontSize },
-      i: commonStyles,
-      a: {
-        fontSize: fontSize,
-        color: 'blue',
-      },
-      span: commonStyles,
-      div: commonStyles,
-      ul: commonStyles,
-      li: commonStyles,
-      br: commonStyles,
-      em: { fontSize },
-    };
-
+    const tagsStyles = getTagsStyles(fontSize, messageColor || 'inherit');
     const formattedHtml = `<div>${html.replace(/\n/g, '<br/>')}</div>`;
-    const customHTMLElementModels = {
-      iframe: HTMLElementModel.fromCustomModel({
-        tagName: 'iframe',
-        contentModel: HTMLContentModel.block,
-        mixedUAStyles: {
-          width: '100%',
-          height: '200px',
-        },
-      }),
-    };
 
     const renderers = {
       iframe: ({ tnode }: { tnode: TNode }) => {
@@ -162,7 +167,7 @@ const useRenderContent = (
           contentWidth={Dimensions.get('window').width}
           source={{ html: formattedHtml }}
           tagsStyles={tagsStyles}
-          customHTMLElementModels={customHTMLElementModels}
+          customHTMLElementModels={CUSTOM_HTML_ELEMENT_MODELS}
           renderers={renderers}
         />
       </View>

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useMemo } from 'react';
 
 interface LoadingContextType {
   loading: boolean;
@@ -12,8 +12,9 @@ const LoadingContext = createContext<LoadingContextType>({
 
 export const LoadingProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const value = useMemo(() => ({ loading, setLoading }), [loading]);
   return (
-    <LoadingContext.Provider value={{ loading, setLoading }}>
+    <LoadingContext.Provider value={value}>
       {children}
     </LoadingContext.Provider>
   );

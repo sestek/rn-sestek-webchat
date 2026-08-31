@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import type PropsModules from '../types/propsModules';
 
 interface ModulesContextType {
@@ -8,8 +8,9 @@ interface ModulesContextType {
 const ModulesContext = createContext<ModulesContextType | undefined>(undefined);
 
 const ModulesProvider: React.FC<{ modules: PropsModules }> = ({ modules, children }) => {
+  const value = useMemo(() => ({ modules }), [modules]);
   return (
-    <ModulesContext.Provider value={{ modules }}>
+    <ModulesContext.Provider value={value}>
       {children}
     </ModulesContext.Provider>
   );

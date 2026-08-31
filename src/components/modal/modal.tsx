@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useRef,
   useMemo,
+  useCallback,
 } from 'react';
 import {
   Modal,
@@ -27,6 +28,7 @@ import GenerateBody from '../body/GenerateBody';
 import LoadingModal from '../loadingModal';
 import { useLoading } from '../../context/LoadingContext';
 import useCheckBackground from '../../hook/useCheckBackground';
+import useKeyboardVisible from '../../hook/useKeyboardVisible';
 import { useCustomizeConfiguration } from '../../context/CustomizeContext';
 import { useModules } from '../../context/ModulesContext';
 import FileSizeWarningModal from '../fileSizeWarningModal';
@@ -37,6 +39,12 @@ import { InfoAreaView } from '../header/InfoAreaView';
 const PassthroughView = ({ children, style }: any) => (
   <View style={style}>{children}</View>
 );
+
+const NO_EDGES: any[] = [];
+const TOP_EDGE: any[] = ['top'];
+const BOTTOM_EDGE: any[] = ['bottom'];
+
+const FALLBACK_BOTTOM_INSET = Platform.OS === 'ios' ? 20 : 8;
 
 const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
   (props, ref) => {
@@ -66,6 +74,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const { loading } = useLoading();
     const { background } = useCheckBackground();
+    const keyboardVisible = useKeyboardVisible();
 
     const [showInfo, setShowInfo] = useState(false);
     const [inputData, setInputData] = useState('');
@@ -73,8 +82,8 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const scrollViewRef = useRef<ScrollView>(null);
 
-    const toggleInfo = () => setShowInfo((v) => !v);
-    const changeInputData = (text: string) => setInputData(text);
+    const toggleInfo = useCallback(() => setShowInfo((v) => !v), []);
+    const changeInputData = useCallback((text: string) => setInputData(text), []);
 
     const {
       messageList,
@@ -105,6 +114,21 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
 
     const handlersRef = useRef({ getHistory, continueIfNeeded });
     handlersRef.current = { getHistory, continueIfNeeded };
+    const chatRef = useRef({ sendMessage, sendAudio, sendAttachment });
+    chatRef.current = { sendMessage, sendAudio, sendAttachment };
+
+    const stableSendMessage = useCallback(
+      (args: any) => chatRef.current.sendMessage(args),
+      []
+    );
+    const stableSendAudio = useCallback(
+      (...args: any[]) => (chatRef.current.sendAudio as any)(...args),
+      []
+    );
+    const stableSendAttachment = useCallback(
+      (...args: any[]) => (chatRef.current.sendAttachment as any)(...args),
+      []
+    );
 
     // Sohbet gorunur oldugunda ve uygulama arka plandan ONE dondugunde
     // history ile senkronlan; arka plandayken bir sey yapma.
@@ -117,11 +141,16 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       handlersRef.current.continueIfNeeded?.();
     }, [visible, background]);
 
-    const closeSizeWarningModal = () => {
+    const closeSizeWarningModal = useCallback(() => {
       setExceededFileSize(false);
-    };
+    }, [setExceededFileSize]);
 
     const isAndroid = Platform.OS === 'android';
+
+    const hasSafeAreaContext = !!SafeAreaContext?.SafeAreaView;
+    const footerEdges = keyboardVisible ? NO_EDGES : BOTTOM_EDGE;
+    const footerBottomPadding =
+      keyboardVisible || hasSafeAreaContext ? 0 : FALLBACK_BOTTOM_INSET;
 
     const isVisible = visible && Object.keys(customizeConfiguration).length > 0;
 
@@ -181,10 +210,11 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
           )}
           <KeyboardAvoidingView
             style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            behavior="padding"
+            keyboardVerticalOffset={0}
             pointerEvents="box-none"
           >
-            <SafeAreaView edges={isAndroid ? ['top'] : []} style={headerStyle}>
+            <SafeAreaView edges={isAndroid ? TOP_EDGE : NO_EDGES} style={headerStyle}>
               <View style={[styles.header, headerStyle]}>
                 <HeaderComponent
                   hideModal={hideModal}
@@ -219,20 +249,26 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                       <BodyComponent
                         messageList={messageList}
                         changeInputData={changeInputData}
-                        sendMessage={sendMessage}
+                        sendMessage={stableSendMessage}
                         scrollViewRef={scrollViewRef}
                         defaultConfiguration={defaultConfiguration}
                         url={url}
                       />
 
-                      <SafeAreaView edges={['bottom']}>
-                        <View style={[styles.footer, footerStyle]}>
+                      <SafeAreaView edges={footerEdges}>
+                        <View
+                          style={[
+                            styles.footer,
+                            footerStyle,
+                            { paddingBottom: footerBottomPadding },
+                          ]}
+                        >
                           <FooterComponent
                             inputData={inputData}
                             changeInputData={changeInputData}
-                            sendMessage={sendMessage}
-                            sendAudio={sendAudio}
-                            sendAttachment={sendAttachment}
+                            sendMessage={stableSendMessage}
+                            sendAudio={stableSendAudio}
+                            sendAttachment={stableSendAttachment}
                             scrollViewRef={scrollViewRef}
                             isDropdownVisible={isDropdownVisible}
                             setDropdownVisible={setDropdownVisible}

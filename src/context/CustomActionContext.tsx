@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useMemo } from 'react';
 
 interface CustomActionType {
   globalCustomAction: any;
@@ -12,8 +12,12 @@ const CustomActionContext = createContext<CustomActionType>({
 
 export const CustomActionProvider: React.FC = ({ children }) => {
   const [globalCustomAction, setGlobalCustomAction] = useState<any>();
+  const value = useMemo(
+    () => ({ globalCustomAction, setGlobalCustomAction }),
+    [globalCustomAction]
+  );
   return (
-    <CustomActionContext.Provider value={{ globalCustomAction, setGlobalCustomAction }}>
+    <CustomActionContext.Provider value={value}>
       {children}
     </CustomActionContext.Provider>
   );

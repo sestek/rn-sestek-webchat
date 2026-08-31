@@ -108,76 +108,82 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
   );
 
   useEffect(() => {
-    if (Array.isArray(attachmentsData)) {
-      if (attachmentsData.length === 1) {
-        attachmentsData[0]?.content?.images?.map((image: any) => {
-          Image.getSize(
-            image.url,
-            (width: number, height: number) => {
-              setImageList((prev: any) => [
-                ...prev,
-                { url: image.url, width, height },
-              ]);
-            },
-            (error) => {
-              console.warn('image size could not be read', error);
-            }
-          );
+    if (!Array.isArray(attachmentsData)) {
+      return;
+    }
+
+    let cancelled = false;
+    const timers: any[] = [];
+    setImageList([]);
+    setCardList([]);
+
+    if (attachmentsData.length === 1) {
+      attachmentsData[0]?.content?.images?.forEach((image: any) => {
+        Image.getSize(
+          image.url,
+          (width: number, height: number) => {
+            if (cancelled) return;
+            setImageList((prev: any) => [
+              ...prev,
+              { url: image.url, width, height },
+            ]);
+          },
+          (error) => {
+            console.warn('image size could not be read', error);
+          }
+        );
+      });
+    }
+
+    if (attachmentsData.length > 1) {
+      attachmentsData.forEach((attach: any, key: number) => {
+        calculateHeight({
+          title: attach?.content?.title,
+          subtitle: attach?.content?.subtitle,
+          text: attach?.content?.text,
+          images: attach?.content?.images?.[0]?.url,
+          buttons: attach?.content?.buttons,
         });
-      }
-      if (attachmentsData.length > 1) {
-        attachmentsData.map((attach: any, key: number) => {
-          calculateHeight({
-            title: attach?.content?.title,
-            subtitle: attach?.content?.subtitle,
-            text: attach?.content?.text,
-            images: attach?.content?.images[0]?.url,
-            buttons: attach?.content?.buttons,
-          });
-          if (attach?.content?.images[0]?.url) {
-            setTimeout(function () {
-              Image.getSize(
-                attach?.content?.images[0]?.url,
-                (width: number, height: number) => {
-                  setCardList((prev: any) => [
-                    ...prev,
-                    {
-                      key,
-                      title: attach?.content?.title,
-                      subtitle: attach?.content?.subtitle,
-                      text: attach?.content?.text,
-                      url: attach?.content?.images[0].url,
-                      width,
-                      height,
-                      buttons: attach?.content?.buttons,
-                    },
-                  ]);
-                },
-                (error) => {
-                  console.warn('image size could not be read', error);
-                }
-              );
-            }, key * 400);
-          } else {
-            setTimeout(function () {
+
+        const imageUrl = attach?.content?.images?.[0]?.url;
+        const card = {
+          key,
+          title: attach?.content?.title,
+          subtitle: attach?.content?.subtitle,
+          text: attach?.content?.text,
+          url: imageUrl,
+          buttons: attach?.content?.buttons,
+        };
+
+        timers.push(
+          setTimeout(() => {
+            if (cancelled) return;
+            if (!imageUrl) {
               setCardList((prev: any) => [
                 ...prev,
-                {
-                  key,
-                  title: attach?.content?.title,
-                  subtitle: attach?.content?.subtitle,
-                  text: attach?.content?.text,
-                  url: attach?.content?.images[0].url,
-                  width: 0,
-                  height: 0,
-                  buttons: attach?.content?.buttons,
-                },
+                { ...card, width: 0, height: 0 },
               ]);
-            }, key * 400);
-          }
-        });
-      }
+              return;
+            }
+            Image.getSize(
+              imageUrl,
+              (width: number, height: number) => {
+                if (cancelled) return;
+                setCardList((prev: any) => [...prev, { ...card, width, height }]);
+              },
+              (error) => {
+                console.warn('image size could not be read', error);
+              }
+            );
+          }, key * 400)
+        );
+      });
     }
+
+    return () => {
+      cancelled = true;
+      timers.forEach((t) => clearTimeout(t));
+    };
   }, [attachmentsData]);
 
   const getTimeGenerate = (props: any) => {
@@ -315,12 +321,97 @@ MessageBox.defaultProps = {
   renderAddCmp: null,
 };
 
+const ACTIVITY_KEYS = [
+  'id',
+  'type',
+  'text',
+  'message',
+  'displayOverride',
+  'channel',
+  'attachmentLayout',
+  'local',
+];
+
+const sameTimestamp = (a: any, b: any) => {
+  const ta = a instanceof Date ? a.getTime() : a;
+  const tb = b instanceof Date ? b.getTime() : b;
+  return ta === tb;
+};
+
+const sameButtons = (a: any, b: any) => {
+  if (a === b) return true;
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) {
+    return false;
+  }
+  for (let i = 0; i < a.length; i++) {
+    if (a[i]?.title !== b[i]?.title || a[i]?.value !== b[i]?.value) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const sameContent = (a: any, b: any) => {
+  if (a === b) return true;
+  if (typeof a === 'string' || typeof b === 'string') {
+    return a === b;
+  }
+  if (!a || !b) return false;
+  if (a.title !== b.title || a.subtitle !== b.subtitle || a.text !== b.text) {
+    return false;
+  }
+  const ia = a.images;
+  const ib = b.images;
+  if (ia !== ib) {
+    if (!Array.isArray(ia) || !Array.isArray(ib) || ia.length !== ib.length) {
+      return false;
+    }
+    for (let i = 0; i < ia.length; i++) {
+      if (ia[i]?.url !== ib[i]?.url) return false;
+    }
+  }
+  return sameButtons(a.buttons, b.buttons);
+};
+
+const sameAttachments = (a: any, b: any) => {
+  if (a === b) return true;
+  if (!Array.isArray(a) || !Array.isArray(b)) return false;
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    const x = a[i];
+    const y = b[i];
+    if (x === y) continue;
+    if (!x || !y) return false;
+    if (
+      x.contentType !== y.contentType ||
+      x.message !== y.message ||
+      x.name !== y.name ||
+      x.messageType !== y.messageType
+    ) {
+      return false;
+    }
+    if (!sameContent(x.content, y.content)) return false;
+  }
+  return true;
+};
+
+const sameActivity = (a: any, b: any) => {
+  if (a === b) return true;
+  if (!a || !b) return false;
+  for (let i = 0; i < ACTIVITY_KEYS.length; i++) {
+    const key = ACTIVITY_KEYS[i]!;
+    if (a[key] !== b[key]) return false;
+  }
+  if (!sameTimestamp(a.timestamp, b.timestamp)) return false;
+  return sameAttachments(a.attachments, b.attachments);
+};
+
 const customComparator = (
   prevProps: PropsMessageBoxComponent,
   nextProps: PropsMessageBoxComponent
 ) => {
   return (
-    JSON.stringify(nextProps.activity) === JSON.stringify(prevProps.activity) &&
+    sameActivity(prevProps.activity, nextProps.activity) &&
     nextProps.isLastMessage === prevProps.isLastMessage
   );
 };

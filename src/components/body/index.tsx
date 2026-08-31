@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import type { PropsBodyComponent } from 'src/types';
 
 import { styles } from './style';
@@ -20,7 +20,7 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
     (x: any) => x.message !== '' && x.message !== '<p></p>'
   );
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView
         ref={scrollViewRef}
         keyboardShouldPersistTaps="handled"
@@ -68,8 +68,8 @@ const BodyComponent: FC<PropsBodyComponent> = (props) => {
           />
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export default BodyComponent;
+export default React.memo(BodyComponent);

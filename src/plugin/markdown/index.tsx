@@ -33,6 +33,34 @@ interface MarkdownProps {
   textType?: string;
 }
 
+const rulesCache = new Map<
+  string,
+  {
+    parse: (source: string) => CustomToken[];
+    renderer: (tree: CustomToken[]) => JSX.Element;
+  }
+>();
+
+const isCacheable = (props: MarkdownProps) =>
+  !props.enableLightBox &&
+  !props.navigator &&
+  !props.imageParam &&
+  !props.onLink &&
+  !props.bgImage &&
+  !props.onImageOpen &&
+  !props.onImageClose &&
+  !props.rules &&
+  !props.style;
+
+const cacheKeyFor = (props: MarkdownProps) =>
+  [
+    props.color ?? '',
+    props.textType ?? '',
+    props.fontSettings?.titleFontSize ?? '',
+    props.fontSettings?.subtitleFontSize ?? '',
+    props.fontSettings?.descriptionFontSize ?? '',
+  ].join('|');
+
 class Markdown extends Component<MarkdownProps> {
   parse: (source: string) => CustomToken[];
   renderer: (tree: CustomToken[]) => JSX.Element;
@@ -43,6 +71,17 @@ class Markdown extends Component<MarkdownProps> {
       throw new Error(
         'props.navigator must be specified when enabling lightbox'
       );
+    }
+
+    const cacheable = isCacheable(props);
+    const cacheKey = cacheable ? cacheKeyFor(props) : null;
+    if (cacheKey !== null) {
+      const cached = rulesCache.get(cacheKey);
+      if (cached) {
+        this.parse = cached.parse;
+        this.renderer = cached.renderer;
+        return;
+      }
     }
 
     const opts = {
@@ -101,6 +140,13 @@ class Markdown extends Component<MarkdownProps> {
       return parser(blockSource, { inline: false }) as CustomToken[];
     };
     this.renderer = SimpleMarkdown.outputFor(rules, 'react' as any);
+
+    if (cacheKey !== null) {
+      rulesCache.set(cacheKey, {
+        parse: this.parse,
+        renderer: this.renderer,
+      });
+    }
   }
 
   componentDidMount() {

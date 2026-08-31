@@ -11,7 +11,7 @@ export interface InProps {
 }
 
 const CloseModal = forwardRef<InProps, PropsCloseModalSettings>(
-  (props) => {
+  (props, _ref) => {
     const {
       closeModal,
       setCloseModal,

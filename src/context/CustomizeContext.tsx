@@ -1,4 +1,12 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
 import type PropsCustomizeConfiguration from '../types/propsCustomizeConfiguration';
 import {
   Back,
@@ -227,25 +235,29 @@ const CustomizeConfigurationProvider: React.FC<{
   initialConfig: PropsCustomizeConfiguration;
   integrationId?: any;
 }> = ({ url, initialConfig, integrationId, children }) => {
-  const mergedInitialConfig: PropsCustomizeConfiguration = {
-    ...defaultCustomizeConfiguration,
-    ...initialConfig,
-  };
-
   const [customizeConfiguration, setCustomizeConfiguration] =
-    useState<PropsCustomizeConfiguration>(mergedInitialConfig);
+    useState<PropsCustomizeConfiguration>(() => ({
+      ...defaultCustomizeConfiguration,
+      ...initialConfig,
+    }));
 
   const languages = customizeConfiguration.language ?? {};
-  const languageKeys = Object.keys(languages);
-  const defaultLanguage = languageKeys.length > 0 ? languageKeys[0] : 'en';
 
-  const [language, setLanguage] = useState(defaultLanguage);
+  const [language, setLanguage] = useState(() => {
+    const keys = Object.keys(customizeConfiguration.language ?? {});
+    return keys.length > 0 ? keys[0]! : 'en';
+  });
 
-  const changeLanguage = (newLanguage: string) => {
+  const changeLanguage = useCallback((newLanguage: string) => {
     setLanguage(newLanguage);
-  };
+  }, []);
 
-  const getTexts = () => languages[language] ?? {};
+  const textsRef = useRef({ languages, language });
+  textsRef.current = { languages, language };
+  const getTexts = useCallback(
+    () => textsRef.current.languages[textsRef.current.language] ?? {},
+    []
+  );
 
   useEffect(() => {
     const fetchIntegrationConfig = async (integrationId: string) => {
@@ -281,18 +293,22 @@ const CustomizeConfigurationProvider: React.FC<{
     if (integrationId) {
       fetchIntegrationConfig(integrationId);
     }
-  }, [initialConfig, url, integrationId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, integrationId]);
+
+  const value = useMemo(
+    () => ({
+      customizeConfiguration,
+      setCustomizeConfiguration,
+      language,
+      changeLanguage,
+      getTexts,
+    }),
+    [customizeConfiguration, language, changeLanguage, getTexts]
+  );
 
   return (
-    <CustomizeConfigurationContext.Provider
-      value={{
-        customizeConfiguration,
-        setCustomizeConfiguration,
-        language,
-        changeLanguage,
-        getTexts,
-      }}
-    >
+    <CustomizeConfigurationContext.Provider value={value}>
       {children}
     </CustomizeConfigurationContext.Provider>
   );

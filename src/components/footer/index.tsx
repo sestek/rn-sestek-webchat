@@ -45,16 +45,15 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     bottomInputAccessibilityLabel,
   } = customizeConfiguration;
 
-  const Record =
+  const [recorder] = useState<Recorder | undefined>(() =>
     modules?.AudioRecorderPlayer && modules?.RNFS
       ? new Recorder(
           modules?.AudioRecorderPlayer,
           modules?.RNFS,
           modules?.Record
         )
-      : undefined;
-
-  const [recorder] = useState<Recorder | undefined>(Record);
+      : undefined
+  );
   const [recordStart, setRecordStart] = useState<boolean>(false);
   const [disableRecord, setDisableRecord] = useState<boolean>(false);
 
