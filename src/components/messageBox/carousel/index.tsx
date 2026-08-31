@@ -138,7 +138,8 @@ const Index = ({
               }}
               style={{
                 marginLeft: idx !== 0 ? 10 : 0,
-                backgroundColor: '#F5F5F5',
+                backgroundColor:
+                  customizeConfiguration?.chatBotMessageBoxBackground,
                 borderRadius: 10,
                 width: CARD_WIDTH,
                 paddingHorizontal: 12,
