@@ -22,6 +22,7 @@ import BodyComponent from '../body';
 import FooterComponent from '../footer';
 import HeaderComponent from '../header';
 import { styles } from './style';
+import { GeneralManager } from '../../services';
 import CloseModal from '../closeModal';
 import { ModalCompRef } from '../../types/components/ModalComponent';
 import GenerateBody from '../body/GenerateBody';
@@ -162,6 +163,19 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
       [customizeConfiguration?.headerColor]
     );
 
+    const headerHeightStyle = useMemo(() => {
+      const height = customizeConfiguration?.headerHeight;
+      if (!height) {
+        return undefined;
+      }
+      return {
+        height:
+          Platform.OS === 'android'
+            ? height
+            : GeneralManager.getStatusBarHeight() + height,
+      };
+    }, [customizeConfiguration?.headerHeight]);
+
     const footerStyle = useMemo(
       () =>
         customizeConfiguration?.bottomColor
@@ -215,7 +229,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
             pointerEvents="box-none"
           >
             <SafeAreaView edges={isAndroid ? TOP_EDGE : NO_EDGES} style={headerStyle}>
-              <View style={[styles.header, headerStyle]}>
+              <View style={[styles.header, headerStyle, headerHeightStyle]}>
                 <HeaderComponent
                   hideModal={hideModal}
                   clickClosedConversationModalFunc={
@@ -255,7 +269,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                         url={url}
                       />
 
-                      <SafeAreaView edges={footerEdges}>
+                      <SafeAreaView edges={footerEdges} style={footerStyle}>
                         <View
                           style={[
                             styles.footer,

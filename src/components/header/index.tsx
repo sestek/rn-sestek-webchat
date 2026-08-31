@@ -26,6 +26,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
   const {
     headerAlignmentType,
     headerTextStyle,
+    headerHeight,
     infoArea,
     infoAreaIcon,
   } = customizeConfiguration;
@@ -89,6 +90,7 @@ const HeaderComponent: FC<PropsHeaderComponent> = (props) => {
     <View
       style={[
         styles.headerContainer,
+        headerHeight ? { minHeight: headerHeight } : null,
         headerAlignmentType === 'textToRight' && {
           flexDirection: 'row-reverse',
         },

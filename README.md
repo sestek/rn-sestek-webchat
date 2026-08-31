@@ -53,15 +53,14 @@ If you use to slider, you must also install the "@miblanchard/react-native-slide
 ```
 npm i --save react-native-file-viewer
 ```
+
 If you do not include this package, users won't be able to open or view the files that are downloaded. This package handles file viewing functionality across different file types and ensures that files can be properly viewed once downloaded.
 
-You can follow the [link](https://www.npmjs.com/package/react-native-file-viewer)  to integrate this package and ensure files open correctly in your application.
-
-
+You can follow the [link](https://www.npmjs.com/package/react-native-file-viewer) to integrate this package and ensure files open correctly in your application.
 
 ### If you want to send files and pictures, you need to follow these steps
 
-##### Step 1: Install react-native-document-picker for file 
+##### Step 1: Install react-native-document-picker for file
 
 RN >= 0.69
 
@@ -82,7 +81,7 @@ RN < 0.63 Older RN versions are not supported.
 ##### Step 2: Install react-native-image-picker for gallery
 
 ```
-npm i --save react-native-image-picker@7.1.2 
+npm i --save react-native-image-picker@7.1.2
 ```
 
 You can follow the [link](https://www.npmjs.com/package/react-native-image-picker) below to integrate -note :according to the android API version, the appropriate package version can be selected.
@@ -97,7 +96,6 @@ If you want to send files, you also need to install the "rn-fetch-blob" package.
 You can follow the [link](https://www.npmjs.com/package/rn-fetch-blob) below to integrate
 
 ---
-
 
 ### Listening to event from conversation
 
@@ -125,18 +123,18 @@ feature, it never breaks the chat.
 Prop names are the same on both architectures — only the package you pass
 changes. The SDK detects which generation it received and adapts internally.
 
-| `modules` entry | Needed for | Old architecture | New Architecture (RN 0.76+) |
-| --- | --- | --- | --- |
-| `RNFS` | Voice messages, file download, audio in history | `rn-fetch-blob` | `react-native-blob-util` |
-| `AudioRecorderPlayer` + `Record` | Recording / playing voice messages | `react-native-audio-recorder-player` + `react-native-audio-record` | replaced by `nitroSound` |
-| `nitroSound` | Same, as a single package | — | `react-native-nitro-sound` |
-| `RNFileSelector` | Sending files | `react-native-document-picker` | `@react-native-documents/picker` |
-| `launchImageLibrary` / `launchcamera` | Sending photos from gallery / camera | `react-native-image-picker` | `react-native-image-picker` |
-| `fileViewer` | Opening a downloaded file | `react-native-file-viewer` | not needed — the SDK opens files through `RNFS` |
-| `asyncStorage` | Resuming a conversation after background / app kill | `@react-native-async-storage/async-storage` (v2) | same package, v2 **or** v3 |
-| `RNWebView` | HTML content, iframes, map cards | `react-native-webview` | `react-native-webview` |
-| `SafeAreaContext` | Status-bar / navigation-bar insets inside the chat modal | not needed | `react-native-safe-area-context` (recommended with edge-to-edge) |
-| `RNSlider` | — | kept for backward compatibility, no longer used | same |
+| `modules` entry                       | Needed for                                               | Old architecture                                                   | New Architecture (RN 0.76+)                                      |
+| ------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| `RNFS`                                | Voice messages, file download, audio in history          | `rn-fetch-blob`                                                    | `react-native-blob-util`                                         |
+| `AudioRecorderPlayer` + `Record`      | Recording / playing voice messages                       | `react-native-audio-recorder-player` + `react-native-audio-record` | replaced by `nitroSound`                                         |
+| `nitroSound`                          | Same, as a single package                                | —                                                                  | `react-native-nitro-sound`                                       |
+| `RNFileSelector`                      | Sending files                                            | `react-native-document-picker`                                     | `@react-native-documents/picker`                                 |
+| `launchImageLibrary` / `launchcamera` | Sending photos from gallery / camera                     | `react-native-image-picker`                                        | `react-native-image-picker`                                      |
+| `fileViewer`                          | Opening a downloaded file                                | `react-native-file-viewer`                                         | not needed — the SDK opens files through `RNFS`                  |
+| `asyncStorage`                        | Resuming a conversation after background / app kill      | `@react-native-async-storage/async-storage` (v2)                   | same package, v2 **or** v3                                       |
+| `RNWebView`                           | HTML content, iframes, map cards                         | `react-native-webview`                                             | `react-native-webview`                                           |
+| `SafeAreaContext`                     | Status-bar / navigation-bar insets inside the chat modal | not needed                                                         | `react-native-safe-area-context` (recommended with edge-to-edge) |
+| `RNSlider`                            | —                                                        | kept for backward compatibility, no longer used                    | same                                                             |
 
 What you lose by omitting an entry:
 
@@ -201,10 +199,10 @@ modules={{
 
 Controls what happens to a message's buttons once the user has answered.
 
-| Value | Behaviour |
-| --- | --- |
+| Value            | Behaviour                                                                                                                                                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `true` (default) | After a button is tapped — or a newer message arrives — that message's buttons stay visible but become non-clickable (dimmed). Only the latest message's buttons remain active. |
-| `false` | Every message's buttons stay clickable, the behaviour of earlier versions. |
+| `false`          | Every message's buttons stay clickable, the behaviour of earlier versions.                                                                                                      |
 
 ```js
 defaultConfiguration={{
@@ -377,6 +375,7 @@ const startStorageSession = () => {
   customizeConfiguration={{
     // Header
     headerColor: '#7743DB',
+    headerHeight: 45,
     headerText: 'Knovvu',
     headerTextStyle:{
       fontWeight: 'bold',
@@ -394,6 +393,7 @@ const startStorageSession = () => {
     headerAlignmentType: 'textToCenter',
     // Bottom
     bottomColor: 'white',
+    bottomHeight: 56,
     bottomInputText: 'Bottom input text..',
     bottomInputBorderColor: '#d5d5d5',
     bottomInputSendButtonColor: '#7743DB',
@@ -428,6 +428,7 @@ const startStorageSession = () => {
 
     // ChatBot MessageBox
     chatBotMessageBoxBackground: '#EFEFEF',
+    endOfConversationBackground: '#EFEFEF',
     chatBotMessageBoxTextColor: 'black',
     chatBotMessageIcon: {
       type: 'url',
@@ -495,7 +496,7 @@ const startStorageSession = () => {
     },
     // Before Func
     permissionAudioCheck: permissionAudioCheck,
-    permissionCameraCheck: permissionCameraCheck, 
+    permissionCameraCheck: permissionCameraCheck,
 
     //loading indicator
     indicatorColor : "#863CEB",
@@ -629,6 +630,28 @@ NOTE: With the language object in customizeConfiguration, you can update all tex
 
 ````
 
+#### Header height (`headerHeight`)
+
+- Sets the height of the header bar. Defaults to `45`.
+- On iOS the status bar height is added on top of this value automatically, so `headerHeight` is the height of the visible content row on both platforms.
+- The value is applied to both the outer header container and the inner row, so taller icons or larger `headerTextStyle.fontSize` will not overflow the bar.
+
+#### Bottom bar height (`bottomHeight`)
+
+- Sets the height of the bottom bar that holds the input and the send button.
+- It is applied as a minimum height: values larger than the natural content height grow the bar, smaller values have no effect because the input box height acts as the floor. If it is not sent, the bar keeps sizing itself to its content.
+
+#### Bottom bar and input colors (`bottomColor`, `bottomInputBackgroundColor`, `bottomInputBorderColor`)
+
+- `bottomColor` paints the whole bottom area — the row containing the input and the send button, its padding, and the bottom safe-area strip. Defaults to `white`.
+- `bottomInputBackgroundColor` and `bottomInputBorderColor` are applied to the bordered input box, so the input can be given a different color from the bar behind it.
+
+#### End of conversation messages (`endOfConversationBackground`)
+
+- Sets the background of the centered notice rendered for the session/agent status messages: `endOfConversation`, `CustomerAssignedToLiveAgent`, `CustomerTransferringToLiveAgent`, `LiveAgentAssignmentTimeout` and `EndOfLiveConversation`.
+- If it is not sent, `chatBotMessageBoxBackground` is used.
+
+
 For other additional information, we have created a document that you can use in the table below.
 
 | props              | type    | description                                                                                                                  |
@@ -644,11 +667,13 @@ You can customize your external components with the following values
 ```javascript
 export default interface PropsCustomizeConfiguration {
   headerColor?: string;
+  headerHeight?: number;
   headerTextStyle?:any;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
   headerAlignmentType?: HeaderAlignmentType;
   bottomColor?: string;
+  bottomHeight?: number;
   bottomInputText?: string;
   bottomInputBackgroundColor?: string;
   bottomInputBorderColor?: string;
@@ -663,6 +688,7 @@ export default interface PropsCustomizeConfiguration {
   chatBotMessageIcon?: IconType;
   chatBotMessageBoxTextColor?: string;
   chatBotMessageBoxBackground?: string;
+  endOfConversationBackground?: string;
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
   chatBotMessageBoxButtonTextColor?: string;

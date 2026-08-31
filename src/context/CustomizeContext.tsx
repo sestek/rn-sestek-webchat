@@ -36,6 +36,7 @@ interface CustomizeConfigurationContextType {
 
 export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
   headerColor: '#7743DB',
+  headerHeight: 45,
   headerTextStyle: {
     fontWeight: 'bold',
     fontSize: 15,
@@ -50,7 +51,7 @@ export const defaultCustomizeConfiguration: PropsCustomizeConfiguration = {
     value: CloseIcon,
   },
   headerAlignmentType: 'textToCenter',
-  bottomColor: 'transparent',
+  bottomColor: 'white',
   bottomInputBackgroundColor: 'white',
   bottomInputBorderColor: '#d5d5d5',
   bottomInputSendButtonColor: '#7743DB',

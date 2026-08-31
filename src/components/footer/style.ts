@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingTop: 0,
     paddingBottom: 5,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
   },
   inputWrapper: {
     flex: 1,

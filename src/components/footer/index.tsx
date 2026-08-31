@@ -37,6 +37,7 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
     bottomAttachmentIcon,
     bottomSendIcon,
     permissionAudioCheck,
+    bottomHeight,
     bottomInputBorderColor,
     bottomInputBackgroundColor,
     bottomInputSendButtonColor,
@@ -177,16 +178,23 @@ const FooterComponent: FC<PropsFooterComponent> = (props) => {
   ].filter(Boolean);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputWrapper}>
+    <View
+      style={[
+        styles.container,
+        bottomHeight ? { minHeight: bottomHeight } : null,
+      ]}
+    >
+      <View
+        style={[
+          styles.inputWrapper,
+          {
+            borderColor: bottomInputBorderColor,
+            backgroundColor: bottomInputBackgroundColor,
+          },
+        ]}
+      >
         <TextInput
-          style={[
-            styles.textInput,
-            {
-              borderColor: bottomInputBorderColor,
-              backgroundColor: bottomInputBackgroundColor,
-            },
-          ]}
+          style={styles.textInput}
           onFocus={() => {
             setTimeout(() => {
               scrollViewRef?.current?.scrollToEnd({ animated: true });

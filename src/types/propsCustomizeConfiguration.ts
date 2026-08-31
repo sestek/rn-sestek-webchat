@@ -1,10 +1,12 @@
 export default interface PropsCustomizeConfiguration {
   headerColor?: string;
+  headerHeight?: number;
   headerTextStyle?: any;
   headerHideIcon?: IconType;
   headerCloseIcon?: IconType;
   headerAlignmentType?: HeaderAlignmentType;
   bottomColor?: string;
+  bottomHeight?: number;
   bottomInputText?: string;
   bottomInputBackgroundColor?: string;
   bottomInputBorderColor?: string;
@@ -21,6 +23,7 @@ export default interface PropsCustomizeConfiguration {
   chatBotMessageIcon?: IconType;
   chatBotMessageBoxTextColor?: string;
   chatBotMessageBoxBackground?: string;
+  endOfConversationBackground?: string;
   chatBotMessageBoxButtonBackground?: string;
   chatBotMessageBoxButtonBorderColor?: string;
   chatBotMessageBoxButtonTextColor?: string;

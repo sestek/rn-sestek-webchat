@@ -35,6 +35,7 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
     chatBodyMessageBoxGap,
     chatBotMessageBoxBackground,
     chatBotMessageBoxTextColor,
+    endOfConversationBackground,
     userMessageBoxBackground,
     userMessageBoxTextColor,
   } = customizeConfiguration;
@@ -205,7 +206,8 @@ const MessageBox: FC<PropsMessageBoxComponent> = (props) => {
       <View
         style={{
           ...styles.endOfConversationContainer,
-          backgroundColor: chatBotMessageBoxBackground,
+          backgroundColor:
+            endOfConversationBackground ?? chatBotMessageBoxBackground,
         }}
       >
         <Text
