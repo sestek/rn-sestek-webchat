@@ -4,7 +4,9 @@ export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 5,
+    paddingHorizontal: 5,
+    paddingTop: 0,
+    paddingBottom: 5,
     backgroundColor: 'white',
   },
   inputWrapper: {

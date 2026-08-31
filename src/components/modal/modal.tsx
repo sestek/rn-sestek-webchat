@@ -225,7 +225,7 @@ const ModalComponent = forwardRef<ModalCompRef, PropsModalComponent>(
                         url={url}
                       />
 
-                      <SafeAreaView>
+                      <SafeAreaView edges={['bottom']}>
                         <View style={[styles.footer, footerStyle]}>
                           <FooterComponent
                             inputData={inputData}

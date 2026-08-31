@@ -15,8 +15,8 @@ export const styles = StyleSheet.create({
   },
   body: {},
   footer: {
-    height: Platform.OS === 'android' ? 67 : 80,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop: 0,
     paddingBottom: Platform.OS === 'android' ? 10 : 25,
   },
   imageBackground: {
